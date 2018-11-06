@@ -2,7 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import List from '@/components/User/List'
 import AddUser from '@/components/User/AddUser'
+import EditUser from '@/components/User/edit'
 import LichDay from '@/components/lichday/index'
+import LichDayGV from '@/components/lichday/indexFromGV'
+import MuonPhong from '@/components/lichday/indexMuonPhong'
 import importLichDay from '@/components/lichday/import'
 import Login from '@/components/Auth/Login'
 import Layout from '@/Layout'
@@ -16,7 +19,7 @@ export default new Router({
         {
             path: '/', component: Layout, name: 'Layout', children: [
                 {
-                    path: 'login',
+                    path: '/',
                     name: 'Login',
                     component: Login
                 },
@@ -44,9 +47,33 @@ export default new Router({
                     },
                 },
                 {
-                    path: '/lichday',
+                    path: '/edit-user/:id',
+                    name: 'EditUser',
+                    component: EditUser,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/lich-day',
                     name: 'LichDay',
                     component: LichDay,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/lich-day-gv',
+                    name: 'LichDayGV',
+                    component: LichDayGV,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/dk-muon-phong',
+                    name: 'MuonPhong',
+                    component: MuonPhong,
                     meta: {
                         middleware: auth,
                     },

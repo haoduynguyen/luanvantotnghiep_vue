@@ -64,14 +64,17 @@
                     <div v-for="( thu, key ) in dataLich.thuList" :key="key" style="width: 14.28%;">
                         <div v-for="( ca, key ) in dataLich.caList" :key="key" class="lichtruc-content-block">
                             <div style="border: 1px solid white; height: 150px; background-color: #eeeeee">
-                                <div v-if="checkLichTruc(ca.id,thu.id)==''" class="lichtruc-detail">
-                                    <div></div>
+                                <div v-if="checkLichTruc(ca.id,thu.id)=='' || ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
+                                        thu.id).dang_ky_nghi.status == 1)" v-on:click="viewMuonPhong()"
+                                     class="lichtruc-detail">
                                 </div>
+
                                 <div v-else class="lichtruc-detail"
                                      v-on:click="viewDetail(checkLichTruc(ca.id, thu.id))">
                                     {{ checkLichTruc(ca.id, thu.id).user.profile.first_name+ ' ' + checkLichTruc(ca.id,
                                     thu.id).user.profile.last_name }}
-                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id, thu.id).dang_ky_nghi.status == 1) ? 'hôm nay nghỉ' : '' }}</div>
+                                    <div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -116,6 +119,56 @@
                 </v-card>
             </v-dialog>
         </v-layout>
+        <v-layout row justify-center>
+            <v-dialog v-model="dialogdkMuonPhong" persistent max-width="500px">
+                <v-card>
+                    <v-card-title>
+                        <span class="headline">Đăng Ký Mượn Phòng</span>
+                        <v-select class="test"
+                                  :items="dataLich.tuanList"
+                                  v-model="dataLich.selectedTuan"
+                                  label="Tuần"
+                                  single-line
+                                  item-text="description"
+                                  item-value="id"
+                                  return-object
+                                  persistent-hint
+                        ></v-select>
+                    </v-card-title>
+                    <v-card-text v-if="detailContent">
+                        <table style="width: 100%" class="table-view-detail">
+                            <tr>
+                                <td><strong>Phòng máy:</strong></td>
+                                <td>{{ detailContent.phong_may.name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ca: </strong></td>
+                                <td>{{ detailContent.ca.name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Thứ: </strong></td>
+                                <td>{{ detailContent.thu.name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Môn học: </strong></td>
+                                <td>{{ detailContent.mon_hoc.name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lớp: </strong></td>
+                                <td>{{ detailContent.nhom_lop.name }}</td>
+                            </tr>
+                        </table>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn v-if="(detailContent.dang_ky_nghi != null && detailContent.dang_ky_nghi.status == 1)"
+                               type="submit">Đăng Ký Mượn Phòng
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" flat @click.native="dialogdkMuonPhong = false">Close</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-layout>
     </div>
 </template>
 
@@ -126,6 +179,7 @@
             dataLich: {
                 caList: "",
                 thuList: "",
+                monList: "",
                 lichDay: [],
                 tuanList: [],
                 hocKyList: [],
@@ -133,11 +187,14 @@
                 selectedTuan: 0,
                 selectedHocKy: 0,
                 selectedPhongMay: 0,
+                statusCode:0,
             },
 
             url: 'http://localhost:8000',
             dialog: false,
+            dialogdkMuonPhong: false,
             detailContent: "",
+            dangKyMuonPhong: "",
         }),
         created: function () {
             var _this = this;
@@ -162,7 +219,18 @@
                 this.dataLich.thuList = response.data.data;
             }).catch(error => {
                 if (!error.response) {
-                    // network error
+                    this.errorStatus = 'Error: Network Error';
+                } else {
+                    this.errorStatus = error.response.data.message;
+                }
+            });
+            //get danh sách môn học
+            let uriMonHoc = _this.url + '/api/thu';
+            Axios.get(uriLich).then((response) => {
+                _this.isLoading = false;
+                this.dataLich.thuList = response.data.data;
+            }).catch(error => {
+                if (!error.response) {
                     this.errorStatus = 'Error: Network Error';
                 } else {
                     this.errorStatus = error.response.data.message;
@@ -214,6 +282,10 @@
                     this.errorStatus = error.response.data.message;
                 }
             });
+            let author = localStorage.getItem('author')
+            let Auth = JSON.parse(author);
+            this.id = Auth['id'];
+            this.token = Auth['token'];
         },
         methods: {
             searchLichDay() {
@@ -224,14 +296,45 @@
                         phong_may_id: _this.dataLich.selectedPhongMay,
                         tuan_id: _this.dataLich.selectedTuan,
                     }
-                Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id.id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' +  data.tuan_id.id
+                Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id.id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id.id
                 ).then((response) => {
                     _this.dataLich.lichDay = response.data.data
+                    _this.dataLich.statusCode = response.status;
                     console.log(response);
                 }).catch(function (error) {
                     _this.error = error.response.data.message
                     _this.info = ""
                 });
+            },
+            viewMuonPhong() {
+                var _this = this;
+                if((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200))
+                {
+                    _this.dialogdkMuonPhong = true;
+                    var uri = _this.url + '/api/dk-muon-phong'
+                    var data =
+                        {
+                            hk_id: _this.dataLich.selectedHocKy,
+                            phong_may_id: _this.dataLich.selectedPhongMay,
+                            tuan_id: _this.dataLich.selectedTuan,
+                        }
+                    Axios.post(uri,data, {
+                        headers: {
+                            Authorization: 'Bearer' + ' ' + this.token
+                        }
+                    }).then((response) => {
+                        _this.dataLich.lichDay = response.data.data
+                        _this.dataLich.statusCode = response.status;
+                        console.log(response);
+                    }).catch(function (error) {
+                        _this.error = error.response.data.message
+                        _this.info = ""
+                    });
+
+                }
+                else {
+                    _this.dialogdkMuonPhong = false;
+                }
             },
             viewDetail(itemLichDay) {
                 console.log('itemLichDay 1', itemLichDay);
@@ -252,7 +355,6 @@
                             result = item;
                             break;
                         }
-
                     }
                 }
                 return result;

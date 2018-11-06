@@ -2,14 +2,14 @@
 export default function auth({to, next, router}) {
     let author = localStorage.getItem('author')
     if (!localStorage.getItem('author')) {
-        next('/login');
+        next('/');
     }
     //console.log(author);
     if (!author && to.name !== 'Register' && to.name !== 'Login' && to.name !== 'ThankYou')
-        next('/login')
+        next('/')
 
     if (author && to.name === 'login')
-        next('/list')
+        next('/lich-day')
 
 
     // let checkUser = await authorApi.getUser();

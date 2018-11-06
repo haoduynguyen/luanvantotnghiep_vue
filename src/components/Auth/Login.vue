@@ -48,7 +48,7 @@
                         if(response.status == 200)
                         {
                             localStorage.setItem('author', JSON.stringify(response.data.data));
-                            this.$router.push({name: 'ListUser'})
+                            this.$router.push({name: 'LichDay'})
                         }
                     }).catch(error => {
                         if (!error.response) {

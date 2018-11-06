@@ -9,9 +9,10 @@ import Layout from './Layout'
 window.VueAxios = require('vue-axios').default;
 window.Axios = require('axios').default;
 
-
 Vue.config.productionTip = false
 Vue.prototype.$http = Axios.bind(window);
+
+
 
 /* eslint-disable no-new */
 Vue.use(Vuetify, Axios, VueAxios);

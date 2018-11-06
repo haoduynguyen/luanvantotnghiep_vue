@@ -68,7 +68,7 @@
                                     <div></div>
                                 </div>
                                 <div v-else class="lichtruc-detail"
-                                     v-on:click="viewDetail(checkLichTruc(ca.id, thu.id))">
+                                     v-on:click="viewDetail(checkLichTruc(ca.id, thu.id),key)">
                                     {{ checkLichTruc(ca.id, thu.id).user.profile.first_name+ ' ' + checkLichTruc(ca.id,
                                     thu.id).user.profile.last_name }}
                                     <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id, thu.id).dang_ky_nghi.status == 1) ? 'hôm nay nghỉ' : '' }}</div>
@@ -110,6 +110,9 @@
                         </table>
                     </v-card-text>
                     <v-card-actions>
+                        <v-btn type="submit"
+                               v-if="detailContent.dang_ky_nghi == null "
+                               v-on:click="dangKyNghi()">Đăng Ký Nghỉ</v-btn>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
                     </v-card-actions>
@@ -121,7 +124,7 @@
 
 <script>
     export default {
-        name: "index",
+        name: "indexFromGV",
         data: () => ({
             dataLich: {
                 caList: "",
@@ -133,11 +136,20 @@
                 selectedTuan: 0,
                 selectedHocKy: 0,
                 selectedPhongMay: 0,
-            },
 
+
+            },
+            dataDangKyNghi: {
+                lich_day_id: 0,
+                tuan_id: "",
+            },
+            notification:'',
+            statusNghi : 0,
             url: 'http://localhost:8000',
             dialog: false,
             detailContent: "",
+            id: 0,
+            selectedNghi: 0
         }),
         created: function () {
             var _this = this;
@@ -214,6 +226,10 @@
                     this.errorStatus = error.response.data.message;
                 }
             });
+            let author = localStorage.getItem('author')
+            let Auth = JSON.parse(author);
+            this.id = Auth['id'];
+            this.token = Auth['token'];
         },
         methods: {
             searchLichDay() {
@@ -224,32 +240,83 @@
                         phong_may_id: _this.dataLich.selectedPhongMay,
                         tuan_id: _this.dataLich.selectedTuan,
                     }
-                Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id.id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' +  data.tuan_id.id
-                ).then((response) => {
-                    _this.dataLich.lichDay = response.data.data
-                    console.log(response);
+                Axios.get(_this.url + '/api/get-lich-gv?' + 'hk_id=' + data.hk_id.id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id.id
+                    , {
+                        headers: {
+                            Authorization: 'Bearer' + ' ' + this.token
+                        }
+                    }).then((response) => {
+                    _this.dataLich.lichDay = response.data.data;
+                }).catch(function (error) {
+                    _this.error = error.response.data.message
+                    _this.info = ""
+                });
+            },
+            dangKyNghi() {
+                var _this = this;
+                var uri = _this.url + '/api/dang-ky-nghi'
+                var data =
+                    {
+                        lich_day_id: _this.selectedNghi,  //_this.dataDangKyNghi.lich_day_id,
+                        tuan_id: _this.dataLich.selectedTuan.id,
+                    }
+                //console.log(data);
+                // console.log(_this.dataLich.lichDay)
+
+                Axios.post(uri, data, {
+                        headers: {
+                            Authorization: 'Bearer' + ' ' + this.token
+                        }
+                    }).then((response) => {
+
+                    if(response.status == 200)
+                    {
+                        alert('thong bao nghi thanh cong')
+                          _this.notification = 'hôm nay nghỉ'
+
+                        //console.log(_this.dataLich.lichDay[indexLichday])
+                        for(let item of response.data.data )
+                        {
+                            var indexLichday = _this.dataLich.lichDay.findIndex(itemLichday => itemLichday.id == item.lich_day_id)
+                            _this.dataLich.lichDay[indexLichday].dang_ky_nghi = {status: 1}
+                        }
+                        _this.dialog = false
+                        //Bat theo front-end
+                        // if(indexLichday + 1 <= _this.dataLich.lichDay.length - 1 && _this.dataLich.lichDay[indexLichday + 1].id -_this.dataLich.lichDay[indexLichday].id == 1
+                        //     && _this.dataLich.lichDay[indexLichday + 1].nhom_lop_id ==  _this.dataLich.lichDay[indexLichday].nhom_lop_id)
+                        //     _this.dataLich.lichDay[indexLichday + 1].dang_ky_nghi = {status: 1}
+                        // if(indexLichday - 1 >= 0 && _this.dataLich.lichDay[indexLichday].id -_this.dataLich.lichDay[indexLichday - 1].id == 1
+                        //     &&_this.dataLich.lichDay[indexLichday - 1].nhom_lop_id ==  _this.dataLich.lichDay[indexLichday].nhom_lop_id)
+                        //     _this.dataLich.lichDay[indexLichday - 1].dang_ky_nghi = {status: 1}
+                        // console.log(response);
+                    }
                 }).catch(function (error) {
                     _this.error = error.response.data.message
                     _this.info = ""
                 });
             },
             viewDetail(itemLichDay) {
-                console.log('itemLichDay 1', itemLichDay);
                 var _this = this;
                 _this.dialog = true;
-                _this.detailContent = itemLichDay; // ham nay ko chay thi pai
-                console.log('itemLichDay 2', itemLichDay);
+                _this.selectedNghi = itemLichDay.id
+                _this.detailContent = itemLichDay;// ham nay ko chay thi pai
+                console.log(_this.detailContent);
             },
             checkLichTruc(ca_id, thu_id) {
                 var _this = this;
                 var dem = 0;
                 var result = '';
-
+                var status = 0;
                 for (var item of _this.dataLich.lichDay) {
                     if (item.ca_id == ca_id && item.thu_id == thu_id) {
                         dem++;
                         if (dem == 1) {
                             result = item;
+                            _this.dataDangKyNghi.lich_day_id = item.id;
+                            if(item.dang_ky_nghi != null)
+                            {
+                                status = item.dang_ky_nghi.status
+                            }
                             break;
                         }
 

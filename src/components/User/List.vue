@@ -57,9 +57,19 @@
                                     hide-details
                             ></v-checkbox>
                         </td>
-                        <td class="text-xs-center">{{ props.item.profile.first_name + ' ' + props.item.profile.last_name }}</td>
+                        <td class="text-xs-center">{{ props.item.profile.first_name + ' ' + props.item.profile.last_name
+                            }}
+                        </td>
                         <td class="text-xs-center">{{ props.item.profile.gender==1 ?"male" : "female" }}</td>
                         <td class="text-xs-center">{{ props.item.email }}</td>
+                        <td class="text-xs-center">
+                            <v-btn icon class="mx-0" @click="editItem(props.item.id)">
+                                <v-icon color="teal">edit</v-icon>
+                            </v-btn>
+                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item)">
+                                <v-icon color="pink">delete</v-icon>
+                            </v-btn>
+                        </td>
                     </tr>
                 </template>
             </v-data-table>
@@ -84,6 +94,7 @@
                 },
                 {text: 'gender', value: 'gender', align: 'left',},
                 {text: 'email', value: 'email', align: 'left',},
+                {text: 'action', value: '', align: 'left',},
             ],
             user: [],
         }),
@@ -119,7 +130,15 @@
                         this.pagination.sortBy = column
                         this.pagination.descending = false
                     }
-                }
+                },
+                // xacnhanxoa(item) {
+                //     var _this = this;
+                //     _this.selectedGiangvien = item;
+                //     _this.dialog = true;
+                // },
+                editItem (id) {
+                    this.$router.push({ path: `/edit-user/${id}` });
+                },
             }
     }
 </script>
