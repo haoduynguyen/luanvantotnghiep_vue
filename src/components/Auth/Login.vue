@@ -36,7 +36,7 @@
                 email: '',
                 password: '',
             },
-            url: "http://localhost:8000"
+            url: "http://luanvantn.dev.digiprojects.top"
         }),
         methods:
             {
@@ -47,6 +47,7 @@
                     Axios.post(uri, _this.Login).then((response) => {
                         if(response.status == 200)
                         {
+                            console.log(response);
                             localStorage.setItem('author', JSON.stringify(response.data.data));
                             this.$router.push({name: 'LichDay'})
                         }

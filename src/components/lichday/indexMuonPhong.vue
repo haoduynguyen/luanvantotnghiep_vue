@@ -65,7 +65,8 @@
                         <div v-for="( ca, key ) in dataLich.caList" :key="key" class="lichtruc-content-block">
                             <div style="border: 1px solid white; height: 150px; background-color: #eeeeee">
                                 <div v-if="checkLichTruc(ca.id,thu.id)=='' || ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
-                                        thu.id).dang_ky_nghi.status == 1)" v-on:click="viewMuonPhong()"
+                                        thu.id).dang_ky_nghi.status == 1)" v-on:click="viewMuonPhong(ca.id, thu.id,checkLichTruc(ca.id,
+                                        thu.id))"
                                      class="lichtruc-detail">
                                 </div>
 
@@ -83,7 +84,7 @@
             </div>
         </div>
         <v-layout row justify-center>
-            <v-dialog v-model="dialog" persistent max-width="500px">
+            <v-dialog v-model="dialog" max-width="500px">
                 <v-card>
                     <v-card-title>
                         <span class="headline">Lịch chi tiết</span>
@@ -106,65 +107,58 @@
                                 <td><strong>Môn học: </strong></td>
                                 <td>{{ detailContent.mon_hoc.name }}</td>
                             </tr>
-                            <tr>
+                            <tr v-if=" detailContent.nhom_lop">
                                 <td><strong>Lớp: </strong></td>
                                 <td>{{ detailContent.nhom_lop.name }}</td>
                             </tr>
                         </table>
                     </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
-                    </v-card-actions>
+
                 </v-card>
             </v-dialog>
         </v-layout>
         <v-layout row justify-center>
-            <v-dialog v-model="dialogdkMuonPhong" persistent max-width="500px">
+            <v-dialog v-model="dialogdkMuonPhong"  max-width="500px">
                 <v-card>
                     <v-card-title>
                         <span class="headline">Đăng Ký Mượn Phòng</span>
                         <v-select class="test"
-                                  :items="dataLich.tuanList"
-                                  v-model="dataLich.selectedTuan"
-                                  label="Tuần"
+                                  :items="dataLich.monList"
+                                  v-model="dataLich.selectedMonHoc"
+                                  label="Môn Học"
                                   single-line
-                                  item-text="description"
+                                  item-text="name"
                                   item-value="id"
                                   return-object
                                   persistent-hint
                         ></v-select>
                     </v-card-title>
-                    <v-card-text v-if="detailContent">
+                    <v-card-text v-if="detailMuonPhong">
                         <table style="width: 100%" class="table-view-detail">
                             <tr>
                                 <td><strong>Phòng máy:</strong></td>
-                                <td>{{ detailContent.phong_may.name }}</td>
+                                <td>{{ dangKyMuonPhong.phong_may.name }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Ca: </strong></td>
-                                <td>{{ detailContent.ca.name }}</td>
+                                <td>{{ dangKyMuonPhong.ca.name }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Thứ: </strong></td>
-                                <td>{{ detailContent.thu.name }}</td>
+                                <td>{{ dangKyMuonPhong.thu.name }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Môn học: </strong></td>
-                                <td>{{ detailContent.mon_hoc.name }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Lớp: </strong></td>
-                                <td>{{ detailContent.nhom_lop.name }}</td>
+                                <td>{{ dangKyMuonPhong.mon_hoc.name }}</td>
                             </tr>
                         </table>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn v-if="(detailContent.dang_ky_nghi != null && detailContent.dang_ky_nghi.status == 1)"
-                               type="submit">Đăng Ký Mượn Phòng
+                        <v-btn
+                                type="submit" v-on:click="submitMuonPhong()">Đăng Ký Mượn Phòng
                         </v-btn>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" flat @click.native="dialogdkMuonPhong = false">Close</v-btn>
+                        <!--<v-btn color="blue darken-1" flat @click.native="dialogdkMuonPhong = false">Close</v-btn>-->
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -179,7 +173,7 @@
             dataLich: {
                 caList: "",
                 thuList: "",
-                monList: "",
+                monList: [],
                 lichDay: [],
                 tuanList: [],
                 hocKyList: [],
@@ -187,18 +181,27 @@
                 selectedTuan: 0,
                 selectedHocKy: 0,
                 selectedPhongMay: 0,
-                statusCode:0,
+                selectedMonHoc: 0,
+                statusCode: 0,
+                ca_id: 0,
+                thu_id: 0
             },
 
-            url: 'http://localhost:8000',
+            url: 'http://luanvantn.dev.digiprojects.top',
             dialog: false,
             dialogdkMuonPhong: false,
             detailContent: "",
             dangKyMuonPhong: "",
+            detailMuonPhong: "",
+            token: "",
         }),
         created: function () {
             var _this = this;
             _this.isLoading = true;
+            let author = localStorage.getItem('author')
+            let Auth = JSON.parse(author);
+            _this.id = Auth['id'];
+            _this.token = Auth['token'];
             // get danh sách ca
             let uriCa = _this.url + '/api/ca';
             Axios.get(uriCa).then((response) => {
@@ -225,10 +228,14 @@
                 }
             });
             //get danh sách môn học
-            let uriMonHoc = _this.url + '/api/thu';
-            Axios.get(uriLich).then((response) => {
+            let uriMonHoc = _this.url + '/api/mon-hoc';
+            Axios.get(uriMonHoc, {
+                headers: {
+                    Authorization: 'Bearer' + ' ' + this.token
+                }
+            }).then((response) => {
                 _this.isLoading = false;
-                this.dataLich.thuList = response.data.data;
+                this.dataLich.monList = response.data.data;
             }).catch(error => {
                 if (!error.response) {
                     this.errorStatus = 'Error: Network Error';
@@ -282,10 +289,8 @@
                     this.errorStatus = error.response.data.message;
                 }
             });
-            let author = localStorage.getItem('author')
-            let Auth = JSON.parse(author);
-            this.id = Auth['id'];
-            this.token = Auth['token'];
+
+
         },
         methods: {
             searchLichDay() {
@@ -299,65 +304,107 @@
                 Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id.id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id.id
                 ).then((response) => {
                     _this.dataLich.lichDay = response.data.data
+                    console.log(_this.dataLich.lichDay);
                     _this.dataLich.statusCode = response.status;
-                    console.log(response);
+                }).catch(function (error) {
+                    _this.error = error.response.data.message
+                    _this.info = ""
+                });
+                Axios.get(_this.url + '/api/dk-muon-phong?' + 'hk_id=' + data.hk_id.id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id.id, {
+                    headers: {
+                        Authorization: 'Bearer' + ' ' + this.token
+                    }
+                }).then((response) => {
+                    _this.dangKyMuonPhong = response.data.data
+                    console.log( _this.dangKyMuonPhong);
                 }).catch(function (error) {
                     _this.error = error.response.data.message
                     _this.info = ""
                 });
             },
-            viewMuonPhong() {
+            viewMuonPhong(ca_id, thu_id,itemDetail) {
                 var _this = this;
-                if((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200))
-                {
+                _this.dataLich.ca_id = ca_id;
+                _this.dataLich.thu_id = thu_id;
+                if ((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200)) {
                     _this.dialogdkMuonPhong = true;
-                    var uri = _this.url + '/api/dk-muon-phong'
-                    var data =
-                        {
-                            hk_id: _this.dataLich.selectedHocKy,
-                            phong_may_id: _this.dataLich.selectedPhongMay,
-                            tuan_id: _this.dataLich.selectedTuan,
-                        }
-                    Axios.post(uri,data, {
-                        headers: {
-                            Authorization: 'Bearer' + ' ' + this.token
-                        }
-                    }).then((response) => {
-                        _this.dataLich.lichDay = response.data.data
-                        _this.dataLich.statusCode = response.status;
-                        console.log(response);
-                    }).catch(function (error) {
-                        _this.error = error.response.data.message
-                        _this.info = ""
-                    });
-
+                    _this.detailMuonPhong = itemDetail
+                    console.log('haha',itemDetail);
                 }
                 else {
                     _this.dialogdkMuonPhong = false;
                 }
             },
+            submitMuonPhong() {
+                var _this = this
+                var uri = _this.url + '/api/dk-muon-phong'
+                var data =
+                    {
+                        mon_hoc_id: _this.dataLich.selectedMonHoc.id,
+                        hk_id: _this.dataLich.selectedHocKy.id,
+                        phong_may_id: _this.dataLich.selectedPhongMay.id,
+                        tuan_id: _this.dataLich.selectedTuan.id,
+                        ca_id: _this.dataLich.ca_id,
+                        thu_id: _this.dataLich.thu_id,
+                        tuan_id: _this.dataLich.selectedTuan.id,
+                    }
+                Axios.post(uri, data, {
+                    headers: {
+                        Authorization: 'Bearer' + ' ' + this.token
+                    }
+                }).then((response) => {
+                    _this.dangKyMuonPhong.push(response.data.data)
+                    _this.dialogdkMuonPhong = false
+                }).catch(function (error) {
+                    _this.error = error.response.data.message
+                    _this.info = ""
+                });
+            },
             viewDetail(itemLichDay) {
-                console.log('itemLichDay 1', itemLichDay);
                 var _this = this;
                 _this.dialog = true;
                 _this.detailContent = itemLichDay; // ham nay ko chay thi pai
-                console.log('itemLichDay 2', itemLichDay);
             },
             checkLichTruc(ca_id, thu_id) {
                 var _this = this;
                 var dem = 0;
                 var result = '';
-
-                for (var item of _this.dataLich.lichDay) {
-                    if (item.ca_id == ca_id && item.thu_id == thu_id) {
-                        dem++;
-                        if (dem == 1) {
-                            result = item;
-                            break;
+                var lich_bu_thay_the = _this.muonPhong(ca_id, thu_id);
+                if (lich_bu_thay_the) {
+                    result = lich_bu_thay_the;
+                }
+                else {
+                    for (var item of _this.dataLich.lichDay) {
+                        if (item.ca_id == ca_id && item.thu_id == thu_id) {
+                            dem++;
+                            if (dem == 1) {
+                                result = item;
+                                break;
+                            }
                         }
                     }
                 }
                 return result;
+            },
+            muonPhong(ca_id, thu_id) {
+                // console.log('ca', ca_id);
+                // console.log('thu', thu_id);
+                var _this = this;
+                var dem = 0;
+                var resultMonHoc = '';
+                for (var item of _this.dangKyMuonPhong) {
+                    // console.log('result', item.ca_id);
+                    // console.log('resultThu', item.thu_id);
+                    // console.log('dang_ky',_this.dangKyMuonPhong);
+                    if (item.ca_id == ca_id && item.thu_id == thu_id) {
+                        resultMonHoc = item;
+                        console.log('resultMonHoc',resultMonHoc)
+                        break;
+
+                    }
+                }
+                return resultMonHoc;
+
             },
         },
     }

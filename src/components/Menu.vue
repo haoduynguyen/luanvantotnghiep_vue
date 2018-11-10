@@ -7,8 +7,8 @@
                 v-model="drawer"
         >
             <v-list dense>
-                <template >
-                    <div  v-if="role_id==1" v-for="item in itemsGV">
+                <template>
+                    <div v-if="role_id==1" v-for="item in itemsGV">
                         <v-layout
                                 row
                                 v-if="item.heading"
@@ -65,7 +65,7 @@
                             </v-list-tile-content>
                         </v-list-tile>
                     </div>
-                    <div  v-if="role_id==2" v-for="item in itemsKTV">
+                    <div v-if="role_id==2" v-for="item in itemsKTV">
                         <v-layout
                                 row
                                 v-if="item.heading"
@@ -134,15 +134,9 @@
         >
             <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
                 <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-                <span class="hidden-sm-and-down">Google Contacts</span>
+                <span class="hidden-sm-and-down">Luận Văn Tốt Nghiệp</span>
             </v-toolbar-title>
-            <v-text-field
-                    flat
-                    solo-inverted
-                    prepend-icon="search"
-                    label="Search"
-                    class="hidden-sm-and-down"
-            ></v-text-field>
+
             <v-spacer></v-spacer>
             <v-btn icon>
                 <v-icon>apps</v-icon>
@@ -154,16 +148,64 @@
                 <v-avatar size="32px" tile>
                 </v-avatar>
             </v-btn>
+            <v-menu offset-y>
+                <v-btn icon large
+                       slot="activator"
+                       color="primary"
+                       dark
+                >
+                    <v-avatar size="32px" tile>
+                        <img
+                                class="avatar"
+                                :src="img"
+                                alt="Vuetify"
+
+                        >
+                    </v-avatar>
+                </v-btn>
+                <v-list>
+                    <v-list-tile v-if="item.title != 'Logout' "
+                                 v-for="(item, index) in items"
+                                 :key="index"
+                                 :to="{path: item.path + id}"
+                                 @click=""
+                    >
+                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                    </v-list-tile>
+                    <v-list-tile v-if="item.title == 'Logout' "
+                                 v-for="(item, index) in items"
+                                 :key="index"
+                                 @click="logout()"
+                    >
+                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                    </v-list-tile>
+                </v-list>
+            </v-menu>
         </v-toolbar>
     </div>
 </template>
 
 <script>
+    import image from "../assets/logo.png";
+
     export default {
         name: "Menu",
         data: () => ({
             dialog: false,
             drawer: null,
+            img: image,
+            id:'',
+            items: [
+                {
+                    title: 'Change Password', path: '/change-password/', test: () => {}
+                },
+                {
+                    title: 'Profile', test: () => {}, path: "/edit-user/"
+                },
+                {
+                    title: 'Logout', test: () => {}
+                },
+            ],
             itemsGV: [
                 //{icon: 'contacts', text: 'User', path: ''},
                 // {
@@ -175,7 +217,8 @@
                 //         {icon: '', text: 'List', path: 'ListUser'},
                 //     ]
                 // },
-                {icon: 'schedule', text: 'Lịch Dạy Chi Tiết',path:'LichDayGV'},
+                {icon: 'List', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
+                {icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
                 {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhong'},
             ],
             itemsKTV: [
@@ -191,12 +234,19 @@
                 {icon: '', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
                 {icon: 'schedule', text: 'Lịch Dạy', path: 'LichDay'},
             ],
-            role_id:''
+            role_id: ''
         }),
         created: function () {
             let author = localStorage.getItem('author')
             let role_id = JSON.parse(author);
             this.role_id = role_id['role_id']
+            this.id = role_id['id']
+        },
+        methods: {
+            logout() {
+                localStorage.clear();
+                this.$router.push({name: 'Login'})
+            }
         }
     }
 </script>

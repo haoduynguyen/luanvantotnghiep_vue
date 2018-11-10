@@ -3,10 +3,12 @@ import Router from 'vue-router'
 import List from '@/components/User/List'
 import AddUser from '@/components/User/AddUser'
 import EditUser from '@/components/User/edit'
+import ChangePassword from '@/components/User/changePassword'
 import LichDay from '@/components/lichday/index'
 import LichDayGV from '@/components/lichday/indexFromGV'
 import MuonPhong from '@/components/lichday/indexMuonPhong'
 import importLichDay from '@/components/lichday/import'
+import ListMoTaGV from '@/components/PhongMay/ListMayLoi'
 import Login from '@/components/Auth/Login'
 import Layout from '@/Layout'
 import App from '@/App'
@@ -55,6 +57,14 @@ export default new Router({
                     },
                 },
                 {
+                    path: '/change-password/:id',
+                    name: 'ChangePassword',
+                    component: ChangePassword,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
                     path: '/lich-day',
                     name: 'LichDay',
                     component: LichDay,
@@ -74,6 +84,14 @@ export default new Router({
                     path: '/dk-muon-phong',
                     name: 'MuonPhong',
                     component: MuonPhong,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/list-mo-ta-gv',
+                    name: 'ListMoTaGV',
+                    component: ListMoTaGV,
                     meta: {
                         middleware: auth,
                     },

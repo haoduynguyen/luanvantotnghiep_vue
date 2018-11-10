@@ -60,7 +60,7 @@
             email: '',
             phone: '',
             gender:0,
-            url: "http://localhost:8000",
+            url: "http://luanvantn.dev.digiprojects.top",
             switch1: true,
             roleList: [],
             nameRules: [
@@ -88,7 +88,8 @@
                         _this.error = response.data.error;
                     }
                     else {
-                        _this.$router.push({name: 'GiangvienList'})
+                        alert('update success')
+                        _this.$router.push({name: 'LichDay'})
                         _this.error = '';
                     }
                 });
@@ -99,14 +100,9 @@
             let giangvien_id = urlCurrent.slice(urlCurrent.lastIndexOf('edit-user/') + 10, urlCurrent.length);
             console.log(giangvien_id);
             let uri = this.url + '/api/user/' + giangvien_id + '/edit';
-            console.log(uri);
             Axios.get(uri).then((response) => {
                 this.giangVien = response.data.data;
                 this.giangVien.profile.gender = this.switch1 ? 1 : null
-                if(response.status == 200){
-                    this.$router.push({name: 'ListUser'})
-                    alert('cập nhật thành công')
-                }
             });
         }
 

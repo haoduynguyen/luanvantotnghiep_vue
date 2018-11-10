@@ -71,7 +71,9 @@
                                      v-on:click="viewDetail(checkLichTruc(ca.id, thu.id),key)">
                                     {{ checkLichTruc(ca.id, thu.id).user.profile.first_name+ ' ' + checkLichTruc(ca.id,
                                     thu.id).user.profile.last_name }}
-                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id, thu.id).dang_ky_nghi.status == 1) ? 'hôm nay nghỉ' : '' }}</div>
+                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
+                                        thu.id).dang_ky_nghi.status == 1) ? 'hôm nay nghỉ' : '' }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -80,7 +82,7 @@
             </div>
         </div>
         <v-layout row justify-center>
-            <v-dialog v-model="dialog" persistent max-width="500px">
+            <v-dialog v-model="dialog" max-width="500px">
                 <v-card>
                     <v-card-title>
                         <span class="headline">Lịch chi tiết</span>
@@ -108,13 +110,22 @@
                                 <td>{{ detailContent.nhom_lop.name }}</td>
                             </tr>
                         </table>
+                        <v-textarea
+                                name="input-7-1"
+                                label="Mô Tả"
+                                value=""
+                                v-model="moTaGv"
+                                hint="Hint text"
+                                style="width: 100%"
+                        ></v-textarea>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn type="submit"
                                v-if="detailContent.dang_ky_nghi == null "
-                               v-on:click="dangKyNghi()">Đăng Ký Nghỉ</v-btn>
+                               v-on:click="dangKyNghi()">Đăng Ký Nghỉ
+                        </v-btn>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
+                        <v-btn color="blue darken-1" @click="submitMotaLoi()">Báo cáo phòng máy</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -143,13 +154,14 @@
                 lich_day_id: 0,
                 tuan_id: "",
             },
-            notification:'',
-            statusNghi : 0,
-            url: 'http://localhost:8000',
+            notification: '',
+            statusNghi: 0,
+            url: 'http://luanvantn.dev.digiprojects.top',
             dialog: false,
             detailContent: "",
             id: 0,
-            selectedNghi: 0
+            selectedNghi: 0,
+            moTaGv: ""
         }),
         created: function () {
             var _this = this;
@@ -264,19 +276,17 @@
                 // console.log(_this.dataLich.lichDay)
 
                 Axios.post(uri, data, {
-                        headers: {
-                            Authorization: 'Bearer' + ' ' + this.token
-                        }
-                    }).then((response) => {
+                    headers: {
+                        Authorization: 'Bearer' + ' ' + this.token
+                    }
+                }).then((response) => {
 
-                    if(response.status == 200)
-                    {
+                    if (response.status == 200) {
                         alert('thong bao nghi thanh cong')
-                          _this.notification = 'hôm nay nghỉ'
+                        _this.notification = 'hôm nay nghỉ'
 
                         //console.log(_this.dataLich.lichDay[indexLichday])
-                        for(let item of response.data.data )
-                        {
+                        for (let item of response.data.data) {
                             var indexLichday = _this.dataLich.lichDay.findIndex(itemLichday => itemLichday.id == item.lich_day_id)
                             _this.dataLich.lichDay[indexLichday].dang_ky_nghi = {status: 1}
                         }
@@ -313,8 +323,7 @@
                         if (dem == 1) {
                             result = item;
                             _this.dataDangKyNghi.lich_day_id = item.id;
-                            if(item.dang_ky_nghi != null)
-                            {
+                            if (item.dang_ky_nghi != null) {
                                 status = item.dang_ky_nghi.status
                             }
                             break;
@@ -323,6 +332,28 @@
                     }
                 }
                 return result;
+            },
+            submitMotaLoi() {
+                var _this = this;
+                var uri = _this.url + '/api/add-mo-ta'
+                var data =
+                    {
+                        mota_gv: _this.moTaGv,
+                        phong_may_id: _this.dataLich.selectedPhongMay.id,
+                    }
+                Axios.post(uri, data, {
+                    headers: {
+                        Authorization: 'Bearer' + ' ' + this.token
+                    }
+                }).then((response) => {
+
+                    if (response.status == 200) {
+                        _this.dialog = false
+                    }
+                }).catch(function (error) {
+                    _this.error = error.response.data.message
+                    _this.info = ""
+                });
             },
         },
     }

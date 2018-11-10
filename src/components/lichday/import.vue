@@ -71,7 +71,7 @@
     export default {
         data: function () {
             return {
-                urlCurrent: "http://localhost:8000",
+                urlCurrent: "http://luanvantn.dev.digiprojects.top",
                 fetchError: '',
                 downTime: 0,
                 valid: false,

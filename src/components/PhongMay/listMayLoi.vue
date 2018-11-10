@@ -1,10 +1,10 @@
 <template>
     <div>
-        <v-card-actions>
-            <!--<v-btn v-bind:to="{name: 'Home'}">Back</v-btn>-->
-            <v-spacer></v-spacer>
-            <v-btn v-bind:to="{name: 'AddUser'}" color="success">Add</v-btn>
-        </v-card-actions>
+        <!--<v-card-actions>-->
+        <!--&lt;!&ndash;<v-btn v-bind:to="{name: 'Home'}">Back</v-btn>&ndash;&gt;-->
+        <!--<v-spacer></v-spacer>-->
+        <!--<v-btn v-bind:to="{name: 'AddUser'}" color="success">Add</v-btn>-->
+        <!--</v-card-actions>-->
         <v-card>
             <v-card-title>
                 <v-spacer></v-spacer>
@@ -19,7 +19,7 @@
             <v-data-table
                     v-model="selected"
                     :headers="headers"
-                    :items="user"
+                    :items="listMota"
                     :pagination.sync="pagination"
                     select-all
                     item-key="name"
@@ -57,11 +57,14 @@
                                     hide-details
                             ></v-checkbox>
                         </td>
-                        <td class="text-xs-center">{{ props.item.profile.first_name + ' ' + props.item.profile.last_name
+                        <td class="text-xs-center">{{ props.item.phong_may.name}}</td>
+                        <td class="text-xs-center">{{ props.item.giang_vien.profile.first_name + ' ' + props.item.giang_vien.profile.last_name
                             }}
                         </td>
-                        <td class="text-xs-center">{{ props.item.profile.gender==1 ?"male" : "female" }}</td>
-                        <td class="text-xs-center">{{ props.item.email }}</td>
+                        <td class="text-xs-center">{{ props.item.mota_gv != null ? props.item.mota_gv : ""  }}</td>
+                        <td class="text-xs-center">{{ props.item.ky_thuat_vien != null ? props.item.ky_thuat_vien.profile.first_name + ' ' + props.item.giang_vien.profile.last_name : ""  }}</td>
+                        <td class="text-xs-center">{{ props.item.mota_ktv != null ? props.item.mota_ktv : "" }}</td>
+                        <td class="text-xs-center" v-if=" props.item.status == 1">{{ "Đang chờ sửa lỗi" }}</td>
                         <td class="text-xs-center">
                             <v-btn icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
@@ -79,7 +82,7 @@
 
 <script>
     export default {
-        name: "ListUser",
+        name: "listMayLoi",
         data: () => ({
             pagination: {
                 sortBy: 'name'
@@ -87,24 +90,35 @@
             selected: [],
             search: "",
             headers: [
+                {text: 'Phòng Máy', value: 'phong_may.name', align: 'left',},
                 {
-                    text: 'name',
+                    text: 'Tên Giảng Viên',
                     align: 'left',
-                    value: 'profile.first_name'
+                    value: 'giang_vien.profile.first_name'
                 },
-                {text: 'gender', value: 'gender', align: 'left',},
-                {text: 'email', value: 'email', align: 'left',},
-                {text: 'action', value: '', align: 'left',},
+                {text: 'Mô Tả Giảng Viên', value: '', align: 'left',},
+                {text: 'Tên Kỹ Thuật Viên', value: '', align: 'left',},
+                {text: 'Mô Tả Kỹ Thuật Viên', value: 'giang_vien.profile.first_name', align: 'left',},
+                {text: 'Tình Trạng', value: '', align: 'left',},
+                {text: 'Chức Năng', value: '', align: 'left',},
             ],
-            user: [],
+            listMota: [],
         }),
         created: function () {
+            let author = localStorage.getItem('author')
+            let auth = JSON.parse(author);
+            this.token = auth['token']
             var _this = this;
             _this.isLoading = true;
-            let uri = 'http://luanvantn.dev.digiprojects.top/api/user';
-            Axios.get(uri).then((response) => {
+            let uri = 'http://luanvantn.dev.digiprojects.top/api/list-mo-ta';
+            Axios.get(uri, {
+                headers: {
+                    Authorization: 'Bearer' + ' ' + this.token
+                }
+            }).then((response) => {
+                console.log(response);
                 _this.isLoading = false;
-                this.user = response.data.data;
+                this.listMota = response.data.data;
             }).catch(error => {
                 if (!error.response) {
                     // network error
@@ -112,7 +126,6 @@
                     console.log(error.response.data.message);
                 } else {
                     this.errorStatus = error.response.data.message;
-                    console.log(this.errorStatus);
                 }
             });
         },
@@ -120,7 +133,7 @@
             {
                 toggleAll() {
                     if (this.selected.length) this.selected = []
-                    else this.selected = this.user.slice()
+                    else this.selected = this.listMota.slice()
                 }
                 ,
                 changeSort(column) {
@@ -136,8 +149,8 @@
                 //     _this.selectedGiangvien = item;
                 //     _this.dialog = true;
                 // },
-                editItem (id) {
-                    this.$router.push({ path: `/edit-user/${id}` });
+                editItem(id) {
+                    this.$router.push({path: `/edit-user/${id}`});
                 },
             }
     }
