@@ -71,8 +71,7 @@
                                      v-on:click="viewDetail(checkLichTruc(ca.id, thu.id),key)">
                                     {{ checkLichTruc(ca.id, thu.id).user.profile.first_name+ ' ' + checkLichTruc(ca.id,
                                     thu.id).user.profile.last_name }}
-                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
-                                        thu.id).dang_ky_nghi.status == 1) ? 'hôm nay nghỉ' : '' }}
+                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null  && checkLichTruc(ca.id, thu.id).dang_ky_nghi.tuan_id == selectTuan) ? 'hôm nay nghỉ' : ''  }}
                                     </div>
                                 </div>
                             </div>
@@ -147,16 +146,15 @@
                 selectedTuan: 0,
                 selectedHocKy: 0,
                 selectedPhongMay: 0,
-
-
             },
             dataDangKyNghi: {
                 lich_day_id: 0,
-                tuan_id: "",
+                tuan_id: 0,
             },
+            selectTuan:0,
             notification: '',
             statusNghi: 0,
-            url: 'http://luanvantn.dev.digiprojects.top',
+            url: 'http://localhost:8000',
             dialog: false,
             detailContent: "",
             id: 0,
@@ -197,6 +195,18 @@
             Axios.get(uriTuan).then((response) => {
                 _this.isLoading = false;
                 this.dataLich.tuanList = response.data.data;
+                var year = new Date().getFullYear();
+                var month = (new Date().getMonth() + 1);
+                var date = new Date().getDate();
+                var currentDate = year + '-' + month + '-'+ date
+                for(var tuan of _this.dataLich.tuanList) {
+                    var ngaybatdau = tuan.ngay_bat_dau;
+                    var ngayketthuc =tuan.ngay_ket_thuc;
+                    if(ngaybatdau <= currentDate && currentDate <= ngayketthuc) {
+                        _this.dataLich.selectedTuan = tuan.id;
+                        break;
+                    }
+                }
             }).catch(error => {
                 if (!error.response) {
                     // network error
@@ -218,7 +228,20 @@
                     }
                     _this.dataLich.hocKyList.push(hockyItem);
                 }
+                for(var hk of _this.dataLich.hocKyList)
+                {
+                    var ngaybatdau = hk.ngaybatdau;
+                    var ngayketthuc =hk.ngayketthuc;
+                    var year = new Date().getFullYear();
+                    var month = (new Date().getMonth() + 1);
+                    var date = new Date().getDate();
+                    var currentDate = year + '-' + month + '-'+ date
 
+                    if(ngaybatdau <= currentDate && currentDate <= ngayketthuc) {
+                        _this.dataLich.selectedHocKy = hk.id;
+                        break
+                    }
+                }
             }).catch(error => {
                 if (!error.response) {
                     this.errorStatus = 'Error: Network Error';
@@ -248,17 +271,19 @@
                 var _this = this;
                 var data =
                     {
-                        hk_id: _this.dataLich.selectedHocKy,
+                        hk_id: typeof _this.dataLich.selectedHocKy == "object" ?_this.dataLich.selectedHocKy.id:_this.dataLich.selectedHocKy,
                         phong_may_id: _this.dataLich.selectedPhongMay,
-                        tuan_id: _this.dataLich.selectedTuan,
+                        tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id :_this.dataLich.selectedTuan,
                     }
-                Axios.get(_this.url + '/api/get-lich-gv?' + 'hk_id=' + data.hk_id.id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id.id
+                Axios.get(_this.url + '/api/get-lich-gv?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
                     , {
                         headers: {
                             Authorization: 'Bearer' + ' ' + this.token
                         }
                     }).then((response) => {
                     _this.dataLich.lichDay = response.data.data;
+                    _this.selectTuan =  data.tuan_id
+                    console.log(_this.selectTuan);
                 }).catch(function (error) {
                     _this.error = error.response.data.message
                     _this.info = ""
@@ -270,9 +295,9 @@
                 var data =
                     {
                         lich_day_id: _this.selectedNghi,  //_this.dataDangKyNghi.lich_day_id,
-                        tuan_id: _this.dataLich.selectedTuan.id,
+                        tuan_id:  typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id :_this.dataLich.selectedTuan,
                     }
-                //console.log(data);
+                console.log(data);
                 // console.log(_this.dataLich.lichDay)
 
                 Axios.post(uri, data, {
@@ -286,9 +311,11 @@
                         _this.notification = 'hôm nay nghỉ'
 
                         //console.log(_this.dataLich.lichDay[indexLichday])
+                        console.log(response.data.data);
                         for (let item of response.data.data) {
-                            var indexLichday = _this.dataLich.lichDay.findIndex(itemLichday => itemLichday.id == item.lich_day_id)
-                            _this.dataLich.lichDay[indexLichday].dang_ky_nghi = {status: 1}
+                            console.log(item);
+                             var indexLichday = _this.dataLich.lichDay.findIndex(itemLichday => itemLichday.id == item.lich_day_id)
+                             _this.dataLich.lichDay[indexLichday].dang_ky_nghi = {tuan_id: _this.selectTuan}
                         }
                         _this.dialog = false
                         //Bat theo front-end
@@ -301,7 +328,7 @@
                         // console.log(response);
                     }
                 }).catch(function (error) {
-                    _this.error = error.response.data.message
+                    _this.error = error.response.message
                     _this.info = ""
                 });
             },
@@ -318,7 +345,7 @@
                 var result = '';
                 var status = 0;
                 for (var item of _this.dataLich.lichDay) {
-                    if (item.ca_id == ca_id && item.thu_id == thu_id) {
+                    if (item.ca_id == ca_id && item.thu_id == thu_id ) {
                         dem++;
                         if (dem == 1) {
                             result = item;
