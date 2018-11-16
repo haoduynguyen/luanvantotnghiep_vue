@@ -154,7 +154,7 @@
             selectTuan:0,
             notification: '',
             statusNghi: 0,
-            url: 'http://localhost:8000',
+            url: 'http://luanvantn.dev.digiprojects.top',
             dialog: false,
             detailContent: "",
             id: 0,

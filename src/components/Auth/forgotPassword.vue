@@ -52,10 +52,9 @@
                     let email = cutStrEmail.replace('%40', '@')
                     _this.Login.email = email
                     _this.Login.token = cutStrToken
-                    console.log(_this.Login);
                     Axios.post(uri, _this.Login).then((response) => {
                         if (response.status == 200) {
-                            console.log(response)
+                            alert('Đổi mật khẩu thành công')
                             this.$router.push({name: 'Login'})
                         }
                     }).catch(error => {
