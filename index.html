@@ -1,15 +1,50 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Luận Văn Tốt Nghiệp</title>
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+    <meta name="google-signin-client_id"
+          content="931597282160-1eg67i8jc4v916ajq2n8v88om23t9r3u.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+    <!--<script src="https://apis.google.com/js/client.js" async defer></script>-->
+
+    <script>
+        onSignIn = function (googleUser) {
+            console.log('onSignIn: ', googleUser);
+            app.onSuccessGoogle(googleUser);
+            const auth2 = gapi.auth2.init();
+            console.log(auth2.currentUser.Aia.value.w3.ig);
+            console.log('bbb', auth2.currentUser.Aia.value.w3.ig);
+            if (auth2.isSignedIn.get()) {
+                const profile = auth2.currentUser.get().getBasicProfile();
+                setTimeout(function () {
+                    console.log('aaa', profile.getName());
+                    // console.log(auth2.isSignedIn.get());
+                    // //console.log(googleUser.getAuthResponse().uid);
+                    // console.log(auth2.currentUser.get().getId());
+                }, 5000)
+            }
+        }
+
+        // function init(){
+        //     gapi.load('auth2', function () {
+        //         gapi.auth2.init({client_id: '931597282160-1eg67i8jc4v916ajq2n8v88om23t9r3u.apps.googleusercontent.com'})
+        //         console.log('Auth2 ready', gapi)
+        //     });
+        // }
+
+    </script>
+</head>
+<body>
+<div id="app"></div>
+<!-- built files will be auto injected -->
+
+<script>
+
+</script>
+</body>
 </html>

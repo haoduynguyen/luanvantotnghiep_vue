@@ -10,6 +10,7 @@ import MuonPhong from '@/components/lichday/indexMuonPhong'
 import importLichDay from '@/components/lichday/import'
 import ListMoTaGV from '@/components/PhongMay/ListMayLoi'
 import Login from '@/components/Auth/Login'
+import ForgotPassword from '@/components/Auth/forgotPassword'
 import Layout from '@/Layout'
 import App from '@/App'
 import auth from '@/middleware/auth'
@@ -24,6 +25,15 @@ export default new Router({
                     path: '/',
                     name: 'Login',
                     component: Login
+                },
+            ]
+        },
+        {
+            path: '/forgot-password/:token', component: Layout, name: 'Layout', children: [
+                {
+                    path: '/',
+                    name: 'ForgotPassword',
+                    component: ForgotPassword
                 },
             ]
         },

@@ -11,9 +11,6 @@ window.Axios = require('axios').default;
 
 Vue.config.productionTip = false
 Vue.prototype.$http = Axios.bind(window);
-
-
-
 /* eslint-disable no-new */
 Vue.use(Vuetify, Axios, VueAxios);
 function nextFactory(context, middleware, index) {
@@ -53,9 +50,21 @@ router.beforeEach(async (to, from, next) => {
 
     next()
 });
-new Vue({
+window.app = new Vue({
     el: '#app',
     router,
     components: {Layout},
     template: '<Layout/>',
+    created() {
+        console.log('Vue generated')
+        if (typeof gapi !== undefined) {
+            const _gapi = gapi ? gapi : window.gapi
+            _gapi.load('auth2', function () {
+                _gapi.auth2.init({client_id: '931597282160-1eg67i8jc4v916ajq2n8v88om23t9r3u.apps.googleusercontent.com'})
+                console.log('Auth2 ready in main', gapi)
+            });
+        }
+    },
+    methods: {
+    }
 })

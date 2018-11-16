@@ -175,7 +175,7 @@
                     <v-list-tile v-if="item.title == 'Logout' "
                                  v-for="(item, index) in items"
                                  :key="index"
-                                 @click="logout()"
+                                 @click="signOut"
                     >
                         <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                     </v-list-tile>
@@ -194,16 +194,19 @@
             dialog: false,
             drawer: null,
             img: image,
-            id:'',
+            id: '',
             items: [
                 {
-                    title: 'Change Password', path: '/change-password/', test: () => {}
+                    title: 'Change Password', path: '/change-password/', test: () => {
+                    }
                 },
                 {
-                    title: 'Profile', test: () => {}, path: "/edit-user/"
+                    title: 'Profile', test: () => {
+                    }, path: "/edit-user/"
                 },
                 {
-                    title: 'Logout', test: () => {}
+                    title: 'Logout', test: () => {
+                    }
                 },
             ],
             itemsGV: [
@@ -245,6 +248,18 @@
         methods: {
             logout() {
                 localStorage.clear();
+                StorageArea.clear();
+                //storage.removeItem("https://accounts.google.com");
+                this.$router.push({name: 'Login'})
+            },
+            async signOut() {
+                const googleAuth = gapi.auth2.getAuthInstance()
+                await googleAuth.signOut()
+                const googleUser = googleAuth.currentUser.get()
+                googleUser.disconnect()
+                localStorage.clear();
+                //storage.removeItem("https://accounts.google.com");
+                // window.location.reload()
                 this.$router.push({name: 'Login'})
             }
         }
