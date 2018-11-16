@@ -13,6 +13,7 @@ import Login from '@/components/Auth/Login'
 import Layout from '@/Layout'
 import App from '@/App'
 import auth from '@/middleware/auth'
+import updatePM from '@/components/PhongMay/updatePM'
 
 Vue.use(Router)
 
@@ -100,6 +101,16 @@ export default new Router({
                     path: '/add-lichday',
                     name: 'importLichDay',
                     component: importLichDay,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+
+                {
+                    path: '/update-PM/:id',
+                    props: true,
+                    name: 'updatePM',
+                    component: updatePM,
                     meta: {
                         middleware: auth,
                     },
