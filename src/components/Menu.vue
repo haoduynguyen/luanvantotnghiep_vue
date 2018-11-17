@@ -138,16 +138,17 @@
             </v-toolbar-title>
 
             <v-spacer></v-spacer>
-            <v-btn icon>
-                <v-icon>apps</v-icon>
-            </v-btn>
-            <v-btn icon>
-                <v-icon>notifications</v-icon>
-            </v-btn>
-            <v-btn icon large>
-                <v-avatar size="32px" tile>
-                </v-avatar>
-            </v-btn>
+            <label>
+                {{name}}
+            </label>
+            <!--<v-btn icon>-->
+                <!--<v-icon>notifications</v-icon>-->
+            <!--</v-btn>-->
+            <!--<v-btn icon large>-->
+                <!--<v-avatar size="32px" tile>-->
+                <!--</v-avatar>-->
+            <!--</v-btn>-->
+            <!--<label v-model="name"></label>-->
             <v-menu offset-y>
                 <v-btn icon large
                        slot="activator"
@@ -195,6 +196,7 @@
             drawer: null,
             img: image,
             id: '',
+            name:'',
             items: [
                 {
                     title: 'Change Password', path: '/change-password/', test: () => {
@@ -244,6 +246,7 @@
             let role_id = JSON.parse(author);
             this.role_id = role_id['role_id']
             this.id = role_id['id']
+            this.name = role_id['profile']['first_name'] + ' ' + role_id['profile']['last_name']
         },
         methods: {
             logout() {

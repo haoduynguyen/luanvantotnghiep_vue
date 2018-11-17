@@ -1,10 +1,6 @@
+
 <template>
     <div>
-        <!--<v-card-actions>-->
-        <!--&lt;!&ndash;<v-btn v-bind:to="{name: 'Home'}">Back</v-btn>&ndash;&gt;-->
-        <!--<v-spacer></v-spacer>-->
-        <!--<v-btn v-bind:to="{name: 'AddUser'}" color="success">Add</v-btn>-->
-        <!--</v-card-actions>-->
         <v-card>
             <v-card-title>
                 <v-spacer></v-spacer>
@@ -49,10 +45,10 @@
                     </tr>
                 </template>
                 <template slot="items" slot-scope="props">
-                    <tr :active="props.item.selected" @click="props.item.selected = !props.item.selected">
+                    <tr :active="props.selected" @click="props.item.selected = !props.selected">
                         <td>
                             <v-checkbox
-                                    :input-value="props.item.selected"
+                                    :input-value="props.selected"
                                     primary
                                     hide-details
                             ></v-checkbox>
@@ -61,15 +57,14 @@
                         <td class="text-xs-center">{{ props.item.giang_vien.profile.first_name + ' ' + props.item.giang_vien.profile.last_name
                             }}
                         </td>
-                        <td class="text-xs-center">{{ props.item.mota_gv != null ? props.item.mota_gv : ""  }}</td>
-                        <td class="text-xs-center">{{ props.item.ky_thuat_vien != null ? props.item.ky_thuat_vien.profile.first_name + ' ' + props.item.giang_vien.profile.last_name : ""  }}</td>
+                        <td class="text-xs-center">{{ props.item.mota_gv != null ? props.item.mota_gv : "" }}</td>
+                        <td class="text-xs-center">{{ props.item.ky_thuat_vien != null ? props.item.ky_thuat_vien.profile.first_name + ' ' + props.item.giang_vien.profile.last_name : "" }}</td>
                         <td class="text-xs-center">{{ props.item.mota_ktv != null ? props.item.mota_ktv : "" }}</td>
-
                         <td class="text-xs-center">
                             <v-btn icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
                             </v-btn>
-                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id,props.index)">
+                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id)">
                                 <v-icon color="pink">delete</v-icon>
                             </v-btn>
                         </td>
@@ -79,7 +74,6 @@
         </v-card>
     </div>
 </template>
-
 <script>
     export default {
         name: "listMayLoi",
@@ -100,10 +94,12 @@
                 {text: 'Tên Kỹ Thuật Viên', value: '', align: 'left',},
                 {text: 'Mô Tả Kỹ Thuật Viên', value: 'giang_vien.profile.first_name', align: 'left',},
 
+
                 {text: 'Chức Năng', value: '', align: 'left',},
             ],
             listMota: [],
-            url:'http://localhost:8000'
+            url:'http://luanvantn.dev.digiprojects.top'
+
         }),
         created: function () {
             let author = localStorage.getItem('author')
@@ -111,7 +107,7 @@
             this.token = auth['token']
             var _this = this;
             _this.isLoading = true;
-            let uri = 'http://luanvantn.dev.digiprojects.top/api/list-mo-ta';
+            let uri = _this.url + '/api/list-mo-ta';
             Axios.get(uri, {
                 headers: {
                     Authorization: 'Bearer' + ' ' + this.token
@@ -145,24 +141,37 @@
                         this.pagination.descending = false
                     }
                 },
-                xacnhanxoa(item,index) {
-                    var _this = this;
-                    let uri = _this.url + '/api/delete-id/';
-                    console.log(index);
-                    Axios.delete(uri + item).then((response) => {
 
-                        _this.isLoading = false;
+                // xacnhanxoa(item,index) {
+                //     var _this = this;
+                //     let uri = _this.url + '/api/delete-id/';
+                //     console.log(index);
+                //     Axios.delete(uri + item).then((response) => {
+                //
+                //         _this.isLoading = false;
+                //         if (response.status == 200) {
+                //             alert('Delete Success')
+                //             _this.listMota.splice(index, 1)
+                //         }
+                //         //this.showData = response.data.data;
+                //         //console.log(this.showData);
+                //     })
+                //     //_this.selectedGiangvien = item;
+                //     //_this.dialog = true;
+                //     console.log(item);
+                // },
+
+                xacnhanxoa(item) {
+                    let _this = this;
+                    console.log(item);
+                    Axios.delete(_this.url + '/api/delete-id/'+item).then(response =>{
                         if(response.status == 200)
                         {
-                            alert('Delete Success')
+                            alert('xóa thành công')
                             _this.listMota.splice(index,1)
                         }
-                        //this.showData = response.data.data;
-                        //console.log(this.showData);
                     })
-                     //_this.selectedGiangvien = item;
-                     //_this.dialog = true;
-                    console.log(item);
+
                 },
                 editItem(id) {
                     this.$router.push({path: `/update-PM/${id}`});

@@ -347,8 +347,9 @@
                     }
                 }).then((response) => {
 
-                    if (response.status == 200) {
+                    if (response.status == 201) {
                         _this.dialog = false
+                        alert('Báo lỗi phòng mày thành công')
                     }
                 }).catch(function (error) {
                     _this.error = error.response.data.message
