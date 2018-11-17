@@ -329,7 +329,6 @@
                 if ((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200)) {
                     _this.dialogdkMuonPhong = true;
                     _this.detailMuonPhong = itemDetail
-                    console.log('haha',itemDetail);
                 }
                 else {
                     _this.dialogdkMuonPhong = false;
@@ -354,6 +353,7 @@
                     }
                 }).then((response) => {
                     _this.dangKyMuonPhong.push(response.data.data)
+
                     _this.dialogdkMuonPhong = false
                 }).catch(function (error) {
                     _this.error = error.response.data.message

@@ -15,7 +15,7 @@
                                 <v-text-field prepend-icon="lock" name="password" label="Password"
                                               v-model="Login.password" id="password" type="password"></v-text-field>
                                 <v-card-actions>
-                                    <v-btn class="btn btn-xs btn-primary" @click="signInGoogle">G Login</v-btn>
+                                    <v-btn  class="btn btn-xs btn-primary" @click="signInGoogle">G Login</v-btn>
                                     <v-spacer></v-spacer>
                                     <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Login</v-btn>
                                 </v-card-actions>
