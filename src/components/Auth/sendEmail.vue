@@ -5,13 +5,13 @@
                 <v-flex xs12 sm8 md4>
                     <v-card class="elevation-12">
                         <v-toolbar dark color="primary">
-                            <v-toolbar-title>Login</v-toolbar-title>
+                            <v-toolbar-title>Tìm tài khoản của bạn</v-toolbar-title>
                             <v-spacer></v-spacer>
                         </v-toolbar>
                         <v-card-text>
-                            <v-form method ="POST">
-                                <v-text-field prepend-icon="lock" name="password" label="Password confirmation"
-                                              id="password" type="password"></v-text-field>
+                            <v-form v-on:submit.prevent="sendmail" method ="POST">
+                                <label>Vui lòng nhập email để tìm kiếm tài khoản.</label>
+                                <v-text-field prepend-icon="lock" label="Email" v-model="sendMail.email"></v-text-field>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Submit</v-btn>
@@ -27,16 +27,32 @@
 
 <script>
     export default {
-        name: "hahaha",
+        name: "sendEmail",
         data: () => ({
             drawer: null,
-            Login: {
-
+            sendMail: {
+                email: '',
             },
-            url: "http://localhost:8000"
+            url: "http://luanvantn.dev.digiprojects.top"
         }),
         methods:
             {
+                sendmail() {
+                    var _this = this
+                    _this.isLoading = true
+                    let uri = _this.url + '/api/password/email'
+                    var data ={
+                        email: _this.sendMail.email,
+                    }
+                    console.log(_this.sendMail.email);
+                    Axios.post(uri, data).then((response) => {
+                        //console.log(response);
+                        if(response.status == 200)
+                        {
+                            this.$router.push({name: 'EmailNotification'})
+                        }
+                    })
+                }
             },
 
         props: {

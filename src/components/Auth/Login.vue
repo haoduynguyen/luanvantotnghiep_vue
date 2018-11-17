@@ -22,7 +22,7 @@
                                 </v-card-actions>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <a v-bind:href="url"> Forgot Password??? </a>
+                                    <a v-bind:href="urlSendMail +'/send-email' "> Forgot Password??? </a>
                                 </v-card-actions>
                             </v-form>
                         </v-card-text>
@@ -42,7 +42,8 @@
                 email: '',
                 password: '',
             },
-            url: "http://luanvantn.dev.digiprojects.top"
+            url: "http://luanvantn.dev.digiprojects.top",
+            urlSendMail:"http://localhost:8080"
         }),
         mounted() {
             const _this = this
@@ -73,6 +74,10 @@
                         }
                     })
 
+                },
+                sendmail() {
+                    var _this = this
+                    this.$router.push({name: 'SendEmail'})
                 },
                 async signInGoogle() {
                     var _this = this

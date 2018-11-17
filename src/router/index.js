@@ -12,6 +12,7 @@ import ListMoTaGV from '@/components/PhongMay/ListMayLoi'
 import Login from '@/components/Auth/Login'
 import ForgotPassword from '@/components/Auth/forgotPassword'
 import SendEmail from '@/components/Auth/sendEmail'
+import EmailNotification from '@/components/Auth/emailNotification'
 import Layout from '@/Layout'
 import App from '@/App'
 import auth from '@/middleware/auth'
@@ -33,7 +34,7 @@ export default new Router({
         {
             path: '/forgot-password/:token', component: Layout, name: 'Layout', children: [
                 {
-                    path: '/',
+                    path: '/forgot-password',
                     name: 'ForgotPassword',
                     component: ForgotPassword
                 },
@@ -49,6 +50,17 @@ export default new Router({
                 },
             ]
         },
+
+        {
+            path: '/email-notification', component: Layout, name: 'Layout', children: [
+                {
+                    path: '/email-notification',
+                    name: 'EmailNotification',
+                    component: EmailNotification
+                },
+            ]
+        },
+
         {
             path: '/', component: App, name: 'App', meta: {
                 middleware: auth,
