@@ -17,7 +17,12 @@
                                 <v-card-actions>
                                     <v-btn class="btn btn-xs btn-primary" @click="signInGoogle">G Login</v-btn>
                                     <v-spacer></v-spacer>
+
                                     <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Login</v-btn>
+                                </v-card-actions>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <a v-bind:href="url"> Forgot Password??? </a>
                                 </v-card-actions>
                             </v-form>
                         </v-card-text>
@@ -41,8 +46,8 @@
         }),
         mounted() {
             const _this = this
-            setTimeout(function(){
-                if(_this.checkGoogleLoggedIn()) _this.$router.push({name: 'LichDay'})
+            setTimeout(function () {
+                if (_this.checkGoogleLoggedIn()) _this.$router.push({name: 'LichDay'})
             }, 2000)
         },
         methods:
@@ -67,7 +72,7 @@
                             alert(this.errorStatus)
                         }
                     })
-                    
+
                 },
                 async signInGoogle() {
                     var _this = this
@@ -93,7 +98,7 @@
                     // }
                 },
                 checkGoogleLoggedIn() {
-                    if (typeof gapi !== undefined){
+                    if (typeof gapi !== undefined) {
                         const _gapi = gapi ? gapi : window.gapi
                         const googleAuth = _gapi.auth2.getAuthInstance()
                         return googleAuth.isSignedIn.get()

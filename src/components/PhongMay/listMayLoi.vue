@@ -49,10 +49,10 @@
                     </tr>
                 </template>
                 <template slot="items" slot-scope="props">
-                    <tr :active="props.selected" @click="props.selected = !props.selected">
+                    <tr :active="props.item.selected" @click="props.item.selected = !props.item.selected">
                         <td>
                             <v-checkbox
-                                    :input-value="props.selected"
+                                    :input-value="props.item.selected"
                                     primary
                                     hide-details
                             ></v-checkbox>
@@ -64,12 +64,12 @@
                         <td class="text-xs-center">{{ props.item.mota_gv != null ? props.item.mota_gv : ""  }}</td>
                         <td class="text-xs-center">{{ props.item.ky_thuat_vien != null ? props.item.ky_thuat_vien.profile.first_name + ' ' + props.item.giang_vien.profile.last_name : ""  }}</td>
                         <td class="text-xs-center">{{ props.item.mota_ktv != null ? props.item.mota_ktv : "" }}</td>
-                        <td class="text-xs-center" v-if=" props.item.status == 1">{{ "Đang chờ sửa lỗi" }}</td>
+
                         <td class="text-xs-center">
                             <v-btn icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
                             </v-btn>
-                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item)">
+                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id,props.index)">
                                 <v-icon color="pink">delete</v-icon>
                             </v-btn>
                         </td>
@@ -99,10 +99,11 @@
                 {text: 'Mô Tả Giảng Viên', value: '', align: 'left',},
                 {text: 'Tên Kỹ Thuật Viên', value: '', align: 'left',},
                 {text: 'Mô Tả Kỹ Thuật Viên', value: 'giang_vien.profile.first_name', align: 'left',},
-                {text: 'Tình Trạng', value: '', align: 'left',},
+
                 {text: 'Chức Năng', value: '', align: 'left',},
             ],
             listMota: [],
+            url:'http://localhost:8000'
         }),
         created: function () {
             let author = localStorage.getItem('author')
@@ -144,13 +145,27 @@
                         this.pagination.descending = false
                     }
                 },
-                // xacnhanxoa(item) {
-                //     var _this = this;
-                //     _this.selectedGiangvien = item;
-                //     _this.dialog = true;
-                // },
+                xacnhanxoa(item,index) {
+                    var _this = this;
+                    let uri = _this.url + '/api/delete-id/';
+                    console.log(index);
+                    Axios.delete(uri + item).then((response) => {
+
+                        _this.isLoading = false;
+                        if(response.status == 200)
+                        {
+                            alert('Delete Success')
+                            _this.listMota.splice(index,1)
+                        }
+                        //this.showData = response.data.data;
+                        //console.log(this.showData);
+                    })
+                     //_this.selectedGiangvien = item;
+                     //_this.dialog = true;
+                    console.log(item);
+                },
                 editItem(id) {
-                    this.$router.push({path: `/edit-user/${id}`});
+                    this.$router.push({path: `/update-PM/${id}`});
                 },
             }
     }

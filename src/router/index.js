@@ -11,6 +11,7 @@ import importLichDay from '@/components/lichday/import'
 import ListMoTaGV from '@/components/PhongMay/ListMayLoi'
 import Login from '@/components/Auth/Login'
 import ForgotPassword from '@/components/Auth/forgotPassword'
+
 import Layout from '@/Layout'
 import App from '@/App'
 import auth from '@/middleware/auth'
@@ -38,6 +39,7 @@ export default new Router({
                 },
             ]
         },
+
         {
             path: '/', component: App, name: 'App', meta: {
                 middleware: auth,
