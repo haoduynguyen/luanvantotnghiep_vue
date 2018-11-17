@@ -63,7 +63,7 @@
                             <v-btn icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
                             </v-btn>
-                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item)">
+                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id)">
                                 <v-icon color="pink">delete</v-icon>
                             </v-btn>
                         </td>
@@ -96,6 +96,7 @@
                 {text: 'Chức Năng', value: '', align: 'left',},
             ],
             listMota: [],
+            url:'http://luanvantn.dev.digiprojects.top'
         }),
         created: function () {
             let author = localStorage.getItem('author')
@@ -103,7 +104,7 @@
             this.token = auth['token']
             var _this = this;
             _this.isLoading = true;
-            let uri = 'http://luanvantn.dev.digiprojects.top/api/list-mo-ta';
+            let uri = _this.url + '/api/list-mo-ta';
             Axios.get(uri, {
                 headers: {
                     Authorization: 'Bearer' + ' ' + this.token
@@ -137,11 +138,16 @@
                         this.pagination.descending = false
                     }
                 },
-                // xacnhanxoa(item) {
-                //     var _this = this;
-                //     _this.selectedGiangvien = item;
-                //     _this.dialog = true;
-                // },
+                xacnhanxoa(item) {
+                    let _this = this;
+                    console.log(item);
+                    Axios.delete(_this.url + '/api/delete-id/'+item).then(response =>{
+                        if(response.status == 200)
+                        {
+                            alert('xóa thành công')
+                        }
+                    })
+                },
                 editItem(id) {
                     this.$router.push({path: `/edit-user/${id}`});
                 },

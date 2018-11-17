@@ -112,6 +112,6 @@
 
 <style>
     .custom-style .v-text-field__slot {
-        height: 65px;
+        height: 65px  ;
     }
 </style>

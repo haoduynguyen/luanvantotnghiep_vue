@@ -11,6 +11,7 @@ import importLichDay from '@/components/lichday/import'
 import ListMoTaGV from '@/components/PhongMay/ListMayLoi'
 import Login from '@/components/Auth/Login'
 import ForgotPassword from '@/components/Auth/forgotPassword'
+import SendEmail from '@/components/Auth/sendEmail'
 import Layout from '@/Layout'
 import App from '@/App'
 import auth from '@/middleware/auth'
@@ -35,6 +36,15 @@ export default new Router({
                     path: '/',
                     name: 'ForgotPassword',
                     component: ForgotPassword
+                },
+            ]
+        },
+        {
+            path: '/send-email', component: Layout, name: 'Layout', children: [
+                {
+                    path: '/send-email',
+                    name: 'SendEmail',
+                    component: SendEmail
                 },
             ]
         },
