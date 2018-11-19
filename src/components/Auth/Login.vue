@@ -43,7 +43,7 @@
                 password: '',
             },
             url: "http://luanvantn.dev.digiprojects.top",
-            urlSendMail:"http://localhost:8080"
+            urlSendMail:"http://lvtn.cf"
         }),
         mounted() {
             const _this = this
@@ -86,6 +86,7 @@
                     var data = {
                         access_token: googleUser.Zi.access_token
                     }
+                    console.log(data);
                     let response = await Axios.post(_this.url + '/api/google', data)
                     if (response.status == 200) {
                         console.log('signInGoogle success', response)
@@ -93,14 +94,14 @@
                         this.$router.push({name: 'LichDay'})
                         return
                     }
-                    // alert('Server error')
-                    // if (!response.response) {
-                    //     console.log('signInGoogle fail', error.response.data.message)
-                    //     alert(error.response.data.message)
-                    // } else {
-                    //     console.log('signInGoogle fail', error.response.data.message)
-                    //     alert(error.response.data.message)
-                    // }
+                    alert('Server error')
+                    if (!response.response) {
+                        console.log('signInGoogle fail', error.response.data.message)
+                        alert(error.response.data.message)
+                    } else {
+                        console.log('signInGoogle fail', error.response.data.message)
+                        alert(error.response.data.message)
+                    }
                 },
                 checkGoogleLoggedIn() {
                     if (typeof gapi !== undefined) {

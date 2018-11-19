@@ -76,7 +76,7 @@
 </template>
 <script>
     export default {
-        name: "listMayLoi",
+        name: "listMayLoiGv",
         data: () => ({
             pagination: {
                 sortBy: 'name'
@@ -113,6 +113,7 @@
                     Authorization: 'Bearer' + ' ' + this.token
                 }
             }).then((response) => {
+                console.log(response);
                 _this.isLoading = false;
                 this.listMota = response.data.data;
             }).catch(error => {
@@ -173,7 +174,7 @@
 
                 },
                 editItem(id) {
-                    this.$router.push({path: `/update-PM-Ktv/${id}`});
+                    this.$router.push({path: `/update-PM/${id}`});
                 },
             }
     }

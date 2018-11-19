@@ -64,14 +64,17 @@
                     <div v-for="( thu, key ) in dataLich.thuList" :key="key" style="width: 14.28%;">
                         <div v-for="( ca, key ) in dataLich.caList" :key="key" class="lichtruc-content-block">
                             <div style="border: 1px solid white; height: 150px; background-color: #eeeeee">
-                                <div v-if="checkLichTruc(ca.id,thu.id)==''" class="lichtruc-detail">
-                                    <div></div>
+                                <div v-if="checkLichTruc(ca.id,thu.id)=='' || ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
+                                        thu.id).dang_ky_nghi.tuan_id == selectTuan)"
+                                     class="lichtruc-detail">
                                 </div>
                                 <div v-else class="lichtruc-detail"
                                      v-on:click="viewDetail(checkLichTruc(ca.id, thu.id))">
                                     {{ checkLichTruc(ca.id, thu.id).user.profile.first_name+ ' ' + checkLichTruc(ca.id,
                                     thu.id).user.profile.last_name }}
-                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id, thu.id).dang_ky_nghi.status == 1) ? 'hôm nay nghỉ' : '' }}</div>
+                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
+                                        thu.id).dang_ky_nghi.tuan_id == selectTuan) ? 'hôm nay nghỉ' : '' }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -103,9 +106,13 @@
                                 <td><strong>Môn học: </strong></td>
                                 <td>{{ detailContent.mon_hoc.name }}</td>
                             </tr>
-                            <tr>
+                            <tr v-if="detailContent.nhom_lop">
                                 <td><strong>Lớp: </strong></td>
                                 <td>{{ detailContent.nhom_lop.name }}</td>
+                            </tr>
+                            <tr v-else>
+                                <td><strong>Nội Dung: </strong></td>
+                                <td>Đăng Ký Mượn Phòng</td>
                             </tr>
                         </table>
                     </v-card-text>
@@ -134,14 +141,20 @@
                 selectedHocKy: 0,
                 selectedPhongMay: 0,
             },
-
+            selectTuan: 0,
             url: 'http://luanvantn.dev.digiprojects.top',
             dialog: false,
             detailContent: "",
+            token: "",
+            id: 0,
         }),
         created: function () {
             var _this = this;
             _this.isLoading = true;
+            let author = localStorage.getItem('author')
+            let Auth = JSON.parse(author);
+            _this.id = Auth['id'];
+            _this.token = Auth['token'];
             // get danh sách ca
             let uriCa = _this.url + '/api/ca';
             Axios.get(uriCa).then((response) => {
@@ -173,6 +186,18 @@
             Axios.get(uriTuan).then((response) => {
                 _this.isLoading = false;
                 this.dataLich.tuanList = response.data.data;
+                var year = new Date().getFullYear();
+                var month = (new Date().getMonth() + 1);
+                var date = new Date().getDate();
+                var currentDate = year + '-' + month + '-' + date
+                for (var tuan of _this.dataLich.tuanList) {
+                    var ngaybatdau = tuan.ngay_bat_dau;
+                    var ngayketthuc = tuan.ngay_ket_thuc;
+                    if (ngaybatdau <= currentDate && currentDate <= ngayketthuc) {
+                        _this.dataLich.selectedTuan = tuan.id;
+                        break;
+                    }
+                }
             }).catch(error => {
                 if (!error.response) {
                     // network error
@@ -194,7 +219,18 @@
                     }
                     _this.dataLich.hocKyList.push(hockyItem);
                 }
-
+                for (var hk of _this.dataLich.hocKyList) {
+                    var ngaybatdau = hk.ngaybatdau;
+                    var ngayketthuc = hk.ngayketthuc;
+                    var year = new Date().getFullYear();
+                    var month = (new Date().getMonth() + 1);
+                    var date = new Date().getDate();
+                    var currentDate = year + '-' + month + '-' + date
+                    if (ngaybatdau <= currentDate && currentDate <= ngayketthuc) {
+                        _this.dataLich.selectedHocKy = hk.id;
+                        break
+                    }
+                }
             }).catch(error => {
                 if (!error.response) {
                     this.errorStatus = 'Error: Network Error';
@@ -221,24 +257,37 @@
                 var data =
                     {
                         hk_id: _this.dataLich.selectedHocKy,
+                        hk_id: typeof _this.dataLich.selectedHocKy == "object" ? _this.dataLich.selectedHocKy.id : _this.dataLich.selectedHocKy,
                         phong_may_id: _this.dataLich.selectedPhongMay,
                         tuan_id: _this.dataLich.selectedTuan,
+                        tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                     }
-                Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id.id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' +  data.tuan_id.id
+                Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
                 ).then((response) => {
                     _this.dataLich.lichDay = response.data.data
-                    console.log(response);
+                    _this.selectTuan = data.tuan_id
+                }).catch(function (error) {
+                    _this.error = error.response.data.message
+                    _this.info = ""
+                });
+                Axios.get(_this.url + '/api/dk-muon-phong?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id, {
+                    headers: {
+                        Authorization: 'Bearer' + ' ' + _this.token
+                    }
+                }).then((response) => {
+                    for (var item of response.data.data){
+                        _this.dataLich.lichDay.push(item)
+                    }
+                    _this.selectTuan = data.tuan_id
                 }).catch(function (error) {
                     _this.error = error.response.data.message
                     _this.info = ""
                 });
             },
             viewDetail(itemLichDay) {
-                console.log('itemLichDay 1', itemLichDay);
                 var _this = this;
                 _this.dialog = true;
-                _this.detailContent = itemLichDay; // ham nay ko chay thi pai
-                console.log('itemLichDay 2', itemLichDay);
+                _this.detailContent = itemLichDay;
             },
             checkLichTruc(ca_id, thu_id) {
                 var _this = this;

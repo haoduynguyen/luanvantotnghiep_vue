@@ -66,7 +66,7 @@
                             <v-btn icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
                             </v-btn>
-                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item)">
+                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id , props.item.index)">
                                 <v-icon color="pink">delete</v-icon>
                             </v-btn>
                         </td>
@@ -131,13 +131,18 @@
                         this.pagination.descending = false
                     }
                 },
-                // xacnhanxoa(item) {
-                //     var _this = this;
-                //     _this.selectedGiangvien = item;
-                //     _this.dialog = true;
-                // },
-                editItem (id) {
-                    this.$router.push({ path: `/edit-user/${id}` });
+                xacnhanxoa(item, index) {
+                    let _this = this;
+                    Axios.delete(_this.url + '/api/user/' + item).then(response => {
+                        if (response.status == 200) {
+                            alert('xóa thành công')
+                            _this.user.splice(index, 1)
+                        }
+                    })
+
+                },
+                editItem(id) {
+                    this.$router.push({path: `/edit-user/${id}`});
                 },
             }
     }

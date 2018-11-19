@@ -1,9 +1,10 @@
 <template>
     <div id="app">
         <v-app id="inspire">
+            <span>Giảng Viên: {{showData.giang_vien.profile.first_name + ' ' + showData.giang_vien.profile.last_name}}</span>
             <v-card flat tile>
                 <v-toolbar color="cyan" dark>
-                    <v-toolbar-title>Edit giang vien</v-toolbar-title>
+                    <v-toolbar-title>Edit Kỷ Thuật Viên</v-toolbar-title>
                 </v-toolbar>
             </v-card>
             <v-form v-on:submit.prevent="update" method="post" class="custom-style">
@@ -17,9 +18,16 @@
 
                 <v-textarea
                         name="input-7-1"
-                        label="Mô Tả"
+                        label="Mô Tả Giảng Viên"
                         hint="Hint text"
                         v-model="showData.mota_gv"
+                        disabled
+                ></v-textarea>
+                <v-textarea
+                        name="input-7-1"
+                        label="Mô Tả Kỷ Thuật Viên"
+                        hint="Hint text"
+                        v-model="showData.mota_ktv"
                 ></v-textarea>
 
 
@@ -38,7 +46,7 @@
 
 <script>
     export default {
-        name: "updatePM",
+        name: "updatePhongMayKtv",
         props: {
             id: [String, Number]
         },
@@ -48,19 +56,27 @@
                 phong_may: {
                     name: ''
                 },
+                giang_vien: {
+                    profile:{
+                        first_name:'',
+                        last_name:'',
+                    },
+                },
+
                 mota_gv:'',
+                mota_ktv:'',
             },
             token:'',
-            url:'http://luanvantn.dev.digiprojects.top'
+            url:'http://luanvantn.dev.digiprojects.top/api/user'
         }),
         //viet cac ham xu ly
         methods: {
             update: function () {
                 var _this = this;
 
-                let uri = _this.url + '/api/gv-update-mo-ta/';
+                let uri = _this.url + '/api/ktv-update-mo-ta/';
                 var gvItem = {
-                    mota_gv: _this.showData.mota_gv,
+                    mota_ktv: _this.showData.mota_ktv,
                 }
                 Axios.put(uri + this.id,gvItem,{
                     headers:{
@@ -71,8 +87,8 @@
                     //this.showData = response.data.data;
                     if(response.status == 200)
                     {
-                      alert("Update Success");
-                      _this.$router.push({name: 'ListMoTaGV'})
+                        alert("Update Success");
+                        _this.$router.push({name: 'ListMayLoi'})
                     }
                     //console.log(response);
                 })
@@ -84,7 +100,6 @@
             let author = localStorage.getItem('author')
             let user = JSON.parse(author); // parse tu chuoi sang mang
             _this.token = user['token']
-            console.log('TOKEN',_this.token);
 
             _this.isLoading = true;
             let uri = _this.url + '/api/show-mo-ta-id/';
@@ -92,7 +107,6 @@
 
                 _this.isLoading = false;
                 this.showData = response.data.data;
-                console.log(this.showData);
             }).catch(error => {
                 if (!error.response) {
                     // network error

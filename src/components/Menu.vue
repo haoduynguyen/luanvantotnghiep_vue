@@ -122,6 +122,63 @@
                             </v-list-tile-content>
                         </v-list-tile>
                     </div>
+                    <div v-if="role_id==3" v-for="item in itemsAdmin">
+                        <v-layout
+                                row
+                                v-if="item.heading"
+                                align-center
+                                :key="item.heading"
+                        >
+                            <v-flex xs6>
+                                <v-subheader v-if="item.heading">
+                                    {{ item.heading }}
+                                </v-subheader>
+                            </v-flex>
+                            <v-flex xs6 class="text-xs-center">
+                                <a href="#!" class="body-2 black--text">EDIT</a>
+                            </v-flex>
+                        </v-layout>
+                        <v-list-group
+                                v-else-if="item.children"
+                                v-model="item.model"
+                                :key="item.text"
+                                :prepend-icon="item.model ? item.icon : item['icon-alt']"
+                                append-icon=""
+                        >
+                            <v-list-tile slot="activator">
+                                <v-list-tile-content>
+                                    <v-list-tile-title>
+                                        {{ item.text }}
+                                    </v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                            <v-list-tile
+                                    v-for="(child, i) in item.children"
+                                    :key="i"
+                                    @click=""
+                                    :to="{name: child.path}"
+                            >
+                                <v-list-tile-action v-if="child.icon">
+                                    <v-icon>{{ child.icon }}</v-icon>
+                                </v-list-tile-action>
+                                <v-list-tile-content>
+                                    <v-list-tile-title>
+                                        {{ child.text }}
+                                    </v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                        </v-list-group>
+                        <v-list-tile v-else @click="" :key="item.text" :to="{name: item.path}">
+                            <v-list-tile-action>
+                                <v-icon>{{ item.icon }}</v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                                <v-list-tile-title>
+                                    {{ item.text }}
+                                </v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </div>
                 </template>
             </v-list>
         </v-navigation-drawer>
@@ -195,8 +252,9 @@
             dialog: false,
             drawer: null,
             img: image,
-            id: '',
+            id: 0,
             name:'',
+            url:'http://luanvantn.dev.digiprojects.top',
             items: [
                 {
                     title: 'Change Password', path: '/change-password/', test: () => {
@@ -212,16 +270,6 @@
                 },
             ],
             itemsGV: [
-                //{icon: 'contacts', text: 'User', path: ''},
-                // {
-                //     icon: 'contacts',
-                //     'icon-alt': 'keyboard_arrow_down',
-                //     text: 'User',
-                //     model: false,
-                //     children: [
-                //         {icon: '', text: 'List', path: 'ListUser'},
-                //     ]
-                // },
                 {icon: 'List', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
                 {icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
                 {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhong'},
@@ -236,17 +284,37 @@
                 //         {icon: '', text: 'List', path: 'ListUser'},
                 //     ]
                 // },
-                {icon: '', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
+                {icon: 'list', text: 'Danh Sách Lỗi Các Phòng Máy', path: 'ListMayLoi'},
+                {icon: 'list', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
                 {icon: 'schedule', text: 'Lịch Dạy', path: 'LichDay'},
+            ],
+            itemsAdmin: [
+                {icon: 'list', text: 'Danh Sách Lỗi Các Phòng Máy', path: 'ListMayLoi'},
+                {icon: 'list', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
+                {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
+                {icon: 'schedule', text: 'Lịch Dạy', path: 'LichDay'},
+                {icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
+                // {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhong'},
             ],
             role_id: ''
         }),
         created: function () {
+            var _this = this
             let author = localStorage.getItem('author')
-            let role_id = JSON.parse(author);
-            this.role_id = role_id['role_id']
-            this.id = role_id['id']
-            this.name = role_id['profile']['first_name'] + ' ' + role_id['profile']['last_name']
+            let Auth = JSON.parse(author);
+            var token = Auth['token']
+            var uri = _this.url + '/api/get-user'
+            Axios.get(uri, {
+                headers: {
+                    Authorization: 'Bearer' + ' ' + token
+                }
+            }).then((response) => {
+                _this.isLoading = false;
+                var user = response.data.data;
+                _this.name = user.profile.first_name + ' ' + user.profile.last_name
+                _this.id = user.id
+                _this.role_id = user.role_id
+            });
         },
         methods: {
             logout() {
@@ -255,7 +323,7 @@
                 //storage.removeItem("https://accounts.google.com");
                 this.$router.push({name: 'Login'})
             },
-            async signOut() {
+            async  signOut() {
                 const googleAuth = gapi.auth2.getAuthInstance()
                 await googleAuth.signOut()
                 const googleUser = googleAuth.currentUser.get()

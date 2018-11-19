@@ -89,6 +89,7 @@
                     }
                     else {
                         alert('update success')
+                        window.location.reload()
                         _this.$router.push({name: 'LichDay'})
                         _this.error = '';
                     }

@@ -56,7 +56,6 @@ window.app = new Vue({
     components: {Layout},
     template: '<Layout/>',
     created() {
-        console.log('Vue generated')
         if (typeof gapi !== undefined) {
             const _gapi = gapi ? gapi : window.gapi
             _gapi.load('auth2', function () {

@@ -8,7 +8,10 @@ import LichDay from '@/components/lichday/index'
 import LichDayGV from '@/components/lichday/indexFromGV'
 import MuonPhong from '@/components/lichday/indexMuonPhong'
 import importLichDay from '@/components/lichday/import'
-import ListMoTaGV from '@/components/PhongMay/ListMayLoi'
+import ListMoTaGV from '@/components/PhongMay/listMayLoiGv'
+import ListMayLoi from '@/components/PhongMay/listMayLoi'
+import updatePM from '@/components/PhongMay/updatePM'
+import UpdatePhongMayKtv from '@/components/PhongMay/updatePhongMayKtv'
 import Login from '@/components/Auth/Login'
 import ForgotPassword from '@/components/Auth/forgotPassword'
 import SendEmail from '@/components/Auth/sendEmail'
@@ -16,7 +19,7 @@ import EmailNotification from '@/components/Auth/emailNotification'
 import Layout from '@/Layout'
 import App from '@/App'
 import auth from '@/middleware/auth'
-import updatePM from '@/components/PhongMay/updatePM'
+
 
 Vue.use(Router)
 
@@ -34,7 +37,7 @@ export default new Router({
         {
             path: '/forgot-password/:token', component: Layout, name: 'Layout', children: [
                 {
-                    path: '/forgot-password',
+                    path: '/forgot-password/:token',
                     name: 'ForgotPassword',
                     component: ForgotPassword
                 },
@@ -131,6 +134,14 @@ export default new Router({
                     },
                 },
                 {
+                    path: '/list-mo-ta',
+                    name: 'ListMayLoi',
+                    component: ListMayLoi,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
                     path: '/add-lichday',
                     name: 'importLichDay',
                     component: importLichDay,
@@ -144,6 +155,15 @@ export default new Router({
                     props: true,
                     name: 'updatePM',
                     component: updatePM,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/update-PM-Ktv/:id',
+                    props: true,
+                    name: 'UpdatePhongMayKtv',
+                    component: UpdatePhongMayKtv,
                     meta: {
                         middleware: auth,
                     },
