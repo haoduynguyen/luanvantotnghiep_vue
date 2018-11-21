@@ -49,6 +49,7 @@
                 </div>
                 <div class="ca-content" v-for="ca in dataLich.caList">
                     <p style="text-align: center; line-height: 150px; font-weight: bold">{{ ca.name }}</p>
+
                 </div>
 
             </div>
@@ -185,7 +186,8 @@
                 selectedMonHoc: 0,
                 statusCode: 0,
                 ca_id: 0,
-                thu_id: 0
+                thu_id: 0,
+	            thuNgayList:[],
             },
             selectTuan:0,
             url: 'http://luanvantn.dev.digiprojects.top',
@@ -262,8 +264,8 @@
                         _this.dataLich.curentTuan.push(this.dataLich.tuanList[index])
                         _this.dataLich.selectedTuan =  tuan.id
                         nextIndex = parseInt(index) + 1
-                        break;
-
+	                    //_this.getDateOfWeek(this.dataLich.tuanList[index]);
+	                    break;
                     }
 
                 }
@@ -327,17 +329,19 @@
         methods: {
             searchLichDay() {
                 var _this = this;
+
                 var data =
                     {
                         hk_id: typeof _this.dataLich.selectedHocKy == "object" ? _this.dataLich.selectedHocKy.id : _this.dataLich.selectedHocKy,
                         phong_may_id: _this.dataLich.selectedPhongMay,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                     }
-                Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
+	            var ngayHienTai = _this.dataLich.tuanList.findIndex(itemTuan => itemTuan.id == data.tuan_id)
+	            _this.getDateOfWeek(this.dataLich.tuanList[ngayHienTai]);
+	            Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
                 ).then((response) => {
                     _this.dataLich.lichDay = response.data.data
-                    console.log(_this.dataLich.lichDay);
-                    _this.dataLich.statusCode = response.status;
+	                _this.dataLich.statusCode = response.status;
                 }).catch(function (error) {
                     _this.error = error.response.data.message
                     _this.info = ""
@@ -358,10 +362,12 @@
                 var _this = this;
                 _this.dataLich.ca_id = ca_id;
                 _this.dataLich.thu_id = thu_id;
-                if ((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200)) {
+	            var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == thu_id)
+                _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
+
+	            if ((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200)) {
                     _this.dialogdkMuonPhong = true;
                     _this.detailMuonPhong = itemDetail
-                    console.log(_this.detailMuonPhong);
                 }
                 else {
                     _this.dialogdkMuonPhong = false;
@@ -375,12 +381,12 @@
                         mon_hoc_id: _this.dataLich.selectedMonHoc.id,
                         hk_id: typeof _this.dataLich.selectedHocKy == "object" ? _this.dataLich.selectedHocKy.id : _this.dataLich.selectedHocKy,
                         phong_may_id: _this.dataLich.selectedPhongMay.id,
-                        tuan_id: _this.dataLich.selectedTuan.id,
                         ca_id: _this.dataLich.ca_id,
                         thu_id: _this.dataLich.thu_id,
+                        ngay_muon:_this.dataLich.ngay,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                     }
-                Axios.post(uri, data, {
+	            Axios.post(uri, data, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + this.token
                     }
@@ -397,14 +403,12 @@
                 var _this = this;
                 _this.dialog = true;
                 _this.detailContent = itemLichDay;
-                console.log(_this.detailContent);
             },
             checkLichTruc(ca_id, thu_id) {
                 var _this = this;
                 var dem = 0;
                 var result = '';
                 var lich_bu_thay_the = _this.muonPhong(ca_id, thu_id);
-                //console.log('aaaa',lich_bu_thay_the);
                 if (lich_bu_thay_the) {
                     result = lich_bu_thay_the;
                 }
@@ -434,6 +438,18 @@
                 }
                 return resultMonHoc;
             },
+	        getDateOfWeek(curentTuan) {
+		        var _this = this;
+		        var dateOfWeek = new Date(curentTuan.ngay_bat_dau);
+		        var thuNgayItem = { id: 2, tenthu: _this.dataLich.thuList[0].name, ngay:  curentTuan.ngay_bat_dau};
+		        _this.dataLich.thuNgayList.push(thuNgayItem);
+		        for(var i = 1; i <= 6; i++) {
+			        dateOfWeek.setDate(dateOfWeek.getDate() + 1);
+			        var dateText =  dateOfWeek.getFullYear() + '-' + ('0' + (dateOfWeek.getMonth()+1)).slice(-2) + '-' + ('0' + dateOfWeek.getDate()).slice(-2);
+			        thuNgayItem = { id: 2 + i, tenthu: _this.dataLich.thuList[0 + i].name, ngay:  dateText};
+			        _this.dataLich.thuNgayList.push(thuNgayItem);
+		        }
+	        },
         },
     }
 </script>

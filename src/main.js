@@ -59,8 +59,7 @@ window.app = new Vue({
         if (typeof gapi !== undefined) {
             const _gapi = gapi ? gapi : window.gapi
             _gapi.load('auth2', function () {
-                _gapi.auth2.init({client_id: '931597282160-1eg67i8jc4v916ajq2n8v88om23t9r3u.apps.googleusercontent.com'})
-                console.log('Auth2 ready in main', gapi)
+                _gapi.auth2.init({client_id: '931597282160-2cfo16vmp2cf8krfa3qkttqpf8pnrvk6.apps.googleusercontent.com'})
             });
         }
     },

@@ -273,6 +273,7 @@
                 {icon: 'List', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
                 {icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
                 {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhong'},
+	            {icon: 'list', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
             ],
             itemsKTV: [
                 // {
@@ -293,8 +294,8 @@
                 {icon: 'list', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
                 {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
                 {icon: 'schedule', text: 'Lịch Dạy', path: 'LichDay'},
-                {icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
-                // {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhong'},
+                //{icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
+                {icon: 'list', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
             ],
             role_id: ''
         }),

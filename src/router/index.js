@@ -19,7 +19,7 @@ import EmailNotification from '@/components/Auth/emailNotification'
 import Layout from '@/Layout'
 import App from '@/App'
 import auth from '@/middleware/auth'
-
+import ListMuonPhong from '@/components/MuonPhong/listMuonPhong'
 
 Vue.use(Router)
 
@@ -164,6 +164,15 @@ export default new Router({
                     props: true,
                     name: 'UpdatePhongMayKtv',
                     component: UpdatePhongMayKtv,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/list-muon-phong',
+                    props: true,
+                    name: 'ListMuonPhong',
+                    component: ListMuonPhong,
                     meta: {
                         middleware: auth,
                     },

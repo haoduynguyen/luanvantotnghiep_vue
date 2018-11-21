@@ -15,7 +15,7 @@
                                 <v-text-field prepend-icon="lock" name="password" label="Password"
                                               v-model="Login.password" id="password" type="password"></v-text-field>
                                 <v-card-actions>
-                                    <v-btn  class="btn btn-xs btn-primary" @click="signInGoogle">G Login</v-btn>
+                                    <v-btn class="btn btn-xs btn-primary" @click="signInGoogle">G Login</v-btn>
                                     <v-spacer></v-spacer>
 
                                     <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Login</v-btn>
@@ -43,12 +43,13 @@
                 password: '',
             },
             url: "http://luanvantn.dev.digiprojects.top",
-            urlSendMail:"http://lvtn.cf"
+            urlSendMail: "http://lvtn.cf"
         }),
         mounted() {
             const _this = this
             setTimeout(function () {
-                if (_this.checkGoogleLoggedIn()) _this.$router.push({name: 'LichDay'})
+                if (_this.checkGoogleLoggedIn())
+                    _this.$router.push({name: 'LichDay'})
             }, 2000)
         },
         methods:
@@ -86,22 +87,38 @@
                     var data = {
                         access_token: googleUser.Zi.access_token
                     }
-                    console.log(data);
-                    let response = await Axios.post(_this.url + '/api/google', data)
-                    if (response.status == 200) {
-                        console.log('signInGoogle success', response)
-                        localStorage.setItem('author', JSON.stringify(response.data.data))
-                        this.$router.push({name: 'LichDay'})
-                        return
-                    }
-                    alert('Server error')
-                    if (!response.response) {
-                        console.log('signInGoogle fail', error.response.data.message)
+
+                    try {
+                        var response = await Axios.post(_this.url + '/api/google', data)
+                        console.log('true', response);
+                        if (response.status == 200) {
+                            localStorage.setItem('author', JSON.stringify(response.data.data))
+                            this.$router.push({name: 'LichDay'})
+                            return
+                        }
+                    } catch (error) {
                         alert(error.response.data.message)
-                    } else {
-                        console.log('signInGoogle fail', error.response.data.message)
-                        alert(error.response.data.message)
+                        googleAuth.signOut()
                     }
+                    // Axios.post(_this.url + '/api/google', data).then((response)=>{
+                    //     if (response.status == 200) {
+                    //         console.log('signInGoogle success', response)
+                    //         localStorage.setItem('author', JSON.stringify(response.data.data))
+                    //         this.$router.push({name: 'LichDay'})
+                    //         return
+                    //     }
+                    // }).catch(error => {
+                    //     if (!error.response) {
+                    //         // network error
+                    //         this.errorStatus = 'Error: Network Error'
+                    //         console.log(error.response.data.message)
+                    //     } else {
+                    //         this.errorStatus = error.response.data.message
+                    //         googleAuth.signOut()
+                    //         alert(this.errorStatus)
+                    //     }
+                    // })
+
                 },
                 checkGoogleLoggedIn() {
                     if (typeof gapi !== undefined) {
