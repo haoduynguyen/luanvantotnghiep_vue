@@ -67,7 +67,7 @@
                 mota_ktv:'',
             },
             token:'',
-            url:'http://luanvantn.dev.digiprojects.top/api/user'
+            url:'http://luanvantn.dev.digiprojects.top'
         }),
         //viet cac ham xu ly
         methods: {

@@ -74,6 +74,18 @@
                 </template>
             </v-data-table>
         </v-card>
+	    <v-layout row justify-center>
+		    <v-dialog v-model="dialog" max-width="500px">
+			    <v-card>
+				    <v-card-title>
+					    <span class="headline">Lịch chi tiết</span>
+				    </v-card-title>
+				    <v-card-text>Bạn có muốn xóa
+				    </v-card-text>
+
+			    </v-card>
+		    </v-dialog>
+	    </v-layout>
     </div>
 </template>
 
@@ -97,6 +109,7 @@
                 {text: 'action', value: '', align: 'left',},
             ],
             user: [],
+	        dialog: false
         }),
         created: function () {
             var _this = this;
@@ -133,6 +146,7 @@
                 },
                 xacnhanxoa(item, index) {
                     let _this = this;
+                    _this.dialog = false;
                     Axios.delete(_this.url + '/api/user/' + item).then(response => {
                         if (response.status == 200) {
                             alert('xóa thành công')
@@ -141,6 +155,9 @@
                     })
 
                 },
+	            notification(){
+		            _this.dialog = true;
+	            },
                 editItem(id) {
                     this.$router.push({path: `/edit-user/${id}`});
                 },
