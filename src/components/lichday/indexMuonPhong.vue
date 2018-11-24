@@ -119,7 +119,7 @@
             </v-dialog>
         </v-layout>
         <v-layout row justify-center>
-            <v-dialog v-model="dialogdkMuonPhong"  max-width="500px">
+            <v-dialog v-model="dialogdkMuonPhong" max-width="500px">
                 <v-card>
                     <v-card-title>
                         <span class="headline">Đăng Ký Mượn Phòng</span>
@@ -187,14 +187,14 @@
                 statusCode: 0,
                 ca_id: 0,
                 thu_id: 0,
-	            thuNgayList:[],
+                thuNgayList: [],
             },
-            selectTuan:0,
+            selectTuan: 0,
             url: 'http://luanvantn.dev.digiprojects.top',
             dialog: false,
             dialogdkMuonPhong: false,
             detailContent: "",
-            dangKyMuonPhong: "",
+            dangKyMuonPhong: [],
             detailMuonPhong: "",
             token: "",
         }),
@@ -234,7 +234,7 @@
             let uriMonHoc = _this.url + '/api/mon-hoc';
             Axios.get(uriMonHoc, {
                 headers: {
-                    Authorization: 'Bearer' + ' ' + this.token
+                    Authorization: 'Bearer' + ' ' + _this.token
                 }
             }).then((response) => {
                 _this.isLoading = false;
@@ -262,10 +262,10 @@
                     var ngayketthuc = tuan.ngay_ket_thuc;
                     if (ngaybatdau <= currentDate && currentDate <= ngayketthuc) {
                         _this.dataLich.curentTuan.push(this.dataLich.tuanList[index])
-                        _this.dataLich.selectedTuan =  tuan.id
+                        _this.dataLich.selectedTuan = tuan.id
                         nextIndex = parseInt(index) + 1
-	                    //_this.getDateOfWeek(this.dataLich.tuanList[index]);
-	                    break;
+                        //_this.getDateOfWeek(this.dataLich.tuanList[index]);
+                        break;
                     }
 
                 }
@@ -336,40 +336,45 @@
                         phong_may_id: _this.dataLich.selectedPhongMay,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                     }
-	            var ngayHienTai = _this.dataLich.tuanList.findIndex(itemTuan => itemTuan.id == data.tuan_id)
-	            _this.getDateOfWeek(this.dataLich.tuanList[ngayHienTai]);
-	            Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
+                var ngayHienTai = _this.dataLich.tuanList.findIndex(itemTuan => itemTuan.id == data.tuan_id)
+                _this.getDateOfWeek(this.dataLich.tuanList[ngayHienTai]);
+                Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
                 ).then((response) => {
                     _this.dataLich.lichDay = response.data.data
-	                _this.dataLich.statusCode = response.status;
+                    _this.dataLich.statusCode = response.status;
                 }).catch(function (error) {
                     _this.error = error.response.data.message
                     _this.info = ""
                 });
                 Axios.get(_this.url + '/api/dk-muon-phong?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id, {
                     headers: {
-                        Authorization: 'Bearer' + ' ' + this.token
+                        Authorization: 'Bearer' + ' ' + _this.token
                     }
                 }).then((response) => {
-                    _this.dangKyMuonPhong = response.data.data
-                    _this.selectTuan =  data.tuan_id
+                    console.log(response.data.data.length > 0);
+                    if (response.data.data.length > 0) {
+                        for (let item of response.data.data)
+                        {
+                            _this.dataLich.lichDay.push(item);
+                        }
+                    }
+                    _this.selectTuan = data.tuan_id
                 }).catch(function (error) {
                     _this.error = error.response.data.message
                     _this.info = ""
                 });
             },
-            viewMuonPhong(ca_id, thu_id,itemDetail) {
+            viewMuonPhong(ca_id, thu_id, itemDetail) {
                 var _this = this;
                 _this.dataLich.ca_id = ca_id;
                 _this.dataLich.thu_id = thu_id;
-	            var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == thu_id)
+                var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == thu_id)
                 _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
 
-	            if ((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200)) {
+                if ((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200)) {
                     _this.dialogdkMuonPhong = true;
                     _this.detailMuonPhong = itemDetail
-                }
-                else {
+                } else {
                     _this.dialogdkMuonPhong = false;
                 }
             },
@@ -383,16 +388,16 @@
                         phong_may_id: _this.dataLich.selectedPhongMay.id,
                         ca_id: _this.dataLich.ca_id,
                         thu_id: _this.dataLich.thu_id,
-                        ngay_muon:_this.dataLich.ngay,
+                        ngay_muon: _this.dataLich.ngay,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                     }
-	            Axios.post(uri, data, {
+                console.log(data);
+                Axios.post(uri, data, {
                     headers: {
-                        Authorization: 'Bearer' + ' ' + this.token
+                        Authorization: 'Bearer' + ' ' + _this.token
                     }
                 }).then((response) => {
                     _this.dangKyMuonPhong.push(response.data.data)
-
                     _this.dialogdkMuonPhong = false
                 }).catch(function (error) {
                     _this.error = error.response.data.message
@@ -411,8 +416,7 @@
                 var lich_bu_thay_the = _this.muonPhong(ca_id, thu_id);
                 if (lich_bu_thay_the) {
                     result = lich_bu_thay_the;
-                }
-                else {
+                } else {
                     for (var item of _this.dataLich.lichDay) {
                         if (item.ca_id == ca_id && item.thu_id == thu_id) {
                             dem++;
@@ -438,18 +442,18 @@
                 }
                 return resultMonHoc;
             },
-	        getDateOfWeek(curentTuan) {
-		        var _this = this;
-		        var dateOfWeek = new Date(curentTuan.ngay_bat_dau);
-		        var thuNgayItem = { id: 2, tenthu: _this.dataLich.thuList[0].name, ngay:  curentTuan.ngay_bat_dau};
-		        _this.dataLich.thuNgayList.push(thuNgayItem);
-		        for(var i = 1; i <= 6; i++) {
-			        dateOfWeek.setDate(dateOfWeek.getDate() + 1);
-			        var dateText =  dateOfWeek.getFullYear() + '-' + ('0' + (dateOfWeek.getMonth()+1)).slice(-2) + '-' + ('0' + dateOfWeek.getDate()).slice(-2);
-			        thuNgayItem = { id: 2 + i, tenthu: _this.dataLich.thuList[0 + i].name, ngay:  dateText};
-			        _this.dataLich.thuNgayList.push(thuNgayItem);
-		        }
-	        },
+            getDateOfWeek(curentTuan) {
+                var _this = this;
+                var dateOfWeek = new Date(curentTuan.ngay_bat_dau);
+                var thuNgayItem = {id: 2, tenthu: _this.dataLich.thuList[0].name, ngay: curentTuan.ngay_bat_dau};
+                _this.dataLich.thuNgayList.push(thuNgayItem);
+                for (var i = 1; i <= 6; i++) {
+                    dateOfWeek.setDate(dateOfWeek.getDate() + 1);
+                    var dateText = dateOfWeek.getFullYear() + '-' + ('0' + (dateOfWeek.getMonth() + 1)).slice(-2) + '-' + ('0' + dateOfWeek.getDate()).slice(-2);
+                    thuNgayItem = {id: 2 + i, tenthu: _this.dataLich.thuList[0 + i].name, ngay: dateText};
+                    _this.dataLich.thuNgayList.push(thuNgayItem);
+                }
+            },
         },
     }
 </script>
