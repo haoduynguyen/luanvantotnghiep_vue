@@ -190,7 +190,7 @@
 	            thuNgayList:[],
             },
             selectTuan:0,
-            url: 'http://luanvantn.dev.digiprojects.top',
+            url: 'http://localhost:8000',
             dialog: false,
             dialogdkMuonPhong: false,
             detailContent: "",
@@ -346,17 +346,17 @@
                     _this.error = error.response.data.message
                     _this.info = ""
                 });
-                Axios.get(_this.url + '/api/dk-muon-phong?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id, {
-                    headers: {
-                        Authorization: 'Bearer' + ' ' + this.token
-                    }
-                }).then((response) => {
-                    _this.dangKyMuonPhong = response.data.data
-                    _this.selectTuan =  data.tuan_id
-                }).catch(function (error) {
-                    _this.error = error.response.data.message
-                    _this.info = ""
-                });
+                // Axios.get(_this.url + '/api/dk-muon-phong?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id, {
+                //     headers: {
+                //         Authorization: 'Bearer' + ' ' + this.token
+                //     }
+                // }).then((response) => {
+                //     _this.dangKyMuonPhong = response.data.data
+                //     _this.selectTuan =  data.tuan_id
+                // }).catch(function (error) {
+                //     _this.error = error.response.data.message
+                //     _this.info = ""
+                // });
             },
             viewMuonPhong(ca_id, thu_id,itemDetail) {
                 var _this = this;

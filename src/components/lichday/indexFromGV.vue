@@ -109,9 +109,9 @@
                                 <td><strong>Lớp: </strong></td>
                                 <td>{{ detailContent.nhom_lop.name }}</td>
                             </tr>
-                            <tr v-else>
-                                <td><strong>Nội Dung: </strong></td>
-                                <td>Đăng Ký Mượn Phòng</td>
+                            <tr>
+                                <!--<td><strong>Nội Dung: </strong></td>-->
+                                <!--<td>Đăng Ký Mượn Phòng</td>-->
                             </tr>
                         </table>
                         <v-textarea
@@ -328,7 +328,7 @@
                 }).then((response) => {
 
                     if (response.status == 200) {
-                        alert('thong bao nghi thanh cong')
+                        alert('Đăng ký nghỉ thành công!')
                         _this.notification = 'hôm nay nghỉ'
                         for (let item of response.data.data) {
                             var indexLichday = _this.dataLich.lichDay.findIndex(itemLichday => itemLichday.id == item.lich_day_id)
@@ -392,7 +392,7 @@
 
                     if (response.status == 201) {
                         _this.dialog = false
-                        alert('Báo lỗi phòng mày thành công')
+                        alert('Báo lỗi phòng máy thành công!')
                     }
                 }).catch(function (error) {
                     _this.error = error.response.data.message
