@@ -48,21 +48,22 @@
                     </tr>
                 </template>
                 <template slot="items" slot-scope="props">
-                    <tr :active="props.selected" @click="props.selected = !props.selected">
+                    <tr :active="props.selected" @click="props.item.selected = !props.item.selected">
                         <td>
                             <v-checkbox
-                                    :input-value="props.selected"
+                                    :input-value="props.item.selected"
                                     primary
                                     hide-details
                             ></v-checkbox>
                         </td>
-                        <td class="text-xs-center">{{ props.item.user_id }}
+                        <td class="text-xs-center">{{ props.item.user.profile.first_name + " " + props.item.user.profile.last_name  }}
                         </td>
-                        <td class="text-xs-center">{{ props.item.phong_may_id }}</td>
-                        <td class="text-xs-center">{{ props.item.mon_hoc_id }}</td>
-                        <td class="text-xs-center">{{ props.item.ca_id }}</td>
-                        <td class="text-xs-center">{{ props.item.thu_id }}</td>
-                        <td class="text-xs-center">{{ props.item.hk_id }}</td>
+                        <td class="text-xs-center">{{ props.item.phong_may.name}}</td>
+                        <td class="text-xs-center">{{ props.item.mon_hoc.name }}</td>
+                        <td class="text-xs-center">{{ props.item.ca.name }}</td>
+                        <td class="text-xs-center">{{ props.item.thu.name }}</td>
+                        <td class="text-xs-center">{{ props.item.hoc_ky.name }}</td>
+                        <td class="text-xs-center">{{ props.item.ngay_muon }}</td>
                         <td class="text-xs-center">
                             <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id , props.item.index)">
                                 <v-icon color="pink">delete</v-icon>
@@ -91,16 +92,20 @@
                 {text: 'Ca Học', value: '', align: 'left',},
                 {text: 'Thứ', value: '', align: 'left',},
                 {text: 'Học Kỳ', value: '', align: 'left',},
+                {text: 'Ngày Mượn Phòng', value: '', align: 'left',},
                 {text: 'Action', value: '', align: 'left',},
+
             ],
             muonPhong: [],
-            url:'http://luanvantn.dev.digiprojects.top'
+            url:'http://localhost:8000',
+            token:''
         }),
         created: function () {
             var _this = this;
 	        let author = localStorage.getItem('author')
 	        let Auth = JSON.parse(author);
 	        var token = Auth['token']
+            _this.token = token;
             _this.isLoading = true;
             let uri = _this.url + '/api/get-ds-muon-phong';
             Axios.get(uri,{
@@ -138,10 +143,15 @@
                 },
                 xacnhanxoa(item, index) {
                     let _this = this;
-                    Axios.delete(_this.url + '/api/user/' + item).then(response => {
+
+                    Axios.delete(_this.url + '/api/dk-muon-phong/' + item,{
+                        headers: {
+                            Authorization: 'Bearer' + ' ' + _this.token
+                        }
+                    }).then(response => {
                         if (response.status == 200) {
                             alert('xóa thành công')
-                            _this.user.splice(index, 1)
+                            _this.muonPhong.splice(index, 1)
                         }
                     })
 
