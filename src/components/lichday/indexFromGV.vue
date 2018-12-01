@@ -157,7 +157,7 @@
                 lich_day_id: 0,
                 tuan_id: "",
             },
-            selectTuan:0,
+            selectTuan: 0,
             notification: '',
             statusNghi: 0,
             url: 'http://localhost:8000',
@@ -315,6 +315,7 @@
             dangKyNghi() {
                 var _this = this;
                 var uri = _this.url + '/api/dang-ky-nghi'
+
                 var data =
                     {
                         lich_day_id: _this.selectedNghi,  //_this.dataDangKyNghi.lich_day_id,
@@ -334,6 +335,7 @@
                         for (let item of response.data.data) {
                             var indexLichday = _this.dataLich.lichDay.findIndex(itemLichday => itemLichday.id == item.lich_day_id)
                             _this.dataLich.lichDay[indexLichday].dang_ky_nghi = {tuan_id: _this.selectTuan}
+
                         }
                         _this.dialog = false
                         //Bat theo front-end
@@ -364,7 +366,7 @@
                 var result = '';
                 var status = 0;
                 for (var item of _this.dataLich.lichDay) {
-                    if (item.ca_id == ca_id && item.thu_id == thu_id ) {
+                    if (item.ca_id == ca_id && item.thu_id == thu_id) {
                         dem++;
                         if (dem == 1) {
                             result = item;

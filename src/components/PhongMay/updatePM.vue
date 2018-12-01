@@ -3,7 +3,7 @@
         <v-app id="inspire">
             <v-card flat tile>
                 <v-toolbar color="cyan" dark>
-                    <v-toolbar-title>Edit giang vien</v-toolbar-title>
+                    <v-toolbar-title>EDIT Giảng Viên </v-toolbar-title>
                 </v-toolbar>
             </v-card>
             <v-form v-on:submit.prevent="update" method="post" class="custom-style">
@@ -27,7 +27,7 @@
                 <!--:label="`Gender: ${switch1.toString() == 'true' ? 'male' : 'female'}`"-->
                 <!--&gt;</v-switch>-->
                 <v-card-actions>
-                    <v-btn v-bind:to="{name: 'ListMayLoi'}">Back</v-btn>
+                    <v-btn v-bind:to="{name: 'ListMayLoi'}"><v-icon dark left>arrow_back</v-icon>Back</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Save</v-btn>
                 </v-card-actions>
@@ -58,7 +58,7 @@
             update: function () {
                 var _this = this;
 
-                let uri = _this.url + '/api/gv-update-mo-ta/';
+                let uri = _this.url + '/api/update-mo-ta/';
                 var gvItem = {
                     mota_gv: _this.showData.mota_gv,
                 }
