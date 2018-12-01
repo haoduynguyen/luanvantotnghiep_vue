@@ -151,8 +151,7 @@
                 selectedTuan: 0,
                 selectedHocKy: 0,
                 selectedPhongMay: 0,
-
-
+                thuNgayList:[]
             },
             dataDangKyNghi: {
                 lich_day_id: 0,
@@ -205,6 +204,7 @@
                 var year = new Date().getFullYear();
                 var month = (new Date().getMonth() + 1);
                 var date = new Date().getDate();
+                var date = (date.toString().length < 2) ? "0" + date : date;
                 var currentDate = year + '-' + month + '-' + date
                 for (var tuan of _this.dataLich.tuanList) {
                     var ngaybatdau = tuan.ngay_bat_dau;
@@ -240,7 +240,8 @@
                     var ngayketthuc = hk.ngayketthuc;
                     var year = new Date().getFullYear();
                     var month = (new Date().getMonth() + 1);
-                    var date = new Date().getDate();
+                    var date = new Date().getDate() ;
+                    var date = date.toString().length < 2 ? "0" + date : date;
                     var currentDate = year + '-' + month + '-' + date
                     if (ngaybatdau <= currentDate && currentDate <= ngayketthuc) {
                         _this.dataLich.selectedHocKy = hk.id;
@@ -280,6 +281,9 @@
                         phong_may_id: _this.dataLich.selectedPhongMay,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                     }
+                var ngayHienTai = _this.dataLich.tuanList.findIndex(itemTuan => itemTuan.id == data.tuan_id)
+                _this.getDateOfWeek(this.dataLich.tuanList[ngayHienTai]);
+                console.log(this.dataLich.tuanList[ngayHienTai],'aaaa');
                 Axios.get(_this.url + '/api/get-lich-gv?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
                     , {
                         headers: {
@@ -287,7 +291,6 @@
                         }
                     }).then((response) => {
                     _this.dataLich.lichDay = response.data.data;
-
                     _this.selectTuan =  data.tuan_id
                 }).catch(function (error) {
                     _this.error = error.response.data.message
@@ -299,12 +302,10 @@
                             Authorization: 'Bearer' + ' ' + this.token
                         }
                     }).then((response) => {
-                    console.log('before',_this.dataLich.lichDay);
                     for (let item of response.data.data)
                     {
                         _this.dataLich.lichDay.push(item);
                     }
-                    console.log('after',_this.dataLich.lichDay);
                     _this.selectTuan =  data.tuan_id
                 }).catch(function (error) {
                     _this.error = error.response.data.message
@@ -317,10 +318,10 @@
                 var data =
                     {
                         lich_day_id: _this.selectedNghi,  //_this.dataDangKyNghi.lich_day_id,
-                        tuan_id: _this.dataLich.selectedTuan.id,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
+                        ngay_nghi: _this.dataLich.ngay,
                     }
-
+                console.log(data);
                 Axios.post(uri, data, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + this.token
@@ -354,6 +355,8 @@
                 _this.dialog = true;
                 _this.selectedNghi = itemLichDay.id
                 _this.detailContent = itemLichDay;// ham nay ko chay thi pai
+                var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == itemLichDay.thu_id)
+                _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
             },
             checkLichTruc(ca_id, thu_id) {
                 var _this = this;
@@ -398,6 +401,19 @@
                     _this.error = error.response.data.message
                     _this.info = ""
                 });
+            },
+            getDateOfWeek(curentTuan) {
+                var _this = this;
+                var dateOfWeek = new Date(curentTuan.ngay_bat_dau);
+                var thuNgayItem = {id: 2, tenthu: _this.dataLich.thuList[0].name, ngay: curentTuan.ngay_bat_dau};
+                _this.dataLich.thuNgayList.push(thuNgayItem);
+                for (var i = 1; i <= 6; i++) {
+                    dateOfWeek.setDate(dateOfWeek.getDate() + 1);
+                    var dateText = dateOfWeek.getFullYear() + '-' + ('0' + (dateOfWeek.getMonth() + 1)).slice(-2) + '-' + ('0' + dateOfWeek.getDate()).slice(-2);
+                    thuNgayItem = {id: 2 + i, tenthu: _this.dataLich.thuList[0 + i].name, ngay: dateText};
+                    _this.dataLich.thuNgayList.push(thuNgayItem);
+                    console.log(_this.dataLich.thuNgayList,'current day');
+                }
             },
         },
     }

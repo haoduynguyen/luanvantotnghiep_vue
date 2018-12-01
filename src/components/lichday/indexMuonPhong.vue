@@ -253,7 +253,8 @@
                 this.dataLich.tuanList = response.data.data;
                 var year = new Date().getFullYear();
                 var month = (new Date().getMonth() + 1);
-                var date = new Date().getDate();
+                var date = new Date().getDate() ;
+                var date = date.toString().length < 2 ? "0" + date : date;
                 var currentDate = year + '-' + month + '-' + date
                 var nextIndex = 0;
                 for (var index in _this.dataLich.tuanList) {
@@ -338,6 +339,7 @@
                     }
                 var ngayHienTai = _this.dataLich.tuanList.findIndex(itemTuan => itemTuan.id == data.tuan_id)
                 _this.getDateOfWeek(this.dataLich.tuanList[ngayHienTai]);
+                console.log(this.dataLich.tuanList[ngayHienTai]);
                 Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
                 ).then((response) => {
                     _this.dataLich.lichDay = response.data.data
@@ -370,6 +372,7 @@
                 _this.dataLich.thu_id = thu_id;
                 var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == thu_id)
                 _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
+                console.log(_this.dataLich.thuNgayList[ngayHienTai]);
 
                 if ((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200)) {
                     _this.dialogdkMuonPhong = true;

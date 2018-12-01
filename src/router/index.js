@@ -13,6 +13,7 @@ import ListMayLoi from '@/components/PhongMay/listMayLoi'
 import updatePM from '@/components/PhongMay/updatePM'
 import UpdatePhongMayKtv from '@/components/PhongMay/updatePhongMayKtv'
 import Login from '@/components/Auth/Login'
+import TestLoginFB from '@/components/Auth/testLoginFB'
 import ForgotPassword from '@/components/Auth/forgotPassword'
 import SendEmail from '@/components/Auth/sendEmail'
 import EmailNotification from '@/components/Auth/emailNotification'
@@ -60,6 +61,15 @@ export default new Router({
                     path: '/email-notification',
                     name: 'EmailNotification',
                     component: EmailNotification
+                },
+            ]
+        },
+        {
+            path: '/login-fb', component: Layout, name: 'Layout', children: [
+                {
+                    path: '/login-fb',
+                    name: 'TestLoginFB',
+                    component: TestLoginFB
                 },
             ]
         },
