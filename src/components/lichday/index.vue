@@ -188,12 +188,13 @@
                 this.dataLich.tuanList = response.data.data;
                 var year = new Date().getFullYear();
                 var month = (new Date().getMonth() + 1);
-                var date = new Date().getDate();
+                var date = new Date().getDate() ;
+                var date = date.toString().length < 2 ? "0" + date : date;
                 var currentDate = year + '-' + month + '-' + date
                 for (var tuan of _this.dataLich.tuanList) {
                     var ngaybatdau = tuan.ngay_bat_dau;
                     var ngayketthuc = tuan.ngay_ket_thuc;
-                    if (ngaybatdau <= currentDate && currentDate <= ngayketthuc) {
+                    if (ngaybatdau <= currentDate && ngayketthuc >= currentDate) {
                         _this.dataLich.selectedTuan = tuan.id;
                         break;
                     }

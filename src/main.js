@@ -5,10 +5,10 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
 import Layout from './Layout'
-
+import FBSignInButton from 'vue-facebook-signin-button'
+Vue.use(FBSignInButton)
 window.VueAxios = require('vue-axios').default;
 window.Axios = require('axios').default;
-
 Vue.config.productionTip = false
 Vue.prototype.$http = Axios.bind(window);
 /* eslint-disable no-new */
@@ -50,6 +50,22 @@ router.beforeEach(async (to, from, next) => {
 
     next()
 });
+window.fbAsyncInit = function() {
+    FB.init({
+        appId      : '348232345938588',
+        xfbml      : true,
+        version    : 'v3.2'
+    });
+    FB.AppEvents.logPageView();
+};
+
+(function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
 window.app = new Vue({
     el: '#app',
     router,
@@ -59,7 +75,7 @@ window.app = new Vue({
         if (typeof gapi !== undefined) {
             const _gapi = gapi ? gapi : window.gapi
             _gapi.load('auth2', function () {
-                _gapi.auth2.init({client_id: '931597282160-1eg67i8jc4v916ajq2n8v88om23t9r3u.apps.googleusercontent.com'})
+                _gapi.auth2.init({client_id: '931597282160-2cfo16vmp2cf8krfa3qkttqpf8pnrvk6.apps.googleusercontent.com'})
             });
         }
     },

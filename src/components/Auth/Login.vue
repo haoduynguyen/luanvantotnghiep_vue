@@ -17,10 +17,16 @@
                                 <v-card-actions>
                                     <v-btn class="btn btn-xs btn-primary" @click="signInGoogle">G Login</v-btn>
                                     <v-spacer></v-spacer>
-
                                     <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Login</v-btn>
                                 </v-card-actions>
                                 <v-card-actions>
+                                    <fb-signin-button
+                                            :params="fbSignInParams"
+                                            @success="onSignInSuccess"
+                                            @onlogin="checkLoginState" style="cursor: pointer; background-color: #4CAF50;border: none;color: white;padding: 15px 32px;text-align: center;
+                                                                              text-decoration: none;display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;">
+                                        Sign in with Facebook
+                                    </fb-signin-button>
                                     <v-spacer></v-spacer>
                                     <a v-bind:href="urlSendMail +'/send-email' "> Forgot Password??? </a>
                                 </v-card-actions>
@@ -41,6 +47,10 @@
             Login: {
                 email: '',
                 password: '',
+            },
+            fbSignInParams: {
+                scope: 'email',
+                return_scopes: true
             },
             url: "http://luanvantn.dev.digiprojects.top",
             urlSendMail: "http://lvtn.cf"
@@ -127,8 +137,36 @@
                         return googleAuth.isSignedIn.get()
                     }
 
+                },
+                onSignInSuccess(response) {
+                    var _this = this
+                    _this.isLoading = true
+                    console.log('login', response.authResponse.accessToken);
+                    var data = {
+                        access_token: response.authResponse.accessToken
+                    }
+                    Axios.post(_this.url + '/api/facebook', data).then((response) => {
+                        console.log(response);
+                    })
+                },
+                logoutFB() {
+                    console.log('aaa');
+                    FB.logout(function (response) {
+                        console.log('logout', response);
+                    });
+                },
+                checkLoginState() {
+                    FB.getLoginStatus(function (response) {
+                        console.log('aaaa', response.authResponse.accessToken);
+                        if (response.status === 'connected') {
+                            // Logged into your app and Facebook.
+                            console.log('Welcome!  Fetching your information.... ');
+                            FB.api('/me', function (response) {
+                                console.log('Successful login for: ' + response.name);
+                            });
+                        }
+                    });
                 }
-
                 // Google Auth object.
             },
 
