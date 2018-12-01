@@ -4,7 +4,7 @@
             <span>Giảng Viên: {{showData.giang_vien.profile.first_name + ' ' + showData.giang_vien.profile.last_name}}</span>
             <v-card flat tile>
                 <v-toolbar color="cyan" dark>
-                    <v-toolbar-title>Edit Kỷ Thuật Viên</v-toolbar-title>
+                    <v-toolbar-title>Edit Kỹ Thuật Viên</v-toolbar-title>
                 </v-toolbar>
             </v-card>
             <v-form v-on:submit.prevent="update" method="post" class="custom-style">
@@ -25,7 +25,7 @@
                 ></v-textarea>
                 <v-textarea
                         name="input-7-1"
-                        label="Mô Tả Kỷ Thuật Viên"
+                        label="Mô Tả Kỹ Thuật Viên"
                         hint="Hint text"
                         v-model="showData.mota_ktv"
                 ></v-textarea>
@@ -74,7 +74,7 @@
             update: function () {
                 var _this = this;
 
-                let uri = _this.url + '/api/ktv-update-mo-ta/';
+                let uri = _this.url + '/api/update-mo-ta/';
                 var gvItem = {
                     mota_ktv: _this.showData.mota_ktv,
                 }

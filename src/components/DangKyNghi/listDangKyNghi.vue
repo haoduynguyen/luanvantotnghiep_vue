@@ -1,6 +1,9 @@
-
 <template>
     <div>
+        <v-card-actions>
+            <!--<v-btn v-bind:to="{name: 'Home'}">Back</v-btn>-->
+            <v-spacer></v-spacer>
+        </v-card-actions>
         <v-card>
             <v-card-title>
                 <v-spacer></v-spacer>
@@ -15,7 +18,7 @@
             <v-data-table
                     v-model="selected"
                     :headers="headers"
-                    :items="listMota"
+                    :items="dangKyNghi"
                     :pagination.sync="pagination"
                     select-all
                     item-key="name"
@@ -45,26 +48,25 @@
                     </tr>
                 </template>
                 <template slot="items" slot-scope="props">
-                    <tr :active="props.selected" @click="props.item.selected = !props.selected">
+                    <tr :active="props.selected" @click="props.item.selected = !props.item.selected">
                         <td>
                             <v-checkbox
-                                    :input-value="props.selected"
+                                    :input-value="props.item.selected"
                                     primary
                                     hide-details
                             ></v-checkbox>
                         </td>
-                        <td class="text-xs-center">{{ props.item.phong_may.name}}</td>
-                        <td class="text-xs-center">{{ props.item.giang_vien.profile.first_name + ' ' + props.item.giang_vien.profile.last_name
-                            }}
+                        <td class="text-xs-center">{{ props.item.lichDay.user.profile.first_name + " " + props.item.lichDay.user.profile.last_name  }}
                         </td>
-                        <td class="text-xs-center">{{ props.item.mota_gv != null ? props.item.mota_gv : "" }}</td>
-                        <td class="text-xs-center">{{ props.item.ky_thuat_vien != null ? props.item.ky_thuat_vien.profile.first_name + ' ' + props.item.ky_thuat_vien.profile.last_name : "" }}</td>
-                        <td class="text-xs-center">{{ props.item.mota_ktv != null ? props.item.mota_ktv : "" }}</td>
+                        <td class="text-xs-center">{{ props.item.lichDay.phong_may.name}}</td>
+                        <td class="text-xs-center">{{ props.item.lichDay.mon_hoc.name }}</td>
+                        <td class="text-xs-center">{{ props.item.lichDay.nhom_lop.name }}</td>
+                        <td class="text-xs-center">{{ props.item.lichDay.ca.name }}</td>
+                        <td class="text-xs-center">{{ props.item.lichDay.thu.name }}</td>
+                        <td class="text-xs-center">{{ props.item.lichDay.hoc_ky.name }}</td>
+                        <td class="text-xs-center">{{ props.item.ngay_nghi }}</td>
                         <td class="text-xs-center">
-                            <v-btn icon class="mx-0" @click="editItem(props.item.id)">
-                                <v-icon color="teal">edit</v-icon>
-                            </v-btn>
-                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id,props.index)">
+                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id , props.item.index)">
                                 <v-icon color="pink">delete</v-icon>
                             </v-btn>
                         </td>
@@ -74,9 +76,10 @@
         </v-card>
     </div>
 </template>
+
 <script>
     export default {
-        name: "listMayLoiGv",
+        name: "DangKyNghi",
         data: () => ({
             pagination: {
                 sortBy: 'name'
@@ -84,38 +87,36 @@
             selected: [],
             search: "",
             headers: [
-                {text: 'Phòng Máy', value: 'phong_may.name', align: 'left',},
-                {
-                    text: 'Tên Giảng Viên',
-                    align: 'left',
-                    value: 'giang_vien.profile.first_name'
-                },
-                {text: 'Mô Tả Giảng Viên', value: '', align: 'left',},
-                {text: 'Tên Kỹ Thuật Viên', value: '', align: 'left',},
-                {text: 'Mô Tả Kỹ Thuật Viên', value: 'giang_vien.profile.first_name', align: 'left',},
+                {text: 'Tên Giảng Viên', align: 'left', value: 'profile.first_name'},
+                {text: 'Phòng Máy', value: '', align: 'left',},
+                {text: 'Môn Học', value: '', align: 'left',},
+                {text: 'Nhóm Lớp', value: '', align: 'left',},
+                {text: 'Ca Học', value: '', align: 'left',},
+                {text: 'Thứ', value: '', align: 'left',},
+                {text: 'Học Kỳ', value: '', align: 'left',},
+                {text: 'Ngày Nghỉ', value: '', align: 'left',},
+                {text: 'Action', value: '', align: 'left',},
 
-
-                {text: 'Chức Năng', value: '', align: 'left',},
             ],
-            listMota: [],
-            url:'http://luanvantn.dev.digiprojects.top'
-
+            dangKyNghi: [],
+            url:'http://localhost:8000',
+            token:''
         }),
         created: function () {
-            let author = localStorage.getItem('author')
-            let auth = JSON.parse(author);
-            this.token = auth['token']
             var _this = this;
+            let author = localStorage.getItem('author')
+            let Auth = JSON.parse(author);
+            var token = Auth['token']
+            _this.token = token;
             _this.isLoading = true;
-            let uri = _this.url + '/api/list-mo-ta';
-            Axios.get(uri, {
+            let uri = _this.url + '/api/get-dk-nghi';
+            Axios.get(uri,{
                 headers: {
-                    Authorization: 'Bearer' + ' ' + this.token
+                    Authorization: 'Bearer' + ' ' + token
                 }
             }).then((response) => {
-                console.log(response);
                 _this.isLoading = false;
-                this.listMota = response.data.data;
+                this.dangKyNghi = response.data.data;
             }).catch(error => {
                 if (!error.response) {
                     // network error
@@ -123,6 +124,7 @@
                     console.log(error.response.data.message);
                 } else {
                     this.errorStatus = error.response.data.message;
+                    console.log(this.errorStatus);
                 }
             });
         },
@@ -130,7 +132,7 @@
             {
                 toggleAll() {
                     if (this.selected.length) this.selected = []
-                    else this.selected = this.listMota.slice()
+                    else this.selected = this.user.slice()
                 }
                 ,
                 changeSort(column) {
@@ -141,44 +143,23 @@
                         this.pagination.descending = false
                     }
                 },
-
-                // xacnhanxoa(item,index) {
-                //     var _this = this;
-                //     let uri = _this.url + '/api/delete-id/';
-                //     console.log(index);
-                //     Axios.delete(uri + item).then((response) => {
-                //
-                //         _this.isLoading = false;
-                //         if (response.status == 200) {
-                //             alert('Delete Success')
-                //             _this.listMota.splice(index, 1)
-                //         }
-                //         //this.showData = response.data.data;
-                //         //console.log(this.showData);
-                //     })
-                //     //_this.selectedGiangvien = item;
-                //     //_this.dialog = true;
-                //     console.log(item);
-                // },
-
-                xacnhanxoa(item,index) {
+                xacnhanxoa(item, index) {
                     let _this = this;
-                    console.log(item,index);
-                    Axios.delete(_this.url + '/api/delete-may-loi/'+item).then(response =>{
-                        if(response.status == 200)
-                        {
-                            alert('Xóa thành công!')
-                            _this.listMota.splice(index,1)
+
+                    Axios.delete(_this.url + '/api/dang-ky-nghi/' + item,{
+                        headers: {
+                            Authorization: 'Bearer' + ' ' + _this.token
                         }
-                        else
-                        {
-                            alert('This line cannot be delete!')
+                    }).then(response => {
+                        if (response.status == 200) {
+                            alert('xóa thành công')
+                            _this.muonPhong.splice(index, 1)
                         }
                     })
 
                 },
                 editItem(id) {
-                    this.$router.push({path: `/update-PM/${id}`});
+                    this.$router.push({path: `/edit-user/${id}`});
                 },
             }
     }

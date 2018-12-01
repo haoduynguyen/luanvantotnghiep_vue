@@ -163,12 +163,17 @@
                 xacnhanxoa(item,index) {
                     let _this = this;
                     console.log(item,index);
-                    Axios.delete(_this.url + '/api/delete-id/'+item).then(response =>{
+                    Axios.delete(_this.url + '/api/delete-may-loi/'+item).then(response =>{
                         if(response.status == 200)
                         {
                             alert('xóa thành công')
                             _this.listMota.splice(index,1)
                         }
+                        else
+                        {
+                            alert('abc')
+                        }
+
                     })
 
                 },

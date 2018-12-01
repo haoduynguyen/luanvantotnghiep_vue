@@ -1,5 +1,31 @@
 <template>
     <div>
+        <div class="text-xs-center">
+            <v-dialog
+                    v-model="hueky"
+                    width="500"
+            >
+
+                <v-card>
+                    <v-card-title
+                            class="headline grey lighten-2"
+                            primary-title
+                    >
+                        Số Máy:   {{mota_pm.so_may}}
+                    </v-card-title>
+
+                    <v-card-text>
+                        Mô tả: {{mota_pm.mo_ta}}
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </div>
         <v-form id="formData" v-on:submit.prevent="searchLichDay">
             <div style="display: flex">
                 <v-select class="test"
@@ -31,6 +57,7 @@
                           single-line
                           item-text="name"
                           item-value="id"
+                          v-on:change="changeRoute"
                           return-object
                           persistent-hint
                 ></v-select>
@@ -189,10 +216,13 @@
                 thu_id: 0,
                 thuNgayList: [],
             },
+            mota_pm:'',
             selectTuan: 0,
-            url: 'http://luanvantn.dev.digiprojects.top',
+            //url: 'http://luanvantn.dev.digiprojects.top',
+            url: 'http://localhost:8000',
             dialog: false,
             dialogdkMuonPhong: false,
+            hueky: false,
             detailContent: "",
             dangKyMuonPhong: [],
             detailMuonPhong: "",
@@ -327,6 +357,15 @@
 
         },
         methods: {
+            changeRoute() {
+                var _this = this;
+                _this.hueky = true;
+                var phong_may_id = _this.dataLich.selectedPhongMay.id
+                Axios.get(_this.url + '/api/phong-may/'+ phong_may_id).then((response)=> {
+                    _this.mota_pm = response.data.data;
+                })
+                //console.log(phong_may_id);
+            },
             searchLichDay() {
                 var _this = this;
 
@@ -353,8 +392,7 @@
                 }).then((response) => {
                     console.log(response.data.data.length > 0);
                     if (response.data.data.length > 0) {
-                        for (let item of response.data.data)
-                        {
+                        for (let item of response.data.data) {
                             _this.dataLich.lichDay.push(item);
                         }
                     }
@@ -370,6 +408,7 @@
                 _this.dataLich.thu_id = thu_id;
                 var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == thu_id)
                 _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
+                console.log(_this.dataLich.thuNgayList[ngayHienTai]);
 
                 if ((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200)) {
                     _this.dialogdkMuonPhong = true;

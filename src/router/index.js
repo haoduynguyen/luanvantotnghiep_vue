@@ -20,6 +20,7 @@ import Layout from '@/Layout'
 import App from '@/App'
 import auth from '@/middleware/auth'
 import ListMuonPhong from '@/components/MuonPhong/listMuonPhong'
+import ListDangKyNghi from '@/components/DangKyNghi/listDangKyNghi'
 
 Vue.use(Router)
 
@@ -173,6 +174,15 @@ export default new Router({
                     props: true,
                     name: 'ListMuonPhong',
                     component: ListMuonPhong,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/list-dang-ky-nghi',
+                    props: true,
+                    name: 'ListDangKyNghi',
+                    component: ListDangKyNghi,
                     meta: {
                         middleware: auth,
                     },

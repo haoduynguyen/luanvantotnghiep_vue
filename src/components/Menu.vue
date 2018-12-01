@@ -183,7 +183,7 @@
             </v-list>
         </v-navigation-drawer>
         <v-toolbar
-                color="blue darken-3"
+                color="pink darken-3"
                 dark
                 app
                 :clipped-left="$vuetify.breakpoint.mdAndUp"
@@ -198,6 +198,7 @@
             <label>
                 {{name}}
             </label>
+
             <!--<v-btn icon>-->
                 <!--<v-icon>notifications</v-icon>-->
             <!--</v-btn>-->
@@ -207,9 +208,9 @@
             <!--</v-btn>-->
             <!--<label v-model="name"></label>-->
             <v-menu offset-y>
-                <v-btn icon large
+                <v-btn icon small
                        slot="activator"
-                       color="primary"
+                       color="white"
                        dark
                 >
                     <v-avatar size="32px" tile>
@@ -217,7 +218,6 @@
                                 class="avatar"
                                 :src="img"
                                 alt="Vuetify"
-
                         >
                     </v-avatar>
                 </v-btn>
@@ -270,10 +270,11 @@
                 },
             ],
             itemsGV: [
-                {icon: 'List', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
-                {icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
+                {icon: 'event', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
                 {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhong'},
+                {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
 	            {icon: 'list', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
+                {icon: 'list', text: 'Danh Sách Đăng Ký Nghỉ', path: 'ListDangKyNghi'},
             ],
             itemsKTV: [
                 // {
@@ -285,17 +286,20 @@
                 //         {icon: '', text: 'List', path: 'ListUser'},
                 //     ]
                 // },
-                {icon: 'list', text: 'Danh Sách Lỗi Các Phòng Máy', path: 'ListMayLoi'},
+                {icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
                 {icon: 'list', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
-                {icon: 'schedule', text: 'Lịch Dạy', path: 'LichDay'},
+                {icon: 'list', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
+
+
             ],
             itemsAdmin: [
-                {icon: 'list', text: 'Danh Sách Lỗi Các Phòng Máy', path: 'ListMayLoi'},
+                {icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
+                //{icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
                 {icon: 'list', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
                 {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
-                {icon: 'schedule', text: 'Lịch Dạy', path: 'LichDay'},
-                //{icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
+                {icon: 'list', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
                 {icon: 'list', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
+                {icon: 'list', text: 'Danh Sách Đăng Ký Nghỉ', path: 'ListDangKyNghi'},
             ],
             role_id: ''
         }),

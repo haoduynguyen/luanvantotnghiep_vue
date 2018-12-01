@@ -88,7 +88,7 @@
                     console.log(_this.switch1);
                     console.log(_this.dataUser);
                     Axios.post(uri, _this.dataUser).then((response) => {
-                        alert('hihihi');
+                        alert('Add User Success!');
                     });
                 },
                 getRole() {
@@ -97,7 +97,7 @@
                     console.log(_this.url);
                     Axios.get(uri).then((response) => {
                         _this.roleList = response.data.data;
-                        console.log('aaaa');
+                        console.log('Role');
                     });
                 }
             },

@@ -151,14 +151,14 @@
                 selectedTuan: 0,
                 selectedHocKy: 0,
                 selectedPhongMay: 0,
-
+                thuNgayList:[],
 
             },
             dataDangKyNghi: {
                 lich_day_id: 0,
                 tuan_id: "",
             },
-            selectTuan:0,
+            selectTuan: 0,
             notification: '',
             statusNghi: 0,
             url: 'http://localhost:8000',
@@ -288,7 +288,7 @@
                     }).then((response) => {
                     _this.dataLich.lichDay = response.data.data;
 
-                    _this.selectTuan =  data.tuan_id
+                    _this.selectTuan = data.tuan_id
                 }).catch(function (error) {
                     _this.error = error.response.data.message
                     _this.info = ""
@@ -299,13 +299,12 @@
                             Authorization: 'Bearer' + ' ' + this.token
                         }
                     }).then((response) => {
-                    console.log('before',_this.dataLich.lichDay);
-                    for (let item of response.data.data)
-                    {
+                    console.log('before', _this.dataLich.lichDay);
+                    for (let item of response.data.data) {
                         _this.dataLich.lichDay.push(item);
                     }
-                    console.log('after',_this.dataLich.lichDay);
-                    _this.selectTuan =  data.tuan_id
+                    console.log('after', _this.dataLich.lichDay);
+                    _this.selectTuan = data.tuan_id
                 }).catch(function (error) {
                     _this.error = error.response.data.message
                     _this.info = ""
@@ -314,11 +313,13 @@
             dangKyNghi() {
                 var _this = this;
                 var uri = _this.url + '/api/dang-ky-nghi'
+
                 var data =
                     {
                         lich_day_id: _this.selectedNghi,  //_this.dataDangKyNghi.lich_day_id,
                         tuan_id: _this.dataLich.selectedTuan.id,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
+                        ngay_nghi: _this.dataLich.ngay
                     }
 
                 Axios.post(uri, data, {
@@ -333,6 +334,7 @@
                         for (let item of response.data.data) {
                             var indexLichday = _this.dataLich.lichDay.findIndex(itemLichday => itemLichday.id == item.lich_day_id)
                             _this.dataLich.lichDay[indexLichday].dang_ky_nghi = {tuan_id: _this.selectTuan}
+
                         }
                         _this.dialog = false
                         //Bat theo front-end
@@ -361,7 +363,7 @@
                 var result = '';
                 var status = 0;
                 for (var item of _this.dataLich.lichDay) {
-                    if (item.ca_id == ca_id && item.thu_id == thu_id ) {
+                    if (item.ca_id == ca_id && item.thu_id == thu_id) {
                         dem++;
                         if (dem == 1) {
                             result = item;
