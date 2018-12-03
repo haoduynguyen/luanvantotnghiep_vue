@@ -160,6 +160,7 @@
             selectTuan: 0,
             notification: '',
             statusNghi: 0,
+            //url: 'http://luanvantn.dev.digiprojects.top',
             url: 'http://localhost:8000',
             dialog: false,
             detailContent: "",
@@ -315,14 +316,12 @@
             dangKyNghi() {
                 var _this = this;
                 var uri = _this.url + '/api/dang-ky-nghi'
-
                 var data =
                     {
                         lich_day_id: _this.selectedNghi,  //_this.dataDangKyNghi.lich_day_id,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                         ngay_nghi: _this.dataLich.ngay,
                     }
-                console.log(data);
                 Axios.post(uri, data, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + this.token

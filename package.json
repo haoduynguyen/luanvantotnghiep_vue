@@ -13,6 +13,7 @@
     "axios": "^0.18.0",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.4",
+    "vue-facebook-signin-button": "^1.0.1",
     "vue-gapi": "0.0.10",
     "vue-google-auth": "^1.0.5",
     "vue-google-oauth2": "^1.1.0",

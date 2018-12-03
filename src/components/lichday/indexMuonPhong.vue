@@ -7,15 +7,12 @@
             >
 
                 <v-card>
-                    <v-card-title
-                            class="headline grey lighten-2"
-                            primary-title
-                    >
-                        Số Máy:   {{mota_pm.so_may}}
+                    <v-card-title class="headline grey lighten-2" v-if="mota_pm == ''" primary-title>
+                        Số Máy:   {{ mota_pm.so_may}}
                     </v-card-title>
 
-                    <v-card-text>
-                        Mô tả: {{mota_pm.mo_ta}}
+                    <v-card-text v-if="mota_pm == ''">
+                        Mô tả: {{ mota_pm.mota}}
                     </v-card-text>
 
                     <v-divider></v-divider>
@@ -196,7 +193,7 @@
 
 <script>
     export default {
-        name: "index",
+        name: "indexMuonPhong",
         data: () => ({
             dataLich: {
                 caList: "",

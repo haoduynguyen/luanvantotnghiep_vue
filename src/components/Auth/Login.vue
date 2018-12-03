@@ -52,7 +52,8 @@
                 scope: 'email',
                 return_scopes: true
             },
-            url: "http://luanvantn.dev.digiprojects.top",
+            //url: "http://luanvantn.dev.digiprojects.top",
+            url: 'http://localhost:8000',
             urlSendMail: "http://lvtn.cf"
         }),
         mounted() {
