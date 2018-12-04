@@ -97,7 +97,8 @@
 
             ],
             muonPhong: [],
-            url:'http://luanvantn.dev.digiprojects.top',
+            //url:'http://luanvantn.dev.digiprojects.top',
+            url:'http://localhost:8000',
             token:''
         }),
         created: function () {
@@ -144,7 +145,7 @@
                 xacnhanxoa(item, index) {
                     let _this = this;
 
-                    Axios.delete(_this.url + '/api/dk-muon-phong/' + item,{
+                    Axios.put(_this.url + '/api/update-status-mp/' + item,{
                         headers: {
                             Authorization: 'Bearer' + ' ' + _this.token
                         }
