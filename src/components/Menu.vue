@@ -254,7 +254,8 @@
             img: image,
             id: 0,
             name:'',
-            url:'http://luanvantn.dev.digiprojects.top',
+            //url:'http://luanvantn.dev.digiprojects.top',
+            url: 'http://localhost:8000',
             items: [
                 {
                     title: 'Change Password', path: '/change-password/', test: () => {
@@ -275,6 +276,7 @@
                 {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
 	            {icon: 'list', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
                 {icon: 'list', text: 'Danh Sách Đăng Ký Nghỉ', path: 'ListDangKyNghi'},
+                {icon: 'schedule', text: 'Test DK Muon Phong', path: 'TestMuonPhong'},
             ],
             itemsKTV: [
                 // {

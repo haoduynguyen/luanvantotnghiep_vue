@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <meta name="google-signin-client_id"
-          content="931597282160-1eg67i8jc4v916ajq2n8v88om23t9r3u.apps.googleusercontent.com">
+          content="931597282160-2cfo16vmp2cf8krfa3qkttqpf8pnrvk6.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
     <script src="https://apis.google.com/js/client.js " async defer></script>
     <script>
@@ -30,13 +30,32 @@
         //     }
         // }
 
-        function init(){
+        function init() {
             gapi.load('auth2', function () {
                 gapi.auth2.init({client_id: '931597282160-2cfo16vmp2cf8krfa3qkttqpf8pnrvk6.apps.googleusercontent.com'})
                 //console.log('Auth2 ready', gapi)
             });
         }
 
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '348232345938588',
+                xfbml: true,
+                version: 'v3.2'
+            });
+            FB.AppEvents.logPageView();
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
     </script>
 </head>
 <body>
