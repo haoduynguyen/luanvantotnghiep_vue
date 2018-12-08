@@ -130,7 +130,7 @@
                                 :key="item.heading"
                         >
                             <v-flex xs6>
-                                <v-subheader v-if="item.heading">
+                                <v-subheader v-if="item.heading" >
                                     {{ item.heading }}
                                 </v-subheader>
                             </v-flex>
@@ -200,11 +200,11 @@
             </label>
 
             <!--<v-btn icon>-->
-                <!--<v-icon>notifications</v-icon>-->
+            <!--<v-icon>notifications</v-icon>-->
             <!--</v-btn>-->
             <!--<v-btn icon large>-->
-                <!--<v-avatar size="32px" tile>-->
-                <!--</v-avatar>-->
+            <!--<v-avatar size="32px" tile>-->
+            <!--</v-avatar>-->
             <!--</v-btn>-->
             <!--<label v-model="name"></label>-->
             <v-menu offset-y>
@@ -253,7 +253,7 @@
             drawer: null,
             img: image,
             id: 0,
-            name:'',
+            name: '',
             //url:'http://luanvantn.dev.digiprojects.top',
             url: 'http://localhost:8000',
             items: [
@@ -272,11 +272,11 @@
             ],
             itemsGV: [
                 {icon: 'event', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
-                {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhong'},
+                {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'TestMuonPhong'},
                 {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
-	            {icon: 'list', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
+                {icon: 'list', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
                 {icon: 'list', text: 'Danh Sách Đăng Ký Nghỉ', path: 'ListDangKyNghi'},
-                {icon: 'schedule', text: 'Test DK Muon Phong', path: 'TestMuonPhong'},
+
             ],
             itemsKTV: [
                 // {
@@ -289,14 +289,17 @@
                 //     ]
                 // },
                 {icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
+                {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'TestMuonPhong'},
                 {icon: 'list', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
                 {icon: 'list', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
+
 
 
             ],
             itemsAdmin: [
                 {icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
                 //{icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
+                {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'TestMuonPhong'},
                 {icon: 'list', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
                 {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
                 {icon: 'list', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
@@ -330,7 +333,7 @@
                 //storage.removeItem("https://accounts.google.com");
                 this.$router.push({name: 'Login'})
             },
-            async  signOut() {
+            async signOut() {
                 const googleAuth = gapi.auth2.getAuthInstance()
                 await googleAuth.signOut()
                 const googleUser = googleAuth.currentUser.get()

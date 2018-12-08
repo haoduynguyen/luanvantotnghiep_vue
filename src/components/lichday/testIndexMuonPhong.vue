@@ -1,30 +1,7 @@
 <template>
     <div>
-        <div class="text-xs-center">
-            <v-dialog
-                    v-model="hueky"
-                    width="500"
-            >
-
-                <v-card>
-                    <v-card-title class="headline grey lighten-2" v-if="mota_pm == ''" primary-title>
-                        Số Máy: {{ mota_pm.so_may}}
-                    </v-card-title>
-
-                    <v-card-text v-if="mota_pm == ''">
-                        Mô tả: {{ mota_pm.mota}}
-                    </v-card-text>
-
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-        </div>
         <v-form id="formData" v-on:submit.prevent="searchLichDay">
-            <div style="display: flex">
+            <div style="display: flex; ">
                 <v-select class="test"
                           :items="dataLich.curentTuan"
                           v-model="dataLich.selectedTuan"
@@ -52,6 +29,13 @@
             <v-card-actions>
                 <v-btn v-bind:to="{name: 'importLichDay'}">Import</v-btn>
                 <v-spacer></v-spacer>
+                <label>
+                    <input type="text" name="color1" style="background-color: #8090a7; width: 20px" disabled> Đã có
+                    giảng viên dạy <br>
+                    <input type="text" name="color1" style="background-color: #bd7474; width: 20px" disabled> Chưa có
+                    giảng viên dạy
+                </label>
+                <v-spacer></v-spacer>
                 <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Submit</v-btn>
             </v-card-actions>
         </v-form>
@@ -75,24 +59,26 @@
                     </div>
                 </div>
                 <div class="lichtruc-content">
-                    <div v-for="( thu, key ) in dataLich.thuList" :key="key" style="width: 14.28%;">
+                    <div v-for="( thu, key ) in dataLich.thuList" :key="key"
+                         style="width: 14.28%; background-color: #bd7474">
                         <div v-for="( ca, key ) in dataLich.caList" :key="key" class="lichtruc-content-block">
                             <div v-for="(phongMay,key) in dataLich.phongMayList" :key="key"
                                  class="phongmay-content-block">
-                                <div style="border: 1px solid white; height: 50px; background-color: #eeeeee">
+                                <div style="border: 1px solid white; height: 50px; background-color: #bd7474">
                                     <div v-if="checkLichTruc(ca.id,thu.id,phongMay.id)=='' ||
                                     ( checkLichTruc(ca.id,thu.id,phongMay.id).dang_ky_nghi != null &&
                                     checkLichTruc(ca.id,thu.id,phongMay.id).dang_ky_nghi.tuan_id == selectTuan)"
-                                         v-on:click="viewMuonPhong(ca.id, thu.id,phongMay.id,checkLichTruc(ca.id,thu.id,phongMay.id))"
-                                         class="lichtruc-detail">
-                                        {{phongMay.name}}
+                                         v-on:click="viewMuonPhong(ca.id, thu.id,phongMay,checkLichTruc(ca.id,thu.id,phongMay.id))"
+                                         class="lichtruc-detail">{{phongMay.name}}
                                     </div>
+
 
                                     <div v-else class="lichtruc-detail"
                                          v-on:click="viewDetail(checkLichTruc(ca.id, thu.id,phongMay.id))">
-                                        <div style="background-color: red;width: 100%;height: 100%" >{{checkLichTruc(ca.id,thu.id,phongMay.id).phong_may.name}}</div>
-                                        <div>
+                                        <div style="background-color: #8090a7;width: 100%;height: 100%">
+                                            {{checkLichTruc(ca.id,thu.id,phongMay.id).phong_may.name}}
                                         </div>
+                                        <div></div>
                                     </div>
                                 </div>
                             </div>
@@ -101,6 +87,7 @@
                 </div>
             </div>
         </div>
+
         <v-layout row justify-center>
             <v-dialog v-model="dialog" max-width="500px">
                 <v-card>
@@ -111,7 +98,10 @@
                         <table style="width: 100%" class="table-view-detail">
                             <tr>
                                 <td><strong>Giảng Viên:</strong></td>
-                                <td>{{ detailContent.user.profile.first_name + ' ' +  detailContent.user.profile.last_name }}</td>
+                                <td>{{ detailContent.user.profile.first_name + ' ' +
+                                    detailContent.user.profile.last_name
+                                    }}
+                                </td>
                             </tr>
                             <tr>
                                 <td><strong>Phòng máy:</strong></td>
@@ -143,7 +133,14 @@
             <v-dialog v-model="dialogdkMuonPhong" max-width="500px">
                 <v-card>
                     <v-card-title>
-                        <span class="headline">Đăng Ký Mượn Phòng</span>
+                        <span class="headline"
+                              style="color: tomato">Đăng Ký Mượn Phòng - {{detailContentMota.name}}</span>
+                        <v-spacer></v-spacer>
+                        <div>
+                            <label v-if="detailContentMota">Số máy: {{detailContentMota.so_may}}</label>
+                            <v-spacer></v-spacer>
+                            <label v-if="detailContentMota">Mô tả: {{detailContentMota.mo_ta}}</label>
+                        </div>
                         <v-select class="test"
                                   :items="dataLich.monList"
                                   v-model="dataLich.selectedMonHoc"
@@ -154,12 +151,15 @@
                                   return-object
                                   persistent-hint
                         ></v-select>
+
                     </v-card-title>
                     <v-card-text v-if="detailMuonPhong && dangKyMuonPhong">
                         <table style="width: 100%" class="table-view-detail">
                             <tr>
                                 <td><strong>Giảng Viên:</strong></td>
-                                <td>{{ dangKyMuonPhong.user.profile.first_name + ' ' +  dangKyMuonPhong.user.profile.last_name }}</td>
+                                <td>{{ dangKyMuonPhong.user.profile.first_name + ' ' +
+                                    dangKyMuonPhong.user.profile.last_name }}
+                                </td>
                             </tr>
                             <tr>
                                 <td><strong>Phòng máy:</strong></td>
@@ -217,12 +217,13 @@
             },
             mota_pm: '',
             selectTuan: 0,
-            //url: 'http://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            url: 'http://luanvantn.dev.digiprojects.top',
+            //url: 'http://localhost:8000',
             dialog: false,
             dialogdkMuonPhong: false,
             hueky: false,
             detailContent: "",
+            detailContentMota: "",
             dangKyMuonPhong: [],
             detailMuonPhong: "",
             token: "",
@@ -348,24 +349,26 @@
                 this.dataLich.phongMayList = response.data.data;
             }).catch(error => {
                 if (!error.response) {
-                    this.errorStatus = 'Error: Network Error';
+                    _this.errorStatus = 'Error: Network Error';
                 } else {
-                    this.errorStatus = error.response.data.message;
+                    _this.errorStatus = error.response.data.message;
+                    alert(_this.errorStatus);
                 }
             });
 
 
         },
         methods: {
-            changeRoute() {
-                var _this = this;
-                _this.hueky = true;
-                var phong_may_id = _this.dataLich.selectedPhongMay.id
-                Axios.get(_this.url + '/api/phong-may/' + phong_may_id).then((response) => {
-                    _this.mota_pm = response.data.data;
-                })
-                //console.log(phong_may_id);
-            },
+            // changeRoute() {
+            //     var _this = this;
+            //     _this.hueky = true;
+            //     var phong_may_id = _this.dataLich.selectedPhongMay.id
+            //     Axios.get(_this.url + '/api/phong-may/' + phong_may_id).then((response) => {
+            //         _this.mota_pm = response.data.data;
+            //     })
+            //     //console.log(phong_may_id);
+            // },
+
             searchLichDay() {
                 var _this = this;
                 var data =
@@ -399,17 +402,18 @@
                     _this.info = ""
                 });
             },
-            viewMuonPhong(ca_id, thu_id,phong_id, itemDetail) {
+            viewMuonPhong(ca_id, thu_id, phong_id, itemDetail) {
                 var _this = this;
                 _this.dataLich.ca_id = ca_id;
                 _this.dataLich.thu_id = thu_id;
-                _this.dataLich.phong_id = phong_id;
+                _this.dataLich.phong_id = phong_id.id;
                 var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == thu_id)
                 _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
-                console.log(_this.dataLich['ngay']);
                 if ((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200)) {
                     _this.dialogdkMuonPhong = true;
                     _this.detailMuonPhong = itemDetail
+                    _this.detailContentMota = phong_id;
+                    console.log(_this.detailContentMota);
                 } else {
                     _this.dialogdkMuonPhong = false;
                 }
@@ -427,6 +431,7 @@
                         ngay_muon: _this.dataLich.ngay,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                     }
+
                 Axios.post(uri, data, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + _this.token
@@ -436,6 +441,7 @@
                     _this.dialogdkMuonPhong = false
                 }).catch(function (error) {
                     _this.error = error.response.data.message
+                    alert(_this.error);
                     _this.info = ""
                 });
             },
@@ -444,11 +450,11 @@
                 _this.dialog = true;
                 _this.detailContent = itemLichDay;
             },
-            checkLichTruc(ca_id, thu_id,phongMay_id) {
+            checkLichTruc(ca_id, thu_id, phongMay_id) {
                 var _this = this;
                 var dem = 0;
                 var result = '';
-                var lich_bu_thay_the = _this.muonPhong(ca_id, thu_id,phongMay_id);
+                var lich_bu_thay_the = _this.muonPhong(ca_id, thu_id, phongMay_id);
                 if (lich_bu_thay_the) {
                     result = lich_bu_thay_the;
                 }
@@ -465,16 +471,14 @@
                 }
                 return result;
             },
-            muonPhong(ca_id, thu_id,phongmay_id) {
+            muonPhong(ca_id, thu_id, phongmay_id) {
                 var _this = this;
                 var dem = 0;
                 var resultMonHoc = '';
                 for (var item of _this.dangKyMuonPhong) {
-                    console.log(item,'hao');
                     if (item.ca_id == ca_id && item.thu_id == thu_id && item.phong_may_id == phongmay_id) {
                         resultMonHoc = item;
                         break;
-
                     }
                 }
                 return resultMonHoc;

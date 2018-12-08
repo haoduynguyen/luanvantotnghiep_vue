@@ -98,8 +98,8 @@
             ],
             muonPhong: [],
 
-            // url:'http://luanvantn.dev.digiprojects.top',
-            url:'http://localhost:8000',
+            url:'http://luanvantn.dev.digiprojects.top',
+            //url:'http://localhost:8000',
             token:''
         }),
         created: function () {
