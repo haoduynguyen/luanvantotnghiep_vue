@@ -71,8 +71,10 @@
                                          v-on:click="viewMuonPhong(ca.id, thu.id,phongMay,checkLichTruc(ca.id,thu.id,phongMay.id))"
                                          class="lichtruc-detail">{{phongMay.name}}
                                     </div>
-
-
+                                    <div v-else-if="checkLichMuonPhong(ca.id,thu.id,phongMay.id)"
+                                         class="lichtruc-detail">
+                                        <div style="background-color: red;width: 100%;height: 100%"></div>
+                                    </div>
                                     <div v-else class="lichtruc-detail"
                                          v-on:click="viewDetail(checkLichTruc(ca.id, thu.id,phongMay.id))">
                                         <div style="background-color: #8090a7;width: 100%;height: 100%">
@@ -80,6 +82,7 @@
                                         </div>
                                         <div></div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -201,6 +204,7 @@
                 thuList: "",
                 monList: [],
                 lichDay: [],
+                lichMuon: [],
                 tuanList: [],
                 hocKyList: [],
                 phongMayList: [],
@@ -391,11 +395,8 @@
                         Authorization: 'Bearer' + ' ' + _this.token
                     }
                 }).then((response) => {
-                    if (response.data.data.length > 0) {
-                        for (let item of response.data.data) {
-                            _this.dataLich.lichDay.push(item);
-                        }
-                    }
+                    _this.dataLich.lichMuon = response.data.data;
+                    console.log(_this.dataLich.lichMuon);
                     _this.selectTuan = data.tuan_id
                 }).catch(function (error) {
                     _this.error = error.response.data.message
@@ -409,6 +410,7 @@
                 _this.dataLich.phong_id = phong_id.id;
                 var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == thu_id)
                 _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
+                console.log(_this.dataLich['ngay']);
                 if ((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200)) {
                     _this.dialogdkMuonPhong = true;
                     _this.detailMuonPhong = itemDetail
@@ -431,13 +433,14 @@
                         ngay_muon: _this.dataLich.ngay,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                     }
-
+                console.log(data);
                 Axios.post(uri, data, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + _this.token
                     }
                 }).then((response) => {
                     _this.dangKyMuonPhong.push(response.data.data)
+                    alert('đăng ký phòng thành công')
                     _this.dialogdkMuonPhong = false
                 }).catch(function (error) {
                     _this.error = error.response.data.message
@@ -450,25 +453,49 @@
                 _this.dialog = true;
                 _this.detailContent = itemLichDay;
             },
+            checkLichMuonPhong(ca_id, thu_id, phongMay_id) {
+                var _this = this;
+                var result = '';
+                console.log('haoaaaa');
+                for (var item of _this.dataLich.lichMuon) {
+                    //console.log('hao',_this.dataLich.lichMuon);
+                    // console.log('ca',item.ca_id);
+                    // console.log('thu',item.thu_id);
+                    // console.log('phongmay',item.phong_may_id);
+                    console.log(ca_id);
+                    console.log(thu_id);
+                    console.log(phongMay_id);
+                    if(1 == ca_id && 2 == thu_id && 6 == phongMay_id)
+                    {
+                        console.log('aaa');
+                    }
+                    // if (item.ca_id == ca_id && item.thu_id == thu_id && item.phong_may_id == phongMay_id) {
+                    //     console.log('hihiaaaa');
+                    //     // result = item;
+                    //     // console.log('hao', result);
+                    //     // break;
+                    // }
+                }
+                return result;
+            },
             checkLichTruc(ca_id, thu_id, phongMay_id) {
                 var _this = this;
                 var dem = 0;
                 var result = '';
-                var lich_bu_thay_the = _this.muonPhong(ca_id, thu_id, phongMay_id);
-                if (lich_bu_thay_the) {
-                    result = lich_bu_thay_the;
-                }
-                else {
-                    for (var item of _this.dataLich.lichDay) {
-                        if (item.ca_id == ca_id && item.thu_id == thu_id && item.phong_may_id == phongMay_id) {
-                            dem++;
-                            if (dem == 1) {
-                                result = item;
-                                break;
-                            }
+                // var lich_bu_thay_the = _this.muonPhong(ca_id, thu_id, phongMay_id);
+                // if (lich_bu_thay_the) {
+                //     result = lich_bu_thay_the;
+                // } else {
+                for (var item of _this.dataLich.lichDay) {
+                    if (item.ca_id == ca_id && item.thu_id == thu_id && item.phong_may_id == phongMay_id) {
+                        dem++;
+                        if (dem == 1) {
+                            result = item;
+                            break;
                         }
                     }
                 }
+                //}
                 return result;
             },
             muonPhong(ca_id, thu_id, phongmay_id) {
