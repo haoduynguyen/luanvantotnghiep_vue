@@ -6,8 +6,9 @@ import EditUser from '@/components/User/edit'
 import ChangePassword from '@/components/User/changePassword'
 import LichDay from '@/components/lichday/index'
 import LichDayGV from '@/components/lichday/indexFromGV'
-import MuonPhong from '@/components/lichday/indexMuonPhong'
+//import MuonPhong from '@/components/lichday/indexMuonPhong'
 import TestMuonPhong from '@/components/lichday/testIndexMuonPhong'
+import MuonPhongKtv from '@/components/lichday/IndexPhongKtv'
 import importLichDay from '@/components/lichday/import'
 import ListMoTaGV from '@/components/PhongMay/listMayLoiGv'
 import ListMayLoi from '@/components/PhongMay/listMayLoi'
@@ -129,18 +130,26 @@ export default new Router({
                         middleware: auth,
                     },
                 },
+                // {
+                //     path: '/dk-muon-phong',
+                //     name: 'MuonPhong',
+                //     component: MuonPhong,
+                //     meta: {
+                //         middleware: auth,
+                //     },
+                // },
                 {
                     path: '/dk-muon-phong',
-                    name: 'MuonPhong',
-                    component: MuonPhong,
+                    name: 'TestMuonPhong',
+                    component: TestMuonPhong,
                     meta: {
                         middleware: auth,
                     },
                 },
                 {
-                    path: '/test-dk-muon-phong',
-                    name: 'TestMuonPhong',
-                    component: TestMuonPhong,
+                    path: '/dk-phong-ktv',
+                    name: 'MuonPhongKtv',
+                    component: MuonPhongKtv,
                     meta: {
                         middleware: auth,
                     },

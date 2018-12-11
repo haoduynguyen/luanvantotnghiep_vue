@@ -91,8 +91,8 @@
                     value: 'giang_vien.profile.first_name'
                 },
                 {text: 'Mô Tả Giảng Viên', value: '', align: 'left',},
-                {text: 'Tên Kỹ Thuật Viên', value: '', align: 'left',},
-                {text: 'Mô Tả Kỹ Thuật Viên', value: 'giang_vien.profile.first_name', align: 'left',},
+                {text: 'Tên Kỹ Thuật Viên', value: 'ky_thuat_vien.profile.first_name', align: 'left',},
+                {text: 'Mô Tả Kỹ Thuật Viên', value: 'mota_ktv', align: 'left',},
 
 
                 {text: 'Chức Năng', value: '', align: 'left',},

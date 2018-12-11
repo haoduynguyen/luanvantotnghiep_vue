@@ -76,7 +76,6 @@
                                     <div v-else-if="(checkLichTruc(ca.id,thu.id,phongMay.id)=='' ||
                                     ( checkLichTruc(ca.id,thu.id,phongMay.id).dang_ky_nghi != null &&
                                     checkLichTruc(ca.id,thu.id,phongMay.id).dang_ky_nghi.tuan_id == selectTuan))"
-                                         v-on:click="viewMuonPhong(ca.id, thu.id,phongMay,checkLichTruc(ca.id,thu.id,phongMay.id))"
                                          class="lichtruc-detail">{{phongMay.name}}
                                     </div>
                                     <div v-else class="lichtruc-detail"
@@ -164,7 +163,7 @@
                             </tr>
                             <tr>
                                 <td><strong>Môn học: </strong></td>
-                                <td>{{ (detailDaMuonPhong.ghi_chu != null) ? detailDaMuonPhong.ghi_chu : detailDaMuonPhong.mon_hoc.name }}</td>
+                                <td>{{ detailDaMuonPhong.mon_hoc.name }}</td>
                             </tr>
                             <tr v-if=" detailDaMuonPhong.nhom_lop">
                                 <td><strong>Lớp: </strong></td>
@@ -205,7 +204,7 @@
                         <div style="width: 100%">
                             <v-text-field
                                     v-if="showGhichu"
-                                    v-model="dataLich.ghichu"
+                                    v-model="ghichu"
                                     label="Ghi chú"
                                     required
                                     style="width: 100%"
@@ -234,7 +233,7 @@
                             </tr>
                             <tr>
                                 <td><strong>Môn học: </strong></td>
-                                <td>{{(dangKyMuonPhong.ghi_chu != null) ? dangKyMuonPhong.ghi_chu : dangKyMuonPhong.mon_hoc.name }}</td>
+                                <td>{{ dangKyMuonPhong.mon_hoc.name }}</td>
                             </tr>
                         </table>
                     </v-card-text>
@@ -253,7 +252,7 @@
 
 <script>
     export default {
-        name: "testIndexMuonPhong",
+        name: "IndexPhongKtv",
         data: () => ({
             dataLich: {
                 caList: "",
@@ -274,12 +273,11 @@
                 thu_id: 0,
                 phong_id: 0,
                 thuNgayList: [],
-                ghichu: '',
             },
             mota_pm: '',
             selectTuan: 0,
-            //url: 'http://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            url: 'http://luanvantn.dev.digiprojects.top',
+            //url: 'http://localhost:8000',
             dialog: false,
             dialogdkMuonPhong: false,
             dialogDaMuonPhong:false,
@@ -290,6 +288,7 @@
             detailMuonPhong: "",
             detailDaMuonPhong: "",
             token: "",
+            ghichu: '',
             showGhichu: false
         }),
         created: function () {
@@ -333,7 +332,7 @@
             }).then((response) => {
                 _this.isLoading = false;
                 this.dataLich.monList = response.data.data;
-                this.dataLich.monList.push({ name: 'Môn khác'})
+                this.dataLich.monList.push({id: 100, name: 'Môn khác'})
             }).catch(error => {
                 if (!error.response) {
                     this.errorStatus = 'Error: Network Error';
@@ -466,6 +465,7 @@
                 });
             },
             viewMuonPhong(ca_id, thu_id, phong_id, itemDetail) {
+                console.log(itemDetail);
                 var _this = this;
                 _this.dataLich.ca_id = ca_id;
                 _this.dataLich.thu_id = thu_id;
@@ -505,9 +505,7 @@
                         thu_id: _this.dataLich.thu_id,
                         ngay_muon: _this.dataLich.ngay,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
-                        ghi_chu:_this.dataLich.ghichu
                     }
-                console.log(data);
                 Axios.post(uri, data, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + _this.token

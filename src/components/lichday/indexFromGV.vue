@@ -260,7 +260,7 @@
             let uriPhongMay = _this.url + '/api/phong-may';
             Axios.get(uriPhongMay).then((response) => {
                 _this.isLoading = false;
-                this.dataLich.phongMayList = response.data.data;
+                _this.dataLich.phongMayList = response.data.data;
             }).catch(error => {
                 if (!error.response) {
                     this.errorStatus = 'Error: Network Error';
@@ -268,7 +268,7 @@
                     this.errorStatus = error.response.data.message;
                 }
             });
-            let author = localStorage.getItem('author')
+            let author = localStorage.getItem('author');
             let Auth = JSON.parse(author);
             this.id = Auth['id'];
             this.token = Auth['token'];

@@ -276,7 +276,6 @@
                 {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
                 {icon: 'list', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
                 {icon: 'list', text: 'Danh Sách Đăng Ký Nghỉ', path: 'ListDangKyNghi'},
-
             ],
             itemsKTV: [
                 // {
@@ -289,7 +288,7 @@
                 //     ]
                 // },
                 {icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
-                {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'TestMuonPhong'},
+                {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhongKtv'},
                 {icon: 'list', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
                 {icon: 'list', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
 
