@@ -276,8 +276,8 @@
             },
             mota_pm: '',
             selectTuan: 0,
-            url: 'http://luanvantn.dev.digiprojects.top',
-            //url: 'http://localhost:8000',
+            //url: 'http://luanvantn.dev.digiprojects.top',
+            url: 'http://localhost:8000',
             dialog: false,
             dialogdkMuonPhong: false,
             dialogDaMuonPhong:false,
@@ -457,7 +457,7 @@
                     }
                 }).then((response) => {
                     _this.dataLich.lichMuon = response.data.data;
-                    console.log(_this.dataLich.lichMuon);
+                    console.log('aaa',_this.dataLich.lichMuon);
                     _this.selectTuan = data.tuan_id
                 }).catch(function (error) {
                     _this.error = error.response.data.message
@@ -465,7 +465,6 @@
                 });
             },
             viewMuonPhong(ca_id, thu_id, phong_id, itemDetail) {
-                console.log(itemDetail);
                 var _this = this;
                 _this.dataLich.ca_id = ca_id;
                 _this.dataLich.thu_id = thu_id;
@@ -481,7 +480,6 @@
                 }
             },
             viewDaMuonPhong(ca_id, thu_id, phong_id, itemDetail) {
-                console.log(itemDetail);
                 var _this = this;
                 _this.dataLich.ca_id = ca_id;
                 _this.dataLich.thu_id = thu_id;
@@ -512,7 +510,6 @@
                     }
                 }).then((response) => {
                     _this.dangKyMuonPhong = response.data.data
-                    console.log(_this.dangKyMuonPhong);
                     alert('đăng ký phòng thành công')
                     _this.dialogdkMuonPhong = false
                     let resultData = response.data.data
@@ -532,10 +529,6 @@
                 var _this = this;
                 var result = '';
                 for (var item of _this.dataLich.lichMuon) {
-                    //console.log('hao',_this.dataLich.lichMuon);
-                    // console.log('ca',item.ca_id);
-                    // console.log('thu',item.thu_id);
-                    // console.log('phongmay',item.phong_may_id);
                     if (item.ca_id == ca_id && item.thu_id == thu_id && item.phong_may_id == phongMay_id) {
                         result = item;
                         break;
@@ -588,7 +581,6 @@
                 }
             },
             onChangeMonhoc(monhoc) {
-                console.log(monhoc)
                 this.showGhichu = false
                 if (monhoc.name == 'Môn khác')
                     this.showGhichu = true

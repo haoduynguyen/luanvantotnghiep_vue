@@ -147,7 +147,7 @@ export default new Router({
                     },
                 },
                 {
-                    path: '/dk-phong-ktv',
+                    path: '/ds-phong',
                     name: 'MuonPhongKtv',
                     component: MuonPhongKtv,
                     meta: {

@@ -68,7 +68,7 @@
                                     <div></div>
                                 </div>
                                 <div v-else class="lichtruc-detail"
-                                     v-on:click="viewDetail(checkLichTruc(ca.id, thu.id),key)">
+                                     v-on:click="viewDetail(ca.id,checkLichTruc(ca.id, thu.id),key)">
                                     {{ checkLichTruc(ca.id, thu.id).user.profile.first_name+ ' ' + checkLichTruc(ca.id,
                                     thu.id).user.profile.last_name }}
                                     <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
@@ -109,9 +109,9 @@
                                 <td><strong>Lớp: </strong></td>
                                 <td>{{ detailContent.nhom_lop.name }}</td>
                             </tr>
-                            <tr>
-                                <!--<td><strong>Nội Dung: </strong></td>-->
-                                <!--<td>Đăng Ký Mượn Phòng</td>-->
+                            <tr v-if="detailContent.ngay_muon">
+                                <td><strong>Nội Dung: </strong></td>
+                                <td>Phòng Mượn</td>
                             </tr>
                         </table>
                         <v-textarea
@@ -129,7 +129,7 @@
                                v-on:click="dangKyNghi()">Đăng Ký Nghỉ
                         </v-btn>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" @click="submitMotaLoi()">Báo cáo phòng máy</v-btn>
+                        <v-btn color="blue darken-1" @click="submitMotaLoi()" v-if="detailContent.dang_ky_nghi  == null && detailContent.nhom_lop || (detailContent.dang_ky_nghi  != null && detailContent.dang_ky_nghi.tuan_id != selectTuan) || detailContent.ngay_muon != null">Báo cáo phòng máy</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -151,7 +151,8 @@
                 selectedTuan: 0,
                 selectedHocKy: 0,
                 selectedPhongMay: 0,
-                thuNgayList:[]
+                thuNgayList:[],
+                mon_hoc_id:0
             },
             dataDangKyNghi: {
                 lich_day_id: 0,
@@ -160,8 +161,8 @@
             selectTuan: 0,
             notification: '',
             statusNghi: 0,
-            url: 'http://luanvantn.dev.digiprojects.top',
-            //url: 'http://localhost:8000',
+            //url: 'http://luanvantn.dev.digiprojects.top',
+            url: 'http://localhost:8000',
             dialog: false,
             detailContent: "",
             id: 0,
@@ -233,7 +234,7 @@
                         tenhocky: hocky.name + ' - ' + hocky.nam_hoc,
                         ngaybatdau: hocky.ngay_bat_dau,
                         ngayketthuc: hocky.ngay_ket_thuc
-                    }
+                    };
                     _this.dataLich.hocKyList.push(hockyItem);
                 }
                 for (var hk of _this.dataLich.hocKyList) {
@@ -283,15 +284,16 @@
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                     }
                 var ngayHienTai = _this.dataLich.tuanList.findIndex(itemTuan => itemTuan.id == data.tuan_id)
-                _this.getDateOfWeek(this.dataLich.tuanList[ngayHienTai]);
-                console.log(this.dataLich.tuanList[ngayHienTai],'aaaa');
+                _this.getDateOfWeek(_this.dataLich.tuanList[ngayHienTai]);
                 Axios.get(_this.url + '/api/get-lich-gv?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
                     , {
                         headers: {
                             Authorization: 'Bearer' + ' ' + this.token
                         }
                     }).then((response) => {
+                    _this.dataLich.lichDay = [];
                     _this.dataLich.lichDay = response.data.data;
+                    console.log(_this.dataLich.lichDay);
                     _this.selectTuan =  data.tuan_id
                 }).catch(function (error) {
                     _this.error = error.response.data.message
@@ -351,10 +353,12 @@
                     _this.info = ""
                 });
             },
-            viewDetail(itemLichDay) {
+            viewDetail(ca_id,itemLichDay) {
                 var _this = this;
                 _this.dialog = true;
                 _this.selectedNghi = itemLichDay.id
+                _this.dataLich.ca_id = ca_id;
+                _this.dataLich.mon_hoc_id = itemLichDay.mon_hoc_id
                 _this.detailContent = itemLichDay;// ham nay ko chay thi pai
                 var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == itemLichDay.thu_id)
                 _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
@@ -375,7 +379,6 @@
                             }
                             break;
                         }
-
                     }
                 }
                 return result;
@@ -387,13 +390,14 @@
                     {
                         mota_gv: _this.moTaGv,
                         phong_may_id: _this.dataLich.selectedPhongMay.id,
+                        ca_id:_this.dataLich.ca_id,
+                        mon_hoc_id: _this.dataLich.mon_hoc_id
                     }
                 Axios.post(uri, data, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + this.token
                     }
                 }).then((response) => {
-
                     if (response.status == 201) {
                         _this.dialog = false
                         alert('Báo lỗi phòng máy thành công!')
@@ -413,7 +417,6 @@
                     var dateText = dateOfWeek.getFullYear() + '-' + ('0' + (dateOfWeek.getMonth() + 1)).slice(-2) + '-' + ('0' + dateOfWeek.getDate()).slice(-2);
                     thuNgayItem = {id: 2 + i, tenthu: _this.dataLich.thuList[0 + i].name, ngay: dateText};
                     _this.dataLich.thuNgayList.push(thuNgayItem);
-                    console.log(_this.dataLich.thuNgayList,'current day');
                 }
             },
         },

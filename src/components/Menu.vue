@@ -272,10 +272,10 @@
             ],
             itemsGV: [
                 {icon: 'event', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
-                {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'TestMuonPhong'},
-                {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
-                {icon: 'list', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
-                {icon: 'list', text: 'Danh Sách Đăng Ký Nghỉ', path: 'ListDangKyNghi'},
+                {icon: 'class', text: 'Đăng Ký Mượn Phòng', path: 'TestMuonPhong'},
+                {icon: 'computer', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
+                {icon: 'room', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
+                {icon: 'work_off', text: 'Danh Sách Đăng Ký Nghỉ', path: 'ListDangKyNghi'},
             ],
             itemsKTV: [
                 // {
@@ -288,9 +288,9 @@
                 //     ]
                 // },
                 {icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
-                {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhongKtv'},
-                {icon: 'list', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
-                {icon: 'list', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
+                {icon: 'class', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhongKtv'},
+                {icon: 'accessibility', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
+                {icon: 'computer', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
 
 
 
@@ -298,12 +298,12 @@
             itemsAdmin: [
                 {icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
                 //{icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
-                {icon: 'schedule', text: 'Đăng Ký Mượn Phòng', path: 'TestMuonPhong'},
-                {icon: 'list', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
+                {icon: 'class', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhongKtv'},
+                {icon: 'accessibility', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
                 {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
-                {icon: 'list', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
-                {icon: 'list', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
-                {icon: 'list', text: 'Danh Sách Đăng Ký Nghỉ', path: 'ListDangKyNghi'},
+                {icon: 'computer', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
+                {icon: 'room', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
+                {icon: 'work_off', text: 'Danh Sách Đăng Ký Nghỉ', path: 'ListDangKyNghi'},
             ],
             role_id: ''
         }),

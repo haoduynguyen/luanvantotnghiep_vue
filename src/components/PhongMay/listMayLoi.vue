@@ -136,19 +136,20 @@
             check_box_da_sua: 0,
         }),
         created: function () {
-            let author = localStorage.getItem('author')
-            let auth = JSON.parse(author);
-            this.token = auth['token']
             var _this = this;
+            let author = localStorage.getItem('author');
+            let auth = JSON.parse(author);
+            _this.token = auth['token'];
             _this.isLoading = true;
             let uri = _this.url + '/api/list-mo-ta';
             Axios.get(uri, {
                 headers: {
-                    Authorization: 'Bearer' + ' ' + this.token
+                    Authorization: 'Bearer' + ' ' + _this.token
                 }
             }).then((response) => {
                 _this.isLoading = false;
-                this.listMota = response.data.data;
+                _this.listMota = response.data.data;
+                console.log(response.data.data);
             }).catch(error => {
                 if (!error.response) {
                     // network error
@@ -250,15 +251,14 @@
                             check_box_chua_sua: _this.check_box_chua_sua,
                             check_box_dang_sua: _this.check_box_dang_sua,
                             check_box_da_sua: _this.check_box_da_sua
-                        }
-                    console.log(data);
+                        };
                     var exportData = await Axios.get(_this.url + '/api/export-danh-sach-loi?phong_may_id=' + data.phong_may_id +
                         '&check_box_chua_sua=' + data.check_box_chua_sua + '&check_box_dang_sua=' + data.check_box_dang_sua + '&check_box_da_sua=' + data.check_box_da_sua,
                         {
                             headers: {
                                 Authorization: 'Bearer' + ' ' + _this.token
                             }
-                        })
+                        });
                     if (exportData.status == 200) {
                         _this.urlExport = _this.url + exportData.data;
                         window.location.href = _this.urlExport;

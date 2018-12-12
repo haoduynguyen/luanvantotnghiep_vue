@@ -443,7 +443,7 @@
                     }
                 var ngayHienTai = _this.dataLich.tuanList.findIndex(itemTuan => itemTuan.id == data.tuan_id)
                 _this.dataLich.thuNgayList = []
-                _this.getDateOfWeek(this.dataLich.tuanList[ngayHienTai]);
+                _this.getDateOfWeek(_this.dataLich.tuanList[ngayHienTai]);
                 Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id + '&tuan_id=' + data.tuan_id
                 ).then((response) => {
                     _this.dataLich.lichDay = response.data.data
@@ -534,10 +534,6 @@
                 var _this = this;
                 var result = '';
                 for (var item of _this.dataLich.lichMuon) {
-                    //console.log('hao',_this.dataLich.lichMuon);
-                    // console.log('ca',item.ca_id);
-                    // console.log('thu',item.thu_id);
-                    // console.log('phongmay',item.phong_may_id);
                     if (item.ca_id == ca_id && item.thu_id == thu_id && item.phong_may_id == phongMay_id) {
                         result = item;
                         break;
