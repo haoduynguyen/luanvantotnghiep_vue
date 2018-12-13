@@ -53,7 +53,8 @@
                 return_scopes: true
             },
             //url: "http://luanvantn.dev.digiprojects.top",
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
+            url:'http://luanvantn.dev.digiprojects.top',
             urlSendMail: "http://lvtn.cf"
         }),
         mounted() {

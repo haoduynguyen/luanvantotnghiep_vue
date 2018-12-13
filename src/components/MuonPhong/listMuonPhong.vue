@@ -27,15 +27,6 @@
             >
                 <template slot="headers" slot-scope="props">
                     <tr>
-                        <th>
-                            <v-checkbox
-                                    :input-value="props.all"
-                                    :indeterminate="props.indeterminate"
-                                    primary
-                                    hide-details
-                                    @click.native="toggleAll"
-                            ></v-checkbox>
-                        </th>
                         <th
                                 v-for="header in props.headers"
                                 :key="header.text"
@@ -48,24 +39,17 @@
                     </tr>
                 </template>
                 <template slot="items" slot-scope="props">
-                    <tr :active="props.selected" @click="props.item.selected = !props.item.selected">
-                        <td>
-                            <v-checkbox
-                                    :input-value="props.item.selected"
-                                    primary
-                                    hide-details
-                            ></v-checkbox>
-                        </td>
+                    <tr>
                         <td class="text-xs-center">{{ props.item.user.profile.first_name + " " + props.item.user.profile.last_name  }}
                         </td>
                         <td class="text-xs-center">{{ props.item.phong_may.name}}</td>
-                        <td class="text-xs-center">{{ props.item.mon_hoc.name }}</td>
+                        <td class="text-xs-center">{{ (props.item.mon_hoc != null) ? props.item.mon_hoc.name : props.item.ghi_chu  }}</td>
                         <td class="text-xs-center">{{ props.item.ca.name }}</td>
                         <td class="text-xs-center">{{ props.item.thu.name }}</td>
                         <td class="text-xs-center">{{ props.item.hoc_ky.name }}</td>
                         <td class="text-xs-center">{{ props.item.ngay_muon }}</td>
                         <td class="text-xs-center">
-                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id , props.item.index)">
+                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id , props.index)">
                                 <v-icon color="pink">delete</v-icon>
                             </v-btn>
                         </td>
@@ -86,7 +70,7 @@
             selected: [],
             search: "",
             headers: [
-                {text: 'Tên Giảng Viên', align: 'left', value: 'profile.first_name'},
+                {text: 'Tên Giảng Viên', align: 'left', value: 'user.profile.first_name'},
                 {text: 'Phòng Máy', value: 'gender', align: 'left',},
                 {text: 'Môn Học', value: 'email', align: 'left',},
                 {text: 'Ca Học', value: '', align: 'left',},
@@ -116,7 +100,8 @@
                 }
             }).then((response) => {
                 _this.isLoading = false;
-                this.muonPhong = response.data.data;
+                _this.muonPhong = response.data.data;
+                console.log(_this.muonPhong);
             }).catch(error => {
                 if (!error.response) {
                     // network error
@@ -145,7 +130,7 @@
                 },
                 xacnhanxoa(item, index) {
                     let _this = this;
-
+                    console.log(index);
                     Axios.put(_this.url + '/api/update-status-mp/' + item,{
                         headers: {
                             Authorization: 'Bearer' + ' ' + _this.token

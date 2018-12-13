@@ -91,15 +91,15 @@
                     value: 'giang_vien.profile.first_name'
                 },
                 {text: 'Mô Tả Giảng Viên', value: '', align: 'left',},
-                {text: 'Tên Kỹ Thuật Viên', value: '', align: 'left',},
-                {text: 'Mô Tả Kỹ Thuật Viên', value: 'giang_vien.profile.first_name', align: 'left',},
+                {text: 'Tên Kỹ Thuật Viên', value: 'ky_thuat_vien.profile.first_name', align: 'left',},
+                {text: 'Mô Tả Kỹ Thuật Viên', value: 'mota_ktv', align: 'left',},
 
 
                 {text: 'Chức Năng', value: '', align: 'left',},
             ],
             listMota: [],
-            url:'http://luanvantn.dev.digiprojects.top'
-
+            // url:'http://luanvantn.dev.digiprojects.top'
+            url:'http://localhost:8000'
         }),
         created: function () {
             let author = localStorage.getItem('author')
@@ -113,9 +113,9 @@
                     Authorization: 'Bearer' + ' ' + this.token
                 }
             }).then((response) => {
-                console.log(response);
                 _this.isLoading = false;
-                this.listMota = response.data.data;
+                _this.listMota = response.data.data;
+                console.log(_this.listMota);
             }).catch(error => {
                 if (!error.response) {
                     // network error
@@ -163,7 +163,6 @@
 
                 xacnhanxoa(item,index) {
                     let _this = this;
-                    console.log(item,index);
                     Axios.delete(_this.url + '/api/delete-may-loi/'+item).then(response =>{
                         if(response.status == 200)
                         {

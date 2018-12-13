@@ -1,8 +1,15 @@
-
 <template>
     <div>
         <v-card>
             <v-card-title>
+                <div class="fillter" style="width: 200px">
+                    <v-checkbox class="filter-chk" :label="`Chưa Sửa`" value="1" v-model="check_box_chua_sua"
+                                @change="changeCheckbox"></v-checkbox>
+                    <v-checkbox class="filter-chk" :label="`Đang Sửa`" value="2" v-model="check_box_dang_sua"
+                                @change="changeCheckbox"></v-checkbox>
+                    <v-checkbox class="filter-chk" :label="`Đã Sửa`" value="3" v-model="check_box_da_sua"
+                                @change="changeCheckbox"></v-checkbox>
+                </div>
                 <v-spacer></v-spacer>
                 <v-text-field
                         v-model="search"
@@ -10,7 +17,20 @@
                         label="Search"
                         single-line
                         hide-details
+                        style="margin-bottom: 18px"
                 ></v-text-field>
+                <v-spacer></v-spacer>
+                <v-select class="test"
+                          :items="listPhongMay"
+                          v-model="selectedPhongMay"
+                          label="Phòng Máy"
+                          single-line
+                          item-text="name"
+                          item-value="id"
+                          return-object
+                          persistent-hint
+                ></v-select>
+                <v-btn @click="exportFile" class="btn btn-xs btn-success" color="primary">Export</v-btn>
             </v-card-title>
             <v-data-table
                     v-model="selected"
@@ -54,12 +74,20 @@
                             ></v-checkbox>
                         </td>
                         <td class="text-xs-center">{{ props.item.phong_may.name}}</td>
-                        <td class="text-xs-center">{{ props.item.giang_vien.profile.first_name + ' ' + props.item.giang_vien.profile.last_name
+                        <td class="text-xs-center">{{ props.item.giang_vien.profile.first_name + ' ' +
+                            props.item.giang_vien.profile.last_name
                             }}
                         </td>
                         <td class="text-xs-center">{{ props.item.mota_gv != null ? props.item.mota_gv : "" }}</td>
-                        <td class="text-xs-center">{{ props.item.ky_thuat_vien != null ? props.item.ky_thuat_vien.profile.first_name + ' ' + props.item.ky_thuat_vien.profile.last_name : "" }}</td>
+                        <td class="text-xs-center">{{ props.item.ky_thuat_vien != null ?
+                            props.item.ky_thuat_vien.profile.first_name + ' ' +
+                            props.item.ky_thuat_vien.profile.last_name : "" }}
+                        </td>
                         <td class="text-xs-center">{{ props.item.mota_ktv != null ? props.item.mota_ktv : "" }}</td>
+                        <td class="text-xs-center">{{ props.item.created_at != null ? props.item.created_at : "" }}</td>
+                        <td class="text-xs-center">{{ (props.item.status == 3 && props.item.updated_at != null) ?
+                            props.item.updated_at : "-" }}
+                        </td>
                         <td class="text-xs-center">
                             <v-btn icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
@@ -93,28 +121,35 @@
                 {text: 'Mô Tả Giảng Viên', value: '', align: 'left',},
                 {text: 'Tên Kỹ Thuật Viên', value: '', align: 'left',},
                 {text: 'Mô Tả Kỹ Thuật Viên', value: 'giang_vien.profile.first_name', align: 'left',},
-
-
+                {text: 'Ngày Tạo', value: '', align: 'left',},
+                {text: 'Ngày Sửa', value: '', align: 'left',},
                 {text: 'Chức Năng', value: '', align: 'left',},
             ],
             listMota: [],
-            url:'http://luanvantn.dev.digiprojects.top'
-
+            // url:'http://luanvantn.dev.digiprojects.top',
+            url: 'http://localhost:8000',
+            urlExport: '',
+            listPhongMay: [],
+            selectedPhongMay: 0,
+            check_box_chua_sua: 0,
+            check_box_dang_sua: 0,
+            check_box_da_sua: 0,
         }),
         created: function () {
-            let author = localStorage.getItem('author')
-            let auth = JSON.parse(author);
-            this.token = auth['token']
             var _this = this;
+            let author = localStorage.getItem('author');
+            let auth = JSON.parse(author);
+            _this.token = auth['token'];
             _this.isLoading = true;
             let uri = _this.url + '/api/list-mo-ta';
             Axios.get(uri, {
                 headers: {
-                    Authorization: 'Bearer' + ' ' + this.token
+                    Authorization: 'Bearer' + ' ' + _this.token
                 }
             }).then((response) => {
                 _this.isLoading = false;
-                this.listMota = response.data.data;
+                _this.listMota = response.data.data;
+                console.log(response.data.data);
             }).catch(error => {
                 if (!error.response) {
                     // network error
@@ -124,9 +159,49 @@
                     this.errorStatus = error.response.data.message;
                 }
             });
+            let uriPhongMay = _this.url + '/api/phong-may';
+            Axios.get(uriPhongMay).then((response) => {
+                _this.isLoading = false;
+                _this.listPhongMay = response.data.data;
+                _this.listPhongMay.push({name: 'Không Chọn'})
+            }).catch(error => {
+                if (!error.response) {
+                    _this.errorStatus = 'Error: Network Error';
+                } else {
+                    _this.errorStatus = error.response.data.message;
+                    alert(_this.errorStatus);
+                }
+            });
         },
         methods:
             {
+                async changeCheckbox() {
+                    var _this = this;
+                    if (_this.check_box_chua_sua == null) {
+                        _this.check_box_chua_sua = 0;
+                    }
+                    if (_this.check_box_dang_sua == null) {
+                        _this.check_box_dang_sua = 0;
+                    }
+                    if (_this.check_box_da_sua == null) {
+                        _this.check_box_da_sua = 0;
+                    }
+                    try {
+                        var response = await Axios.get(_this.url + '/api/list-mo-ta?check_box_dang_sua='
+                            + _this.check_box_chua_sua + '&check_box_chua_sua=' + _this.check_box_dang_sua + '&check_box_da_sua=' + _this.check_box_da_sua, {
+                            headers: {
+                                Authorization: 'Bearer' + ' ' + _this.token
+                            }
+                        });
+                        if (response.status == 200) {
+                            _this.listMota = [];
+                            _this.listMota = response.data.data;
+                        }
+                    } catch (e) {
+                        alert(e.response.data.message);
+                    }
+
+                },
                 toggleAll() {
                     if (this.selected.length) this.selected = []
                     else this.selected = this.listMota.slice()
@@ -159,18 +234,44 @@
                 //     //_this.dialog = true;
                 //     console.log(item);
                 // },
-
-                xacnhanxoa(item,index) {
+                async exportFile() {
                     let _this = this;
-                    console.log(item,index);
-                    Axios.delete(_this.url + '/api/delete-may-loi/'+item).then(response =>{
-                        if(response.status == 200)
+                    if (_this.check_box_chua_sua == null) {
+                        _this.check_box_chua_sua = 0;
+                    }
+                    if (_this.check_box_dang_sua == null) {
+                        _this.check_box_dang_sua = 0;
+                    }
+                    if (_this.check_box_da_sua == null) {
+                        _this.check_box_da_sua = 0;
+                    }
+                    var data =
                         {
+                            phong_may_id: _this.selectedPhongMay.id,
+                            check_box_chua_sua: _this.check_box_chua_sua,
+                            check_box_dang_sua: _this.check_box_dang_sua,
+                            check_box_da_sua: _this.check_box_da_sua
+                        };
+                    var exportData = await Axios.get(_this.url + '/api/export-danh-sach-loi?phong_may_id=' + data.phong_may_id +
+                        '&check_box_chua_sua=' + data.check_box_chua_sua + '&check_box_dang_sua=' + data.check_box_dang_sua + '&check_box_da_sua=' + data.check_box_da_sua,
+                        {
+                            headers: {
+                                Authorization: 'Bearer' + ' ' + _this.token
+                            }
+                        });
+                    if (exportData.status == 200) {
+                        _this.urlExport = _this.url + exportData.data;
+                        window.location.href = _this.urlExport;
+                    }
+                },
+                xacnhanxoa(item, index) {
+                    let _this = this;
+                    console.log(item, index);
+                    Axios.delete(_this.url + '/api/delete-may-loi/' + item).then(response => {
+                        if (response.status == 200) {
                             alert('xóa thành công')
-                            _this.listMota.splice(index,1)
-                        }
-                        else
-                        {
+                            _this.listMota.splice(index, 1)
+                        } else {
                             alert('abc')
                         }
 
@@ -185,5 +286,8 @@
 </script>
 
 <style scoped>
-
+    .filter-chk {
+        height: 30px;
+        margin: 0 !important;
+    }
 </style>

@@ -42,6 +42,20 @@
                 <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Submit</v-btn>
             </v-card-actions>
         </v-form>
+        <v-alert v-if="success != ''"
+                 v-model="success"
+                 type="success"
+                 class="alert-effect"
+        >
+            <label>{{success}}</label>
+        </v-alert>
+        <v-alert v-if="info != ''"
+                 v-model="info"
+                 type="error"
+                 class="alert-effect"
+        >
+            <label>{{info}}</label>
+        </v-alert>
         <div class="lichtruc-data">
             <div class="col-ca">
                 <div class="ca-content" style="height: 50px">
@@ -68,7 +82,7 @@
                                     <div></div>
                                 </div>
                                 <div v-else class="lichtruc-detail"
-                                     v-on:click="viewDetail(checkLichTruc(ca.id, thu.id),key)">
+                                     v-on:click="viewDetail(ca.id,checkLichTruc(ca.id, thu.id),key)">
                                     {{ checkLichTruc(ca.id, thu.id).user.profile.first_name+ ' ' + checkLichTruc(ca.id,
                                     thu.id).user.profile.last_name }}
                                     <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
@@ -109,18 +123,32 @@
                                 <td><strong>Lớp: </strong></td>
                                 <td>{{ detailContent.nhom_lop.name }}</td>
                             </tr>
-                            <tr>
-                                <!--<td><strong>Nội Dung: </strong></td>-->
-                                <!--<td>Đăng Ký Mượn Phòng</td>-->
+                            <tr v-if="detailContent.ngay_muon">
+                                <td><strong>Nội Dung: </strong></td>
+                                <td>Phòng Mượn</td>
                             </tr>
                         </table>
-                        <v-textarea
-                                name="input-7-1"
-                                label="Mô Tả"
-                                value=""
-                                v-model="moTaGv"
-                                hint="Hint text"
-                                style="width: 100%"
+                        <v-radio-group v-model="ex7" @change="changerdo" row>
+                            <v-radio
+                                    label="Bình Thường"
+                                    color="indigo"
+                                    value="3"
+                            ></v-radio>
+                            <v-radio
+                                    label="Lỗi"
+                                    color="red"
+                                    value="1"
+                            ></v-radio>
+                        </v-radio-group>
+                        <label style="color: red">{{error != '' ? error : ""}}</label>
+                        <v-textarea v-if="ex7 == '1'"
+                                    name="input-7-1"
+                                    label="Mô Tả (*)"
+                                    value=""
+                                    v-model="moTaGv"
+                                    hint="Hint text"
+                                    style="width: 100%"
+                                    required
                         ></v-textarea>
                     </v-card-text>
                     <v-card-actions>
@@ -129,7 +157,10 @@
                                v-on:click="dangKyNghi()">Đăng Ký Nghỉ
                         </v-btn>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" @click="submitMotaLoi()">Báo cáo phòng máy</v-btn>
+                        <v-btn color="blue darken-1" @click="submitMotaLoi()"
+                               v-if="detailContent.dang_ky_nghi  == null && detailContent.nhom_lop || (detailContent.dang_ky_nghi  != null && detailContent.dang_ky_nghi.tuan_id != selectTuan) || detailContent.ngay_muon != null">
+                            Báo cáo phòng máy
+                        </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -151,7 +182,8 @@
                 selectedTuan: 0,
                 selectedHocKy: 0,
                 selectedPhongMay: 0,
-                thuNgayList:[]
+                thuNgayList: [],
+                mon_hoc_id: 0
             },
             dataDangKyNghi: {
                 lich_day_id: 0,
@@ -166,7 +198,11 @@
             detailContent: "",
             id: 0,
             selectedNghi: 0,
-            moTaGv: ""
+            moTaGv: "",
+            ex7: '3',
+            error:'',
+            success:'',
+            info:'',
         }),
         created: function () {
             var _this = this;
@@ -233,7 +269,7 @@
                         tenhocky: hocky.name + ' - ' + hocky.nam_hoc,
                         ngaybatdau: hocky.ngay_bat_dau,
                         ngayketthuc: hocky.ngay_ket_thuc
-                    }
+                    };
                     _this.dataLich.hocKyList.push(hockyItem);
                 }
                 for (var hk of _this.dataLich.hocKyList) {
@@ -241,7 +277,7 @@
                     var ngayketthuc = hk.ngayketthuc;
                     var year = new Date().getFullYear();
                     var month = (new Date().getMonth() + 1);
-                    var date = new Date().getDate() ;
+                    var date = new Date().getDate();
                     var date = date.toString().length < 2 ? "0" + date : date;
                     var currentDate = year + '-' + month + '-' + date
                     if (ngaybatdau <= currentDate && currentDate <= ngayketthuc) {
@@ -260,7 +296,7 @@
             let uriPhongMay = _this.url + '/api/phong-may';
             Axios.get(uriPhongMay).then((response) => {
                 _this.isLoading = false;
-                this.dataLich.phongMayList = response.data.data;
+                _this.dataLich.phongMayList = response.data.data;
             }).catch(error => {
                 if (!error.response) {
                     this.errorStatus = 'Error: Network Error';
@@ -268,10 +304,10 @@
                     this.errorStatus = error.response.data.message;
                 }
             });
-            let author = localStorage.getItem('author')
+            let author = localStorage.getItem('author');
             let Auth = JSON.parse(author);
-            this.id = Auth['id'];
-            this.token = Auth['token'];
+            _this.id = Auth['id'];
+            _this.token = Auth['token'];
         },
         methods: {
             searchLichDay() {
@@ -283,18 +319,19 @@
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                     }
                 var ngayHienTai = _this.dataLich.tuanList.findIndex(itemTuan => itemTuan.id == data.tuan_id)
-                _this.getDateOfWeek(this.dataLich.tuanList[ngayHienTai]);
-                console.log(this.dataLich.tuanList[ngayHienTai],'aaaa');
+                _this.getDateOfWeek(_this.dataLich.tuanList[ngayHienTai]);
                 Axios.get(_this.url + '/api/get-lich-gv?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
                     , {
                         headers: {
                             Authorization: 'Bearer' + ' ' + this.token
                         }
                     }).then((response) => {
+                    _this.dataLich.lichDay = [];
                     _this.dataLich.lichDay = response.data.data;
-                    _this.selectTuan =  data.tuan_id
-                }).catch(function (error) {
-                    _this.error = error.response.data.message
+                    console.log(_this.dataLich.lichDay);
+                    _this.selectTuan = data.tuan_id
+                }).catch(function (e) {
+                    _this.error = e.response.data.message
                     _this.info = ""
                 });
                 Axios.get(_this.url + '/api/get-dk-muon-phong-gv?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
@@ -303,13 +340,12 @@
                             Authorization: 'Bearer' + ' ' + this.token
                         }
                     }).then((response) => {
-                    for (let item of response.data.data)
-                    {
+                    for (let item of response.data.data) {
                         _this.dataLich.lichDay.push(item);
                     }
-                    _this.selectTuan =  data.tuan_id
+                    _this.selectTuan = data.tuan_id
                 }).catch(function (error) {
-                    _this.error = error.response.data.message
+                    _this.error = error.response.data.message;
                     _this.info = ""
                 });
             },
@@ -324,17 +360,18 @@
                     }
                 Axios.post(uri, data, {
                     headers: {
-                        Authorization: 'Bearer' + ' ' + this.token
+                        Authorization: 'Bearer' + ' ' + _this.token
                     }
                 }).then((response) => {
-
                     if (response.status == 200) {
-                        alert('Đăng ký nghỉ thành công!')
-                        _this.notification = 'hôm nay nghỉ'
+                        _this.success = 'Đăng Ký Nghỉ Thành Công';
+                        setTimeout(()=>{
+                            _this.success = '';
+                        }, 3000);
+                        _this.notification = 'hôm nay nghỉ';
                         for (let item of response.data.data) {
                             var indexLichday = _this.dataLich.lichDay.findIndex(itemLichday => itemLichday.id == item.lich_day_id)
                             _this.dataLich.lichDay[indexLichday].dang_ky_nghi = {tuan_id: _this.selectTuan}
-
                         }
                         _this.dialog = false
                         //Bat theo front-end
@@ -347,14 +384,19 @@
                         // console.log(response);
                     }
                 }).catch(function (error) {
-                    _this.error = error.response.data.message
+                    _this.info = error.response.data.message
+                    setTimeout(()=>{
+                        _this.info = '';
+                    }, 3000);
                     _this.info = ""
                 });
             },
-            viewDetail(itemLichDay) {
+            viewDetail(ca_id, itemLichDay) {
                 var _this = this;
                 _this.dialog = true;
                 _this.selectedNghi = itemLichDay.id
+                _this.dataLich.ca_id = ca_id;
+                _this.dataLich.mon_hoc_id = itemLichDay.mon_hoc_id
                 _this.detailContent = itemLichDay;// ham nay ko chay thi pai
                 var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == itemLichDay.thu_id)
                 _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
@@ -375,7 +417,6 @@
                             }
                             break;
                         }
-
                     }
                 }
                 return result;
@@ -387,19 +428,24 @@
                     {
                         mota_gv: _this.moTaGv,
                         phong_may_id: _this.dataLich.selectedPhongMay.id,
+                        ca_id: _this.dataLich.ca_id,
+                        mon_hoc_id: _this.dataLich.mon_hoc_id,
+                        status: _this.ex7,
                     }
                 Axios.post(uri, data, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + this.token
                     }
                 }).then((response) => {
-
                     if (response.status == 201) {
                         _this.dialog = false
-                        alert('Báo lỗi phòng máy thành công!')
+                        _this.success = 'Báo lỗi phòng máy thành công!'
+                        setTimeout(()=>{
+                            _this.success = '';
+                            }, 3000);
                     }
                 }).catch(function (error) {
-                    _this.error = error.response.data.message
+                    _this.error = error.response.data.message;
                     _this.info = ""
                 });
             },
@@ -413,9 +459,15 @@
                     var dateText = dateOfWeek.getFullYear() + '-' + ('0' + (dateOfWeek.getMonth() + 1)).slice(-2) + '-' + ('0' + dateOfWeek.getDate()).slice(-2);
                     thuNgayItem = {id: 2 + i, tenthu: _this.dataLich.thuList[0 + i].name, ngay: dateText};
                     _this.dataLich.thuNgayList.push(thuNgayItem);
-                    console.log(_this.dataLich.thuNgayList,'current day');
                 }
             },
+            changerdo() {
+                let _this = this
+                console.log(_this.ex7);
+                if (_this.ex7 == '1') {
+                    console.log('aaa');
+                }
+            }
         },
     }
 </script>
@@ -510,6 +562,10 @@
         font-size: 14px;
     }
 
+    .rdobtn {
+
+    }
+
     @keyframes displayLoading {
         from {
             opacity: 0
@@ -518,7 +574,14 @@
             opacity: 1
         }
     }
-
+    .alert-effect {
+        animation: animations 1s;
+        position: absolute;
+        top: 65px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+    }
     @media screen and (max-width: 1280px) {
         .lichtruc-box {
             overflow-x: scroll;
@@ -536,5 +599,10 @@
             min-width: 1516px;
         }
     }
+    @keyframes animations {
+        from {top: -20px}
+        to {top: 65px}
+    }
+
 
 </style>

@@ -28,15 +28,6 @@
             >
                 <template slot="headers" slot-scope="props">
                     <tr>
-                        <th>
-                            <v-checkbox
-                                    :input-value="props.all"
-                                    :indeterminate="props.indeterminate"
-                                    primary
-                                    hide-details
-                                    @click.native="toggleAll"
-                            ></v-checkbox>
-                        </th>
                         <th
                                 v-for="header in props.headers"
                                 :key="header.text"
@@ -49,24 +40,17 @@
                     </tr>
                 </template>
                 <template slot="items" slot-scope="props">
-                    <tr :active="props.selected" @click="props.selected = !props.selected">
-                        <td>
-                            <v-checkbox
-                                    :input-value="props.selected"
-                                    primary
-                                    hide-details
-                            ></v-checkbox>
-                        </td>
+                    <tr>
                         <td class="text-xs-center">{{ props.item.profile.first_name + ' ' + props.item.profile.last_name
                             }}
                         </td>
-                        <td class="text-xs-center">{{ props.item.profile.gender==1 ?"male" : "female" }}</td>
+                        <td class="text-xs-center">{{ props.item.profile.gender == 1 ?"male" : "female" }}</td>
                         <td class="text-xs-center">{{ props.item.email }}</td>
                         <td class="text-xs-center">
                             <v-btn icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
                             </v-btn>
-                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id , props.item.index)">
+                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id , props.index)">
                                 <v-icon color="pink">delete</v-icon>
                             </v-btn>
                         </td>
@@ -147,12 +131,13 @@
                 xacnhanxoa(item, index) {
                     let _this = this;
                     _this.dialog = false;
-                    Axios.delete(_this.url + '/api/user/' + item).then(response => {
-                        if (response.status == 200) {
-                            alert('xóa thành công')
-                            _this.user.splice(index, 1)
-                        }
-                    })
+                    console.log(index);
+                    // Axios.delete(_this.url + '/api/user/' + item).then(response => {
+                    //     if (response.status == 200) {
+                    //         alert('xóa thành công')
+                    //         _this.user.splice(index, 1)
+                    //     }
+                    // })
 
                 },
 	            notification(){
