@@ -319,6 +319,7 @@
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                     }
                 var ngayHienTai = _this.dataLich.tuanList.findIndex(itemTuan => itemTuan.id == data.tuan_id)
+                _this.dataLich.thuNgayList = []
                 _this.getDateOfWeek(_this.dataLich.tuanList[ngayHienTai]);
                 Axios.get(_this.url + '/api/get-lich-gv?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
                     , {
@@ -328,11 +329,10 @@
                     }).then((response) => {
                     _this.dataLich.lichDay = [];
                     _this.dataLich.lichDay = response.data.data;
-                    console.log(_this.dataLich.lichDay);
                     _this.selectTuan = data.tuan_id
                 }).catch(function (e) {
-                    _this.error = e.response.data.message
-                    _this.info = ""
+                    _this.info = e.response.data.message
+
                 });
                 Axios.get(_this.url + '/api/get-dk-muon-phong-gv?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
                     , {
@@ -343,10 +343,16 @@
                     for (let item of response.data.data) {
                         _this.dataLich.lichDay.push(item);
                     }
+                    _this.success = 'Thành Công';
+                    setTimeout(()=>{
+                        _this.success = '';
+                    }, 3000);
                     _this.selectTuan = data.tuan_id
                 }).catch(function (error) {
-                    _this.error = error.response.data.message;
-                    _this.info = ""
+                    _this.info = error.response.data.message;
+                    setTimeout(()=>{
+                        _this.info = '';
+                    }, 3000);
                 });
             },
             dangKyNghi() {
@@ -400,6 +406,7 @@
                 _this.detailContent = itemLichDay;// ham nay ko chay thi pai
                 var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == itemLichDay.thu_id)
                 _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
+                console.log(_this.dataLich['ngay']);
             },
             checkLichTruc(ca_id, thu_id) {
                 var _this = this;
@@ -431,7 +438,9 @@
                         ca_id: _this.dataLich.ca_id,
                         mon_hoc_id: _this.dataLich.mon_hoc_id,
                         status: _this.ex7,
+                        ngay_thong_bao:_this.dataLich.ngay
                     }
+                console.log(data);
                 Axios.post(uri, data, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + this.token
@@ -439,6 +448,7 @@
                 }).then((response) => {
                     if (response.status == 201) {
                         _this.dialog = false
+                        _this.moTaGv = "";
                         _this.success = 'Báo lỗi phòng máy thành công!'
                         setTimeout(()=>{
                             _this.success = '';

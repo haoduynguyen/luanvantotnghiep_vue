@@ -1,5 +1,19 @@
 <template>
     <div>
+        <v-alert v-if="success != ''"
+                 v-model="success"
+                 type="success"
+                 class="alert-effect"
+        >
+            <label>{{success}}</label>
+        </v-alert>
+        <v-alert v-if="info != ''"
+                 v-model="info"
+                 type="error"
+                 class="alert-effect"
+        >
+            <label>{{info}}</label>
+        </v-alert>
         <v-form id="formData" v-on:submit.prevent="searchLichDay">
             <div style="display: flex; ">
                 <v-select class="test"
@@ -290,7 +304,9 @@
             detailMuonPhong: "",
             detailDaMuonPhong: "",
             token: "",
-            showGhichu: false
+            showGhichu: false,
+            success:'',
+            info:'',
         }),
         created: function () {
             var _this = this;
@@ -507,22 +523,26 @@
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                         ghi_chu:_this.dataLich.ghichu
                     }
-                console.log(data);
                 Axios.post(uri, data, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + _this.token
                     }
                 }).then((response) => {
                     _this.dangKyMuonPhong = response.data.data
-                    console.log(_this.dangKyMuonPhong);
-                    alert('đăng ký phòng thành công')
                     _this.dialogdkMuonPhong = false
+                    _this.success = 'đăng ký phòng thành công';
+                    setTimeout(() => {
+                        _this.success = '';
+                    }, 2000);
                     let resultData = response.data.data
                     _this.dataLich.lichMuon.push(resultData)
                 }).catch(function (error) {
-                    _this.error = error.response.data.message
-                    alert(_this.error);
-                    _this.info = ""
+                    _this.dialogdkMuonPhong = false
+                    _this.info = error.response.data.message
+                    console.log(_this.info);
+                    setTimeout(() => {
+                        _this.info = '';
+                    }, 2000);
                 });
             },
             viewDetail(itemLichDay) {

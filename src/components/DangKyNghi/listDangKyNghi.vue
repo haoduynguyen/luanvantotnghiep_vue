@@ -1,5 +1,19 @@
 <template>
     <div>
+        <v-alert v-if="success != ''"
+                 v-model="success"
+                 type="success"
+                 class="alert-effect"
+        >
+            <label>{{success}}</label>
+        </v-alert>
+        <v-alert v-if="info != ''"
+                 v-model="info"
+                 type="error"
+                 class="alert-effect"
+        >
+            <label>{{info}}</label>
+        </v-alert>
         <v-card-actions>
             <!--<v-btn v-bind:to="{name: 'Home'}">Back</v-btn>-->
             <v-spacer></v-spacer>
@@ -27,15 +41,6 @@
             >
                 <template slot="headers" slot-scope="props">
                     <tr>
-                        <th>
-                            <v-checkbox
-                                    :input-value="props.all"
-                                    :indeterminate="props.indeterminate"
-                                    primary
-                                    hide-details
-                                    @click.native="toggleAll"
-                            ></v-checkbox>
-                        </th>
                         <th
                                 v-for="header in props.headers"
                                 :key="header.text"
@@ -49,13 +54,6 @@
                 </template>
                 <template slot="items" slot-scope="props">
                     <tr :active="props.selected" @click="props.item.selected = !props.item.selected">
-                        <td>
-                            <v-checkbox
-                                    :input-value="props.item.selected"
-                                    primary
-                                    hide-details
-                            ></v-checkbox>
-                        </td>
                         <td class="text-xs-center">{{ props.item.lichDay.user.profile.first_name + " " + props.item.lichDay.user.profile.last_name  }}
                         </td>
                         <td class="text-xs-center">{{ props.item.lichDay.phong_may.name}}</td>
@@ -66,7 +64,7 @@
                         <td class="text-xs-center">{{ props.item.lichDay.hoc_ky.name }}</td>
                         <td class="text-xs-center">{{ props.item.ngay_nghi }}</td>
                         <td class="text-xs-center">
-                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id , props.item.index)">
+                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id , props.index)">
                                 <v-icon color="pink">delete</v-icon>
                             </v-btn>
                         </td>
@@ -74,6 +72,37 @@
                 </template>
             </v-data-table>
         </v-card>
+        <v-layout row justify-center>
+            <v-dialog
+                    v-model="dialogDelete"
+                    max-width="290"
+            >
+                <v-card>
+                    <v-card-title class="headline">Bạn có chắc chắn muốn xóa không ?</v-card-title>
+
+                    <v-card-text>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="green darken-1"
+                                flat="flat"
+                                @click="dialogDelete = false"
+                        >
+                            Không
+                        </v-btn>
+                        <v-btn
+                                color="green darken-1"
+                                flat="flat"
+                                @click="xoaData"
+                        >
+                            Đồng ý
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-layout>
     </div>
 </template>
 
@@ -99,9 +128,14 @@
 
             ],
             dangKyNghi: [],
-            //url:'http://localhost:8000',
-            url:'http://luanvantn.dev.digiprojects.top',
-            token:''
+            url:'http://localhost:8000',
+            //url:'http://luanvantn.dev.digiprojects.top',
+            token:'',
+            success:'',
+            info:'',
+            valueItem:'',
+            positionItem:'',
+            dialogDelete:false
         }),
         created: function () {
             var _this = this;
@@ -122,10 +156,8 @@
                 if (!error.response) {
                     // network error
                     this.errorStatus = 'Error: Network Error';
-                    console.log(error.response.data.message);
                 } else {
                     this.errorStatus = error.response.data.message;
-                    console.log(this.errorStatus);
                 }
             });
         },
@@ -145,19 +177,35 @@
                     }
                 },
                 xacnhanxoa(item, index) {
-                    let _this = this;
+                    var _this = this;
+                    _this.dialogDelete = true;
+                    _this.valueItem = item;
+                    _this.positionItem = index;
 
-                    Axios.delete(_this.url + '/api/dang-ky-nghi/' + item,{
+                },
+                xoaData() {
+                    let _this = this;
+                    console.log(_this.valueItem);
+                    Axios.delete(_this.url + '/api/dang-ky-nghi/' + _this.valueItem, {
                         headers: {
                             Authorization: 'Bearer' + ' ' + _this.token
                         }
                     }).then(response => {
                         if (response.status == 200) {
-                            alert('xóa thành công')
-                            _this.muonPhong.splice(index, 1)
+                            _this.dangKyNghi.splice(_this.positionItem, 1);
+                            _this.dialogDelete = false;
+                            _this.success = 'xóa thành công';
+                            setTimeout(() => {
+                                _this.success = '';
+                            }, 2000);
                         }
+                    }).catch(function (error) {
+                        _this.info = error.response.data.message;
+                        _this.dialogDelete = false;
+                        setTimeout(() => {
+                            _this.info = '';
+                        }, 2000);
                     })
-
                 },
                 editItem(id) {
                     this.$router.push({path: `/edit-user/${id}`});
