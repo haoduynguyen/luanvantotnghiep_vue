@@ -200,9 +200,9 @@
             selectedNghi: 0,
             moTaGv: "",
             ex7: '3',
-            error:'',
-            success:'',
-            info:'',
+            error: '',
+            success: '',
+            info: '',
         }),
         created: function () {
             var _this = this;
@@ -344,13 +344,13 @@
                         _this.dataLich.lichDay.push(item);
                     }
                     _this.success = 'Thành Công';
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         _this.success = '';
                     }, 3000);
                     _this.selectTuan = data.tuan_id
                 }).catch(function (error) {
                     _this.info = error.response.data.message;
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         _this.info = '';
                     }, 3000);
                 });
@@ -371,7 +371,7 @@
                 }).then((response) => {
                     if (response.status == 200) {
                         _this.success = 'Đăng Ký Nghỉ Thành Công';
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             _this.success = '';
                         }, 3000);
                         _this.notification = 'hôm nay nghỉ';
@@ -391,7 +391,7 @@
                     }
                 }).catch(function (error) {
                     _this.info = error.response.data.message
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         _this.info = '';
                     }, 3000);
                     _this.info = ""
@@ -438,7 +438,8 @@
                         ca_id: _this.dataLich.ca_id,
                         mon_hoc_id: _this.dataLich.mon_hoc_id,
                         status: _this.ex7,
-                        ngay_thong_bao:_this.dataLich.ngay
+                        ngay_thong_bao: _this.dataLich.ngay,
+                        tuan_id: _this.dataLich.selectedTuan.id,
                     }
                 console.log(data);
                 Axios.post(uri, data, {
@@ -450,9 +451,9 @@
                         _this.dialog = false
                         _this.moTaGv = "";
                         _this.success = 'Báo lỗi phòng máy thành công!'
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             _this.success = '';
-                            }, 3000);
+                        }, 3000);
                     }
                 }).catch(function (error) {
                     _this.error = error.response.data.message;
@@ -584,6 +585,7 @@
             opacity: 1
         }
     }
+
     .alert-effect {
         animation: animations 1s;
         position: absolute;
@@ -592,6 +594,7 @@
         transform: translate(-50%, -50%);
         width: 50%;
     }
+
     @media screen and (max-width: 1280px) {
         .lichtruc-box {
             overflow-x: scroll;
@@ -609,9 +612,14 @@
             min-width: 1516px;
         }
     }
+
     @keyframes animations {
-        from {top: -20px}
-        to {top: 65px}
+        from {
+            top: -20px
+        }
+        to {
+            top: 65px
+        }
     }
 
 

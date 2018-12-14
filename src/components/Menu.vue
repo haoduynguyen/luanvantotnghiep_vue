@@ -287,8 +287,8 @@
                 //         {icon: '', text: 'List', path: 'ListUser'},
                 //     ]
                 // },
-                {icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
-                {icon: 'class', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhongKtv'},
+                //{icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
+                {icon: 'class', text: 'Lịch Dạy', path: 'MuonPhongKtv'},
                 {icon: 'accessibility', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
                 {icon: 'computer', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
 
@@ -296,9 +296,9 @@
 
             ],
             itemsAdmin: [
-                {icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
+                //{icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
                 //{icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
-                {icon: 'class', text: 'Đăng Ký Mượn Phòng', path: 'MuonPhongKtv'},
+                {icon: 'event', text: 'Lịch Dạy', path: 'MuonPhongKtv'},
                 {icon: 'accessibility', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
                 {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
                 {icon: 'computer', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
@@ -309,9 +309,9 @@
         }),
         created: function () {
             var _this = this
-            let author = localStorage.getItem('author')
+            let author = localStorage.getItem('author');
             let Auth = JSON.parse(author);
-            var token = Auth['token']
+            var token = Auth['token'];
             var uri = _this.url + '/api/get-user'
             Axios.get(uri, {
                 headers: {
@@ -336,8 +336,12 @@
                 const googleAuth = gapi.auth2.getAuthInstance()
                 await googleAuth.signOut()
                 const googleUser = googleAuth.currentUser.get()
+                FB.logout(function (response) {
+                    console.log('logout', response);
+                });
                 googleUser.disconnect()
                 localStorage.clear();
+
                 //storage.removeItem("https://accounts.google.com");
                 // window.location.reload()
                 this.$router.push({name: 'Login'})

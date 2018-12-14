@@ -290,6 +290,7 @@
                 thuNgayList: [],
                 ghichu: '',
             },
+            status: 'not_accepted',
             mota_pm: '',
             selectTuan: 0,
             //url: 'http://luanvantn.dev.digiprojects.top',

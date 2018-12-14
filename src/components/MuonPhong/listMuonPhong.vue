@@ -4,6 +4,20 @@
             <!--<v-btn v-bind:to="{name: 'Home'}">Back</v-btn>-->
             <v-spacer></v-spacer>
         </v-card-actions>
+        <v-alert v-if="success != ''"
+                 v-model="success"
+                 type="success"
+                 class="alert-effect"
+        >
+            <label>{{success}}</label>
+        </v-alert>
+        <v-alert v-if="info != ''"
+                 v-model="info"
+                 type="error"
+                 class="alert-effect"
+        >
+            <label>{{info}}</label>
+        </v-alert>
         <v-card>
             <v-card-title>
                 <v-spacer></v-spacer>
@@ -40,10 +54,13 @@
                 </template>
                 <template slot="items" slot-scope="props">
                     <tr>
-                        <td class="text-xs-center">{{ props.item.user.profile.first_name + " " + props.item.user.profile.last_name  }}
+                        <td class="text-xs-center">{{ props.item.user.profile.first_name + " " +
+                            props.item.user.profile.last_name }}
                         </td>
                         <td class="text-xs-center">{{ props.item.phong_may.name}}</td>
-                        <td class="text-xs-center">{{ (props.item.mon_hoc != null) ? props.item.mon_hoc.name : props.item.ghi_chu  }}</td>
+                        <td class="text-xs-center">{{ (props.item.mon_hoc != null) ? props.item.mon_hoc.name :
+                            props.item.ghi_chu }}
+                        </td>
                         <td class="text-xs-center">{{ props.item.ca.name }}</td>
                         <td class="text-xs-center">{{ props.item.thu.name }}</td>
                         <td class="text-xs-center">{{ props.item.hoc_ky.name }}</td>
@@ -57,6 +74,37 @@
                 </template>
             </v-data-table>
         </v-card>
+        <v-layout row justify-center>
+            <v-dialog
+                    v-model="dialogDelete"
+                    max-width="290"
+            >
+                <v-card>
+                    <v-card-title class="headline">Bạn có chắc chắn muốn xóa không ?</v-card-title>
+
+                    <v-card-text>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="green darken-1"
+                                flat="flat"
+                                @click="dialogDelete = false"
+                        >
+                            Không
+                        </v-btn>
+                        <v-btn
+                                color="green darken-1"
+                                flat="flat"
+                                @click="xoaData"
+                        >
+                            Đồng ý
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-layout>
     </div>
 </template>
 
@@ -81,22 +129,26 @@
 
             ],
             muonPhong: [],
-
             //url:'http://luanvantn.dev.digiprojects.top',
-            url:'http://localhost:8000',
-            token:''
+            url: 'http://localhost:8000',
+            token: '',
+            valueItem: '',
+            positionItem: '',
+            dialogDelete: false,
+            success: '',
+            info: '',
         }),
         created: function () {
             var _this = this;
-	        let author = localStorage.getItem('author')
-	        let Auth = JSON.parse(author);
-	        var token = Auth['token']
+            let author = localStorage.getItem('author')
+            let Auth = JSON.parse(author);
+            var token = Auth['token']
             _this.token = token;
             _this.isLoading = true;
             let uri = _this.url + '/api/get-ds-muon-phong';
-            Axios.get(uri,{
-            	headers: {
-            		Authorization: 'Bearer' + ' ' + token
+            Axios.get(uri, {
+                headers: {
+                    Authorization: 'Bearer' + ' ' + token
                 }
             }).then((response) => {
                 _this.isLoading = false;
@@ -129,24 +181,41 @@
                     }
                 },
                 xacnhanxoa(item, index) {
+                    var _this = this;
+                    _this.dialogDelete = true;
+                    _this.valueItem = item;
+                    _this.positionItem = index;
+
+                },
+                xoaData() {
                     let _this = this;
-                    console.log(index);
-                    Axios.put(_this.url + '/api/update-status-mp/' + item,{
+                    console.log(_this.valueItem);
+                    Axios.put(_this.url + '/api/update-status-mp/' + _this.valueItem, {
                         headers: {
                             Authorization: 'Bearer' + ' ' + _this.token
                         }
                     }).then(response => {
                         if (response.status == 200) {
-                            alert('xóa thành công')
-                            _this.muonPhong.splice(index, 1)
+                            _this.muonPhong.splice(_this.positionItem, 1)
+                            _this.dialogDelete = false;
+                            _this.success = 'xóa thành công';
+                            setTimeout(() => {
+                                _this.success = '';
+                            }, 2000);
                         }
-                    })
+                    }).catch(function (error) {
+                        _this.info = error.response.data.message;
+                        _this.dialogDelete = false;
+                        setTimeout(()=>{
 
-                },
-                editItem(id) {
-                    this.$router.push({path: `/edit-user/${id}`});
-                },
-            }
+                            _this.info = '';
+                        }, 2000);
+                    })
+                }
+            },
+        editItem(id) {
+            this.$router.push({path: `/edit-user/${id}`});
+        },
     }
 </script>
 

@@ -115,7 +115,7 @@ export default new Router({
                     },
                 },
                 {
-                    path: '/lich-day',
+                    path: '/lich-day-cu',
                     name: 'LichDay',
                     component: LichDay,
                     meta: {
@@ -139,7 +139,7 @@ export default new Router({
                 //     },
                 // },
                 {
-                    path: '/dk-muon-phong',
+                    path: '/lich-day',
                     name: 'TestMuonPhong',
                     component: TestMuonPhong,
                     meta: {
@@ -147,7 +147,7 @@ export default new Router({
                     },
                 },
                 {
-                    path: '/ds-phong',
+                    path: '/ds-lich-day',
                     name: 'MuonPhongKtv',
                     component: MuonPhongKtv,
                     meta: {

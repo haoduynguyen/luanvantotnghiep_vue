@@ -1,5 +1,19 @@
 <template>
     <v-content>
+        <v-alert v-if="success != ''"
+                 v-model="success"
+                 type="success"
+                 class="alert-effect"
+        >
+            <label>{{success}}</label>
+        </v-alert>
+        <v-alert v-if="info != ''"
+                 v-model="info"
+                 type="error"
+                 class="alert-effect"
+        >
+            <label>{{info}}</label>
+        </v-alert>
         <v-container fluid fill-height>
             <v-layout align-center justify-center>
                 <v-flex xs12 sm8 md4>
@@ -52,10 +66,11 @@
                 scope: 'email',
                 return_scopes: true
             },
-            //url: "http://luanvantn.dev.digiprojects.top",
-            //url: 'http://localhost:8000',
-            url:'http://luanvantn.dev.digiprojects.top',
-            urlSendMail: "http://lvtn.cf"
+            //url: "https://luanvantn.dev.digiprojects.top",
+            url: 'http://localhost:8000',
+            urlSendMail: "http://lvtn.cf",
+            success: '',
+            info: '',
         }),
         mounted() {
             const _this = this
@@ -68,13 +83,24 @@
             {
                 loginUser() {
                     var _this = this
-                    _this.isLoading = true
-                    let uri = _this.url + '/api/login'
+                    _this.isLoading = true;
+                    let uri = _this.url + '/api/login';
                     Axios.post(uri, _this.Login).then((response) => {
                         if (response.status == 200) {
-                            console.log(response)
                             localStorage.setItem('author', JSON.stringify(response.data.data))
-                            this.$router.push({name: 'LichDay'})
+                            _this.success = 'Đăng nhập thành công'
+                            console.log(response.data.data);
+                            if (response.data.data.role_id == 1) {
+                                setTimeout(() => {
+                                    _this.success = '';
+                                    _this.$router.push({name: 'LichDayGV'})
+                                }, 2000);
+                            } else {
+                                setTimeout(() => {
+                                    _this.success = '';
+                                    _this.$router.push({name: 'TestMuonPhong'})
+                                }, 2000);
+                            }
                         }
                     }).catch(error => {
                         if (!error.response) {
@@ -82,11 +108,12 @@
                             this.errorStatus = 'Error: Network Error'
                             console.log(error.response.data.message)
                         } else {
-                            this.errorStatus = error.response.data.message
-                            alert(this.errorStatus)
+                            _this.info = error.response.data.message;
+                            setTimeout(() => {
+                                _this.info = '';
+                            }, 2000);
                         }
                     })
-
                 },
                 sendmail() {
                     var _this = this
@@ -98,15 +125,17 @@
                     const googleUser = await googleAuth.signIn({prompt: 'select_account', ux_mode: 'popup'})
                     var data = {
                         access_token: googleUser.Zi.access_token
-                    }
-
+                    };
                     try {
                         var response = await Axios.post(_this.url + '/api/google', data)
-                        console.log('true', response);
                         if (response.status == 200) {
                             localStorage.setItem('author', JSON.stringify(response.data.data))
-                            this.$router.push({name: 'LichDay'})
-                            return
+                            _this.success = 'Đăng nhập thành công',
+                                setTimeout(() => {
+                                    _this.success = '';
+                                    this.$router.push({name: 'LichDay'})
+                                    return
+                                }, 2000);
                         }
                     } catch (error) {
                         alert(error.response.data.message)
@@ -134,8 +163,8 @@
                 },
                 checkGoogleLoggedIn() {
                     if (typeof gapi !== undefined) {
-                        const _gapi = gapi ? gapi : window.gapi
-                        const googleAuth = _gapi.auth2.getAuthInstance()
+                        const _gapi = gapi ? gapi : window.gapi;
+                        const googleAuth = _gapi.auth2.getAuthInstance();
                         return googleAuth.isSignedIn.get()
                     }
 
@@ -148,18 +177,33 @@
                         access_token: response.authResponse.accessToken
                     }
                     Axios.post(_this.url + '/api/facebook', data).then((response) => {
-                        console.log(response);
+                        localStorage.setItem('author', JSON.stringify(response.data.data))
+                        _this.success = 'Đăng nhập thành công',
+                            setTimeout(() => {
+                                _this.success = '';
+                                _this.$router.push({name: 'LichDay'})
+                            }, 2000);
+                        return
+                    }).catch(error => {
+                        if (!error.response) {
+                            // network error
+                            this.errorStatus = 'Error: Network Error'
+                            console.log(error.response.data.message)
+                        } else {
+                            _this.info = error.response.data.message;
+                            setTimeout(() => {
+                                _this.info = '';
+                            }, 2000);
+                        }
                     })
                 },
                 logoutFB() {
-                    console.log('aaa');
                     FB.logout(function (response) {
                         console.log('logout', response);
                     });
                 },
                 checkLoginState() {
                     FB.getLoginStatus(function (response) {
-                        console.log('aaaa', response.authResponse.accessToken);
                         if (response.status === 'connected') {
                             // Logged into your app and Facebook.
                             console.log('Welcome!  Fetching your information.... ');

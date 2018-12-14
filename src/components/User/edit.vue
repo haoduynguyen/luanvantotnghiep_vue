@@ -1,5 +1,19 @@
 <template>
     <div id="app">
+        <v-alert v-if="success != ''"
+                 v-model="success"
+                 type="success"
+                 class="alert-effect"
+        >
+            <label>{{success}}</label>
+        </v-alert>
+        <v-alert v-if="info != ''"
+                 v-model="info"
+                 type="error"
+                 class="alert-effect"
+        >
+            <label>{{info}}</label>
+        </v-alert>
         <v-app id="inspire">
             <v-form v-model="valid" v-on:submit.prevent="editGiangVien" method="put">
                 <v-text-field
@@ -70,7 +84,9 @@
             emailRules: [
                 v => !!v || 'E-mail is required',
                 v => /.+@.+/.test(v) || 'E-mail must be valid'
-            ]
+            ],
+            success:'',
+            info:'',
         }),
         methods: {
             editGiangVien: function () {
@@ -82,24 +98,26 @@
                     phone: _this.giangVien.profile.phone,
                     gender: _this.giangVien.profile.gender,
                 }
-                console.log(giangVienItem);
                 Axios.put(_this.url + '/api/user/' + _this.giangVien.id, giangVienItem).then((response) => {
-                    if (response.data.error) {
-                        _this.error = response.data.error;
+                    if (response.status  == 200) {
+                        _this.success = 'Sửa thành công';
+                        setTimeout(() => {
+                            _this.success = '';
+                            window.location.reload()
+                            _this.$router.push({name: 'MuonPhongKtv'})
+                        }, 2000);
                     }
-                    else {
-                        alert('update success')
-                        window.location.reload()
-                        _this.$router.push({name: 'LichDay'})
-                        _this.error = '';
-                    }
+                }).catch(function (error) {
+                    _this.info = error.response.data.message;
+                    setTimeout(() => {
+                        _this.info = '';
+                    }, 2000);
                 });
             }
         },
         created: function () {
             let urlCurrent = window.location.href;
             let giangvien_id = urlCurrent.slice(urlCurrent.lastIndexOf('edit-user/') + 10, urlCurrent.length);
-            console.log(giangvien_id);
             let uri = this.url + '/api/user/' + giangvien_id + '/edit';
             Axios.get(uri).then((response) => {
                 this.giangVien = response.data.data;

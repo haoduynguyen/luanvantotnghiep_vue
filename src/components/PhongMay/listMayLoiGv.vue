@@ -120,9 +120,10 @@
                 if (!error.response) {
                     // network error
                     this.errorStatus = 'Error: Network Error';
-                    console.log(error.response.data.message);
+                    console.log(error.response);
                 } else {
-                    this.errorStatus = error.response.data.message;
+                    //this.errorStatus = error.response.data.message;
+                    console.log(error.response);
                 }
             });
         },
