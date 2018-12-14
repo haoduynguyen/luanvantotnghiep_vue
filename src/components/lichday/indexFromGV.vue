@@ -431,23 +431,25 @@
                         ca_id: _this.dataLich.ca_id,
                         mon_hoc_id: _this.dataLich.mon_hoc_id,
                         status: _this.ex7,
+                        tuan_id:_this.dataLich.selectedTuan.id,
                     }
-                Axios.post(uri, data, {
-                    headers: {
-                        Authorization: 'Bearer' + ' ' + this.token
-                    }
-                }).then((response) => {
-                    if (response.status == 201) {
-                        _this.dialog = false
-                        _this.success = 'Báo lỗi phòng máy thành công!'
-                        setTimeout(()=>{
-                            _this.success = '';
-                            }, 3000);
-                    }
-                }).catch(function (error) {
-                    _this.error = error.response.data.message;
-                    _this.info = ""
-                });
+                console.log(_this.dataLich.selectedTuan.id);
+                // Axios.post(uri, data, {
+                //     headers: {
+                //         Authorization: 'Bearer' + ' ' + this.token
+                //     }
+                // }).then((response) => {
+                //     if (response.status == 201) {
+                //         _this.dialog = false
+                //         _this.success = 'Báo lỗi phòng máy thành công!'
+                //         setTimeout(()=>{
+                //             _this.success = '';
+                //             }, 3000);
+                //     }
+                // }).catch(function (error) {
+                //     _this.error = error.response.data.message;
+                //     _this.info = ""
+                // });
             },
             getDateOfWeek(curentTuan) {
                 var _this = this;

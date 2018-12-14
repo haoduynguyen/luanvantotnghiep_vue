@@ -84,9 +84,9 @@
                             props.item.ky_thuat_vien.profile.last_name : "" }}
                         </td>
                         <td class="text-xs-center">{{ props.item.mota_ktv != null ? props.item.mota_ktv : "" }}</td>
-                        <td class="text-xs-center">{{ props.item.created_at != null ? props.item.created_at : "" }}</td>
-                        <td class="text-xs-center">{{ (props.item.status == 3 && props.item.updated_at != null) ?
-                            props.item.updated_at : "-" }}
+                        <td class="text-xs-center">{{ props.item.ngay_tao != null ? props.item.ngay_tao : "" }}</td>
+                        <td class="text-xs-center">{{ (props.item.status == 3 && props.item.ngay_sua != null) ?
+                            props.item.ngay_sua : "-" }}
                         </td>
                         <td class="text-xs-center">
                             <v-btn icon class="mx-0" @click="editItem(props.item.id)">
