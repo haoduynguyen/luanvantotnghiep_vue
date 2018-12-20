@@ -254,8 +254,8 @@
             img: image,
             id: 0,
             name: '',
-            //url:'http://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            url: "https://luanvantn.dev.digiprojects.top",
+            //url: 'http://localhost:8000',
             items: [
                 {
                     title: 'Change Password', path: '/change-password/', test: () => {
@@ -333,13 +333,13 @@
                 this.$router.push({name: 'Login'})
             },
             async signOut() {
-                const googleAuth = gapi.auth2.getAuthInstance()
-                await googleAuth.signOut()
-                const googleUser = googleAuth.currentUser.get()
+                const googleAuth = gapi.auth2.getAuthInstance();
+                await googleAuth.signOut();
+                const googleUser = googleAuth.currentUser.get();
                 FB.logout(function (response) {
                     console.log('logout', response);
                 });
-                googleUser.disconnect()
+                googleUser.disconnect();
                 localStorage.clear();
 
                 //storage.removeItem("https://accounts.google.com");

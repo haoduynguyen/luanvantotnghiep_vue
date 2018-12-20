@@ -72,6 +72,51 @@
                 </template>
             </v-data-table>
         </v-card>
+        <v-alert v-if="success != ''"
+                 v-model="success"
+                 type="success"
+                 class="alert-effect"
+        >
+            <label>{{success}}</label>
+        </v-alert>
+        <v-alert v-if="info != ''"
+                 v-model="info"
+                 type="error"
+                 class="alert-effect"
+        >
+            <label>{{info}}</label>
+        </v-alert>
+        <v-layout row justify-center>
+            <v-dialog
+                    v-model="dialogDelete"
+                    max-width="290"
+            >
+                <v-card>
+                    <v-card-title class="headline">Bạn có chắc chắn muốn xóa không ?</v-card-title>
+
+                    <v-card-text>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="green darken-1"
+                                flat="flat"
+                                @click="dialogDelete = false"
+                        >
+                            Không
+                        </v-btn>
+                        <v-btn
+                                color="green darken-1"
+                                flat="flat"
+                                @click="xoaData"
+                        >
+                            Đồng ý
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-layout>
     </div>
 </template>
 <script>
@@ -98,8 +143,13 @@
                 {text: 'Chức Năng', value: '', align: 'left',},
             ],
             listMota: [],
-            // url:'http://luanvantn.dev.digiprojects.top'
-            url:'http://localhost:8000'
+            url: 'https://luanvantn.dev.digiprojects.top',
+            //url:'http://localhost:8000',
+            success: '',
+            info: '',
+            valueItem: '',
+            positionItem: '',
+            dialogDelete: false,
         }),
         created: function () {
             let author = localStorage.getItem('author')
@@ -129,6 +179,12 @@
         },
         methods:
             {
+                xacnhanxoa(item, index) {
+                    var _this = this;
+                    _this.dialogDelete = true;
+                    _this.valueItem = item;
+                    _this.positionItem = index;
+                },
                 toggleAll() {
                     if (this.selected.length) this.selected = []
                     else this.selected = this.listMota.slice()
@@ -162,20 +218,24 @@
                 //     console.log(item);
                 // },
 
-                xacnhanxoa(item,index) {
+                xoaData() {
                     let _this = this;
-                    Axios.delete(_this.url + '/api/delete-may-loi/'+item).then(response =>{
-                        if(response.status == 200)
-                        {
-                            alert('Xóa thành công!')
-                            _this.listMota.splice(index,1)
+                    Axios.delete(_this.url + '/api/delete-may-loi/' + _this.valueItem).then(response => {
+                        if (response.status == 200) {
+                            _this.success = ' xóa thành công'
+                            _this.dialogDelete = false
+                            _this.listMota.splice(_this.positionItem, 1)
+                            setTimeout(() => {
+                                _this.success = ''
+                            },3000)
                         }
-                        else
-                        {
-                            alert('This line cannot be delete!')
-                        }
+                    }).catch(function (error) {
+                        _this.info = error.response.data.message;
+                        _this.dialogDelete = false;
+                        setTimeout(()=>{
+                            _this.info = '';
+                        }, 2000);
                     })
-
                 },
                 editItem(id) {
                     this.$router.push({path: `/update-PM/${id}`});

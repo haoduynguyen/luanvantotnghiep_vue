@@ -71,7 +71,7 @@
     export default {
         data: function () {
             return {
-                urlCurrent: "http://luanvantn.dev.digiprojects.top",
+                urlCurrent: "https://luanvantn.dev.digiprojects.top",
                 fetchError: '',
                 downTime: 0,
                 valid: false,

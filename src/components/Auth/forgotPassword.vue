@@ -38,7 +38,7 @@
                 password: '',
                 password_confirmation: '',
             },
-            url: "http://luanvantn.dev.digiprojects.top"
+            url: "https://luanvantn.dev.digiprojects.top",
         }),
         methods:
             {

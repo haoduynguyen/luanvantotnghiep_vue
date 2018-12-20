@@ -192,8 +192,8 @@
             selectTuan: 0,
             notification: '',
             statusNghi: 0,
-            //url: 'http://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            url: 'https://luanvantn.dev.digiprojects.top',
+            //url: 'http://localhost:8000',
             dialog: false,
             detailContent: "",
             id: 0,
@@ -406,7 +406,6 @@
                 _this.detailContent = itemLichDay;// ham nay ko chay thi pai
                 var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == itemLichDay.thu_id)
                 _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
-                console.log(_this.dataLich['ngay']);
             },
             checkLichTruc(ca_id, thu_id) {
                 var _this = this;
@@ -439,7 +438,7 @@
                         mon_hoc_id: _this.dataLich.mon_hoc_id,
                         status: _this.ex7,
                         ngay_thong_bao: _this.dataLich.ngay,
-                        tuan_id: _this.dataLich.selectedTuan.id,
+                        tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                     }
                 console.log(data);
                 Axios.post(uri, data, {

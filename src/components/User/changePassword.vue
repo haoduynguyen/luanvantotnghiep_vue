@@ -41,7 +41,7 @@
                 newPassword: '',
                 passwordConfirmation: ''
             },
-            url: 'http://luanvantn.dev.digiprojects.top',
+            url: 'https://luanvantn.dev.digiprojects.top',
             id: 0,
         }),
         methods: {

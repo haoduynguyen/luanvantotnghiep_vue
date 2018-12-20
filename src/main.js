@@ -52,7 +52,7 @@ router.beforeEach(async (to, from, next) => {
 });
 window.fbAsyncInit = function() {
     FB.init({
-        appId      : '348232345938588',
+        appId      : '217826945802069',
         xfbml      : true,
         version    : 'v3.2'
     });
@@ -71,6 +71,8 @@ window.app = new Vue({
     router,
     components: {Layout},
     template: '<Layout/>',
+
+
     created() {
         if (typeof gapi !== undefined) {
             const _gapi = gapi ? gapi : window.gapi

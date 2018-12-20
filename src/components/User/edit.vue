@@ -74,7 +74,7 @@
             email: '',
             phone: '',
             gender:0,
-            url: "http://luanvantn.dev.digiprojects.top",
+            url: 'https://luanvantn.dev.digiprojects.top',
             switch1: true,
             roleList: [],
             nameRules: [

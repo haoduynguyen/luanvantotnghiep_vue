@@ -51,7 +51,7 @@
                 mota_gv:'',
             },
             token:'',
-            url:'http://luanvantn.dev.digiprojects.top'
+            url: 'https://luanvantn.dev.digiprojects.top',
         }),
         //viet cac ham xu ly
         methods: {

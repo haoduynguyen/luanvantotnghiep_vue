@@ -3,7 +3,7 @@
         <v-card-actions>
             <!--<v-btn v-bind:to="{name: 'Home'}">Back</v-btn>-->
             <v-spacer></v-spacer>
-            <v-btn v-bind:to="{name: 'AddUser'}" color="success">Add</v-btn>
+            <v-btn v-bind:to="{name: 'AddUser'}" color="success">Thêm</v-btn>
         </v-card-actions>
         <v-card>
             <v-card-title>
@@ -58,18 +58,51 @@
                 </template>
             </v-data-table>
         </v-card>
-	    <v-layout row justify-center>
-		    <v-dialog v-model="dialog" max-width="500px">
-			    <v-card>
-				    <v-card-title>
-					    <span class="headline">Lịch chi tiết</span>
-				    </v-card-title>
-				    <v-card-text>Bạn có muốn xóa
-				    </v-card-text>
+        <v-alert v-if="success != ''"
+                 v-model="success"
+                 type="success"
+                 class="alert-effect"
+        >
+            <label>{{success}}</label>
+        </v-alert>
+        <v-alert v-if="info != ''"
+                 v-model="info"
+                 type="error"
+                 class="alert-effect"
+        >
+            <label>{{info}}</label>
+        </v-alert>
+        <v-layout row justify-center>
+            <v-dialog
+                    v-model="dialogDelete"
+                    max-width="290"
+            >
+                <v-card>
+                    <v-card-title class="headline">Bạn có chắc chắn muốn xóa không ?</v-card-title>
 
-			    </v-card>
-		    </v-dialog>
-	    </v-layout>
+                    <v-card-text>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="green darken-1"
+                                flat="flat"
+                                @click="dialogDelete = false"
+                        >
+                            Không
+                        </v-btn>
+                        <v-btn
+                                color="green darken-1"
+                                flat="flat"
+                                @click="xoaData"
+                        >
+                            Đồng ý
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-layout>
     </div>
 </template>
 
@@ -78,7 +111,8 @@
         name: "ListUser",
         data: () => ({
             pagination: {
-                sortBy: 'name'
+                sortBy: 'name',
+                rowsPerPage: 10, // -1 for All
             },
             selected: [],
             search: "",
@@ -93,12 +127,19 @@
                 {text: 'action', value: '', align: 'left',},
             ],
             user: [],
-	        dialog: false
+	        dialog: false,
+            success: '',
+            info: '',
+            valueItem: '',
+            positionItem: '',
+            dialogDelete: false,
+            //url:'http://localhost:8000',
+            url: "https://luanvantn.dev.digiprojects.top",
         }),
         created: function () {
             var _this = this;
             _this.isLoading = true;
-            let uri = 'http://luanvantn.dev.digiprojects.top/api/user';
+            let uri = _this.url + '/api/user';
             Axios.get(uri).then((response) => {
                 _this.isLoading = false;
                 this.user = response.data.data;
@@ -115,6 +156,13 @@
         },
         methods:
             {
+                xacnhanxoa(item, index) {
+                    var _this = this;
+                    _this.dialogDelete = true;
+                    _this.valueItem = item;
+                    _this.positionItem = index;
+                    console.log(_this.positionItem);
+                },
                 toggleAll() {
                     if (this.selected.length) this.selected = []
                     else this.selected = this.user.slice()
@@ -128,17 +176,25 @@
                         this.pagination.descending = false
                     }
                 },
-                xacnhanxoa(item, index) {
+                xoaData() {
                     let _this = this;
                     _this.dialog = false;
-                    console.log(index);
-                    // Axios.delete(_this.url + '/api/user/' + item).then(response => {
-                    //     if (response.status == 200) {
-                    //         alert('xóa thành công')
-                    //         _this.user.splice(index, 1)
-                    //     }
-                    // })
-
+                    Axios.delete(_this.url + '/api/user/' + _this.valueItem).then(response => {
+                        if (response.status == 200) {
+                            _this.success = ' xóa thành công'
+                            _this.dialogDelete = false
+                            _this.user.splice(_this.positionItem, 1)
+                            setTimeout(() => {
+                                _this.success = ''
+                            },3000)
+                        }
+                    }).catch(function (error) {
+                        _this.info = error.response.data.message;
+                        _this.dialogDelete = false;
+                        setTimeout(()=>{
+                            _this.info = '';
+                        }, 3000);
+                    })
                 },
 	            notification(){
 		            _this.dialog = true;

@@ -19,8 +19,9 @@
                 <v-flex xs12 sm8 md4>
                     <v-card class="elevation-12">
                         <v-toolbar dark color="primary">
-                            <v-toolbar-title>Login</v-toolbar-title>
+                            <a href="#" class="fa fa-facebook"></a>
                             <v-spacer></v-spacer>
+                            <v-toolbar-title>Login</v-toolbar-title>
                         </v-toolbar>
                         <v-card-text>
                             <v-form v-model="drawer" v-on:submit.prevent="loginUser" method="POST">
@@ -29,21 +30,16 @@
                                 <v-text-field prepend-icon="lock" name="password" label="Password"
                                               v-model="Login.password" id="password" type="password"></v-text-field>
                                 <v-card-actions>
-                                    <v-btn class="btn btn-xs btn-primary login-social-google" @click="signInGoogle">
-                                        <img :src="image" alt="" class="custom-social">
-                                        Sign in with Google
-                                    </v-btn>
-
+                                    <v-btn class="btn btn-xs btn-primary" @click="signInGoogle">G Login</v-btn>
                                     <v-spacer></v-spacer>
-                                    <v-btn type="submit" class=" btn btn-xs btn-primary" color="success">Login</v-btn>
+                                    <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Login</v-btn>
                                 </v-card-actions>
                                 <v-card-actions>
                                     <fb-signin-button
                                             :params="fbSignInParams"
                                             @success="onSignInSuccess"
-                                            @onlogin="checkLoginState"
-                                            class="fa fa-facebook login-social"
-                                            >
+                                            @onlogin="checkLoginState" style="cursor: pointer; background-color: #4CAF50;border: none;color: white;padding: 15px 32px;text-align: center;
+                                                                              text-decoration: none;display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;">
                                         Sign in with Facebook
                                     </fb-signin-button>
                                     <v-spacer></v-spacer>
@@ -59,9 +55,8 @@
 </template>
 
 <script>
-    import image from "../../assets/google.png";
     export default {
-        name: "Login",
+        name: "fakeFb",
         data: () => ({
             drawer: null,
             Login: {
@@ -72,12 +67,11 @@
                 scope: 'email',
                 return_scopes: true
             },
-            url: "https://luanvantn.dev.digiprojects.top",
-            //url: 'http://localhost:8000',
+            //url: "https://luanvantn.dev.digiprojects.top",
+            url: 'http://localhost:8000',
             urlSendMail: "http://lvtn.cf",
             success: '',
             info: '',
-            image:image,
         }),
         mounted() {
             const _this = this
@@ -85,6 +79,7 @@
                 if (_this.checkGoogleLoggedIn())
                     _this.$router.push({name: 'LichDay'})
             }, 2000)
+            _this.checkLoginState();
         },
         methods:
             {
@@ -139,19 +134,12 @@
                         var response = await Axios.post(_this.url + '/api/google', data)
                         if (response.status == 200) {
                             localStorage.setItem('author', JSON.stringify(response.data.data))
-                            _this.success = 'Đăng nhập thành công'
-                            if (response.data.data.role_id == 1) {
+                            _this.success = 'Đăng nhập thành công',
                                 setTimeout(() => {
                                     _this.success = '';
-                                    _this.$router.push({name: 'LichDayGV'})
-                                }, 300);
-                                console.timeEnd("Time this");
-                            } else {
-                                setTimeout(() => {
-                                    _this.success = '';
-                                    _this.$router.push({name: 'MuonPhongKtv'})
-                                }, 300);
-                            }
+                                    this.$router.push({name: 'LichDay'})
+                                    return
+                                }, 2000);
                         }
                     } catch (error) {
                         _this.info = error.response.data.message;
@@ -186,66 +174,52 @@
                         const googleAuth = _gapi.auth2.getAuthInstance();
                         return googleAuth.isSignedIn.get()
                     }
+
                 },
                 onSignInSuccess(response) {
                     var _this = this
                     _this.isLoading = true
+                    console.log('login', response.authResponse.accessToken);
                     var data = {
                         access_token: response.authResponse.accessToken
                     }
-                    console.log(data);
-                    // Axios.post(_this.url + '/api/facebook', data).then((response) => {
-                    //     localStorage.setItem('author', JSON.stringify(response.data.data))
-                    //     if (response.data.data.role_id == 1) {
-                    //         setTimeout(() => {
-                    //             _this.success = '';
-                    //             _this.$router.push({name: 'LichDayGV'})
-                    //         }, 300);
-                    //         console.timeEnd("Time this");
-                    //     } else {
-                    //         setTimeout(() => {
-                    //             _this.success = '';
-                    //             _this.$router.push({name: 'MuonPhongKtv'})
-                    //         }, 300);
-                    //     }
-                    // }).catch(error => {
-                    //     if (!error.response) {
-                    //         // network error
-                    //         this.errorStatus = 'Error: Network Error'
-                    //         console.log(error.response.data.message)
-                    //     } else {
-                    //         _this.info = error.response.data.message;
-                    //         setTimeout(() => {
-                    //             _this.info = '';
-                    //         }, 2000);
-                    //         FB.logout(function (response) {
-                    //             console.log('logout', response);
-                    //         });
-                    //     }
-                    // })
+                    Axios.post(_this.url + '/api/facebook', data).then((response) => {
+                        localStorage.setItem('author', JSON.stringify(response.data.data))
+                        _this.success = 'Đăng nhập thành công',
+                            setTimeout(() => {
+                                _this.success = '';
+                                _this.$router.push({name: 'LichDay'})
+                            }, 2000);
+                        return
+                    }).catch(error => {
+                        if (!error.response) {
+                            // network error
+                            this.errorStatus = 'Error: Network Error'
+                            console.log(error.response.data.message)
+                        } else {
+                            _this.info = error.response.data.message;
+                            setTimeout(() => {
+                                _this.info = '';
+                            }, 2000);
+                            FB.logout(function (response) {
+                                console.log('logout', response);
+                            });
+                        }
+                    })
                 },
                 logoutFB() {
                     FB.logout(function (response) {
                         console.log('logout', response);
                     });
                 },
-                 checkLoginState() {
-                    var _this = this
+                checkLoginState() {
                     FB.getLoginStatus(function (response) {
+                        console.log(response);
                         if (response.status === 'connected') {
                             // Logged into your app and Facebook.
                             console.log('Welcome!  Fetching your information.... ');
-                            var data ={
-                                access_token: response.authResponse.accessToken
-                            }
-                             Axios.post(_this.url + '/api/facebook', data).then((res) => {
-                                localStorage.setItem('author', JSON.stringify(res.data.data))
-                                _this.success = 'Đăng nhập thành công',
-                                    setTimeout(() => {
-                                        _this.success = '';
-                                        _this.$router.push({name: 'LichDay'})
-                                    }, 2000);
-                                return
+                            FB.api('/me', function (response) {
+                                console.log('Successful login for: ' + response.name);
                             });
                         }
                     });
@@ -259,38 +233,19 @@
 </script>
 
 <style scoped>
-    .custom-social {
-        position: relative;
-        width: 15px;
-        max-width: 50px;
-        margin-right: 5px;
-    }
-    .login-social-google:hover,
-    .v-btn--active:before, .v-btn:focus:before, .v-btn:hover:before{
-        box-shadow: 0 0 3px 3px rgba(66,133,244,.3) !important;
-        background: #fff !important;
-    }
-
-    .login-social-google {
-        background-color: #fff !important;
-
-    }
-    .login-social {
-        cursor: pointer;
-        border: none;color: white;
-        padding: 15px 15px;
+    .fa {
+        padding: 20px;
+        font-size: 30px;
+        width: 50px;
         text-align: center;
         text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;cursor: pointer;
+        margin: 5px 2px;
     }
+
     .fa-facebook {
         background: #3B5998;
         color: white;
-    }
-    .fa-facebook-f:before, .fa-facebook:before{
-        padding-right: 5px;
+        font-size: 13px;
     }
 
 </style>

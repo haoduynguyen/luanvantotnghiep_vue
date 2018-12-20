@@ -293,8 +293,8 @@
             status: 'not_accepted',
             mota_pm: '',
             selectTuan: 0,
-            //url: 'http://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            url: 'https://luanvantn.dev.digiprojects.top',
+            //url: 'http://localhost:8000',
             dialog: false,
             dialogdkMuonPhong: false,
             dialogDaMuonPhong:false,
@@ -452,6 +452,7 @@
             // },
 
             searchLichDay() {
+                console.time("Time this");
                 var _this = this;
                 var data =
                     {
@@ -481,6 +482,7 @@
                     _this.error = error.response.data.message
                     _this.info = ""
                 });
+                console.timeEnd("Time this");
             },
             viewMuonPhong(ca_id, thu_id, phong_id, itemDetail) {
                 var _this = this;
@@ -511,6 +513,7 @@
                 }
             },
             submitMuonPhong() {
+                console.time("Time this 1");
                 var _this = this
                 var uri = _this.url + '/api/dk-muon-phong'
                 var data =
@@ -537,6 +540,7 @@
                     }, 2000);
                     let resultData = response.data.data
                     _this.dataLich.lichMuon.push(resultData)
+                    console.timeEnd("Time this 1");
                 }).catch(function (error) {
                     _this.dialogdkMuonPhong = false
                     _this.info = error.response.data.message

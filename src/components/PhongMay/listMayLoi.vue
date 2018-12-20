@@ -1,5 +1,34 @@
 <template>
     <div>
+        <v-layout wrap align-center>
+            <v-flex xs12 sm4 d-flex>
+                <v-select class="test"
+                          :items="listPhongMay"
+                          v-model="selectedPhongMay"
+                          label="Phòng Máy"
+                          single-line
+                          item-text="name"
+                          item-value="id"
+                          return-object
+                          persistent-hint
+                ></v-select>
+            </v-flex>
+            <v-spacer></v-spacer>
+            <v-flex xs12 sm4 d-flex>
+                <v-select class="test"
+                          :items="tuanList"
+                          v-model="selectedTuan"
+                          label="Tuần"
+                          single-line
+                          item-text="tenTuan"
+                          item-value="id"
+                          return-object
+                          persistent-hint
+                ></v-select>
+            </v-flex>
+            <v-spacer></v-spacer>
+            <v-btn @click="exportFile" class="btn btn-xs btn-success" color="primary">Export</v-btn>
+        </v-layout>
         <v-card>
             <v-card-title>
                 <div class="fillter" style="width: 200px">
@@ -7,7 +36,7 @@
                                 @change="changeCheckbox"></v-checkbox>
                     <v-checkbox class="filter-chk" :label="`Đang Sửa`" value="2" v-model="check_box_dang_sua"
                                 @change="changeCheckbox"></v-checkbox>
-                    <v-checkbox class="filter-chk" :label="`Đã Sửa`" value="3" v-model="check_box_da_sua"
+                    <v-checkbox class="filter-chk" :label="`Đã Sửa (Bình Thường)`" value="3" v-model="check_box_da_sua"
                                 @change="changeCheckbox"></v-checkbox>
                 </div>
                 <v-spacer></v-spacer>
@@ -20,17 +49,6 @@
                         style="margin-bottom: 18px"
                 ></v-text-field>
                 <v-spacer></v-spacer>
-                <v-select class="test"
-                          :items="listPhongMay"
-                          v-model="selectedPhongMay"
-                          label="Phòng Máy"
-                          single-line
-                          item-text="name"
-                          item-value="id"
-                          return-object
-                          persistent-hint
-                ></v-select>
-                <v-btn @click="exportFile" class="btn btn-xs btn-success" color="primary">Export</v-btn>
             </v-card-title>
             <v-data-table
                     v-model="selected"
@@ -44,15 +62,6 @@
             >
                 <template slot="headers" slot-scope="props">
                     <tr>
-                        <th>
-                            <v-checkbox
-                                    :input-value="props.all"
-                                    :indeterminate="props.indeterminate"
-                                    primary
-                                    hide-details
-                                    @click.native="toggleAll"
-                            ></v-checkbox>
-                        </th>
                         <th
                                 v-for="header in props.headers"
                                 :key="header.text"
@@ -65,14 +74,7 @@
                     </tr>
                 </template>
                 <template slot="items" slot-scope="props">
-                    <tr :active="props.selected" @click="props.item.selected = !props.selected">
-                        <td>
-                            <v-checkbox
-                                    :input-value="props.selected"
-                                    primary
-                                    hide-details
-                            ></v-checkbox>
-                        </td>
+                    <tr>
                         <td class="text-xs-center">{{ props.item.phong_may.name}}</td>
                         <td class="text-xs-center">{{ props.item.giang_vien.profile.first_name + ' ' +
                             props.item.giang_vien.profile.last_name
@@ -88,8 +90,11 @@
                         <td class="text-xs-center">{{ (props.item.status == 3 && props.item.ngay_sua != null) ?
                             props.item.ngay_sua : "-" }}
                         </td>
+                        <td class="text-xs-center" v-if="props.item.status == 1">Chưa Sửa</td>
+                        <td class="text-xs-center" v-if="props.item.status == 2">Đang Sửa</td>
+                        <td class="text-xs-center" v-if="props.item.status == 3">Bình Thường</td>
                         <td class="text-xs-center">
-                            <v-btn icon class="mx-0" @click="editItem(props.item.id)">
+                            <v-btn v-if="user_role != 3" icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
                             </v-btn>
                             <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id,props.index)">
@@ -100,6 +105,51 @@
                 </template>
             </v-data-table>
         </v-card>
+        <v-alert v-if="success != ''"
+                 v-model="success"
+                 type="success"
+                 class="alert-effect"
+        >
+            <label>{{success}}</label>
+        </v-alert>
+        <v-alert v-if="info != ''"
+                 v-model="info"
+                 type="error"
+                 class="alert-effect"
+        >
+            <label>{{info}}</label>
+        </v-alert>
+        <v-layout row justify-center>
+            <v-dialog
+                    v-model="dialogDelete"
+                    max-width="290"
+            >
+                <v-card>
+                    <v-card-title class="headline">Bạn có chắc chắn muốn xóa không ?</v-card-title>
+
+                    <v-card-text>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="green darken-1"
+                                flat="flat"
+                                @click="dialogDelete = false"
+                        >
+                            Không
+                        </v-btn>
+                        <v-btn
+                                color="green darken-1"
+                                flat="flat"
+                                @click="xoaData"
+                        >
+                            Đồng ý
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-layout>
     </div>
 </template>
 <script>
@@ -123,23 +173,33 @@
                 {text: 'Mô Tả Kỹ Thuật Viên', value: 'giang_vien.profile.first_name', align: 'left',},
                 {text: 'Ngày Tạo', value: '', align: 'left',},
                 {text: 'Ngày Sửa', value: '', align: 'left',},
+                {text: 'Trạng Thái', value: '', align: 'left',},
                 {text: 'Chức Năng', value: '', align: 'left',},
             ],
             listMota: [],
-            // url:'http://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            url: 'https://luanvantn.dev.digiprojects.top',
+            //url: 'http://localhost:8000',
             urlExport: '',
             listPhongMay: [],
             selectedPhongMay: 0,
+            selectedTuan: 0,
             check_box_chua_sua: 0,
             check_box_dang_sua: 0,
             check_box_da_sua: 0,
+            user_role: 0,
+            tuanList: [],
+            success: '',
+            info: '',
+            valueItem: '',
+            positionItem: '',
+            dialogDelete: false,
         }),
         created: function () {
             var _this = this;
             let author = localStorage.getItem('author');
             let auth = JSON.parse(author);
             _this.token = auth['token'];
+            _this.user_role = auth['role_id'];
             _this.isLoading = true;
             let uri = _this.url + '/api/list-mo-ta';
             Axios.get(uri, {
@@ -149,12 +209,10 @@
             }).then((response) => {
                 _this.isLoading = false;
                 _this.listMota = response.data.data;
-                console.log(response.data.data);
             }).catch(error => {
                 if (!error.response) {
                     // network error
                     this.errorStatus = 'Error: Network Error';
-                    console.log(error.response.data.message);
                 } else {
                     this.errorStatus = error.response.data.message;
                 }
@@ -172,9 +230,35 @@
                     alert(_this.errorStatus);
                 }
             });
+            // get danh sách tuần
+            let uriTuan = _this.url + '/api/tuan';
+            Axios.get(uriTuan).then((response) => {
+                _this.isLoading = false;
+                for (let item of response.data.data) {
+                    let tuanItem = {
+                        id: item.id,
+                        tenTuan: item.description + ' ' + '(' + 'Từ ' + item.ngay_bat_dau + ' Đến ' + item.ngay_ket_thuc + ')'
+                    }
+                    _this.tuanList.push(tuanItem);
+                }
+            }).catch(error => {
+                if (!error.response) {
+                    // network error
+                    this.errorStatus = 'Error: Network Error';
+                } else {
+                    this.errorStatus = error.response.data.message;
+                }
+            });
         },
         methods:
             {
+                xacnhanxoa(item, index) {
+                    var _this = this;
+                    _this.dialogDelete = true;
+                    _this.valueItem = item;
+                    _this.positionItem = index;
+
+                },
                 async changeCheckbox() {
                     var _this = this;
                     if (_this.check_box_chua_sua == null) {
@@ -188,7 +272,8 @@
                     }
                     try {
                         var response = await Axios.get(_this.url + '/api/list-mo-ta?check_box_dang_sua='
-                            + _this.check_box_chua_sua + '&check_box_chua_sua=' + _this.check_box_dang_sua + '&check_box_da_sua=' + _this.check_box_da_sua, {
+                            + _this.check_box_chua_sua + '&check_box_chua_sua=' +
+                            _this.check_box_dang_sua + '&check_box_da_sua=' + _this.check_box_da_sua, {
                             headers: {
                                 Authorization: 'Bearer' + ' ' + _this.token
                             }
@@ -247,13 +332,13 @@
                     }
                     var data =
                         {
-                            phong_may_id: _this.selectedPhongMay.id,
-                            check_box_chua_sua: _this.check_box_chua_sua,
-                            check_box_dang_sua: _this.check_box_dang_sua,
-                            check_box_da_sua: _this.check_box_da_sua
+                            phong_may_id: typeof _this.selectedPhongMay.id === 'undefined' ? 0 : _this.selectedPhongMay.id,
+                            //status: [_this.check_box_chua_sua,_this.check_box_dang_sua,_this.check_box_da_sua],
+                            // check_box_dang_sua: _this.check_box_dang_sua,
+                            // check_box_da_sua: _this.check_box_da_sua,
+                            tuan_id: typeof _this.selectedTuan.id === 'undefined' ? 0 : _this.selectedTuan.id,
                         };
-                    var exportData = await Axios.get(_this.url + '/api/export-danh-sach-loi?phong_may_id=' + data.phong_may_id +
-                        '&check_box_chua_sua=' + data.check_box_chua_sua + '&check_box_dang_sua=' + data.check_box_dang_sua + '&check_box_da_sua=' + data.check_box_da_sua,
+                    var exportData = await Axios.get(_this.url + '/api/export-danh-sach-loi?phong_may_id=' + data.phong_may_id + '&tuan_id=' + data.tuan_id,
                         {
                             headers: {
                                 Authorization: 'Bearer' + ' ' + _this.token
@@ -264,13 +349,16 @@
                         window.location.href = _this.urlExport;
                     }
                 },
-                xacnhanxoa(item, index) {
+                xoaData() {
                     let _this = this;
-                    console.log(item, index);
-                    Axios.delete(_this.url + '/api/delete-may-loi/' + item).then(response => {
+                    Axios.delete(_this.url + '/api/delete-may-loi/' + _this.valueItem).then(response => {
                         if (response.status == 200) {
-                            alert('xóa thành công')
-                            _this.listMota.splice(index, 1)
+                            _this.success = ' xóa thanh công'
+                            _this.dialogDelete = false
+                            _this.listMota.splice(_this.positionItem, 1)
+                            setTimeout(() => {
+                                _this.success = ''
+                            },3000)
                         } else {
                             alert('abc')
                         }

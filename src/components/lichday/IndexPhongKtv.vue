@@ -276,8 +276,8 @@
             },
             mota_pm: '',
             selectTuan: 0,
-            //url: 'http://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            url: 'https://luanvantn.dev.digiprojects.top',
+            // url: 'http://localhost:8000',
             dialog: false,
             dialogdkMuonPhong: false,
             dialogDaMuonPhong:false,
@@ -457,7 +457,6 @@
                     }
                 }).then((response) => {
                     _this.dataLich.lichMuon = response.data.data;
-                    console.log('aaa',_this.dataLich.lichMuon);
                     _this.selectTuan = data.tuan_id
                 }).catch(function (error) {
                     _this.error = error.response.data.message
