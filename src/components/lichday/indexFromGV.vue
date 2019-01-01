@@ -417,7 +417,8 @@
                         dem++;
                         if (dem == 1) {
                             result = item;
-                            _this.dataDangKyNghi.lich_day_id = item.id;
+                            //_this.dataDangKyNghi.lich_day_id = item.id;
+                            console.log(item);
                             if (item.dang_ky_nghi != null) {
                                 status = item.dang_ky_nghi.tuan_id
                             }

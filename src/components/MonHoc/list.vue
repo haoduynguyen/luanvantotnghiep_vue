@@ -3,7 +3,7 @@
         <v-card-actions>
             <!--<v-btn v-bind:to="{name: 'Home'}">Back</v-btn>-->
             <v-spacer></v-spacer>
-            <v-btn v-bind:to="{name: 'AddUser'}" color="success">Thêm</v-btn>
+            <v-btn v-bind:to="{name: 'AddMonHoc'}" color="success">Thêm</v-btn>
         </v-card-actions>
         <v-card>
             <v-card-title>
@@ -19,7 +19,7 @@
             <v-data-table
                     v-model="selected"
                     :headers="headers"
-                    :items="user"
+                    :items="monHoc"
                     :pagination.sync="pagination"
                     select-all
                     item-key="name"
@@ -41,14 +41,8 @@
                 </template>
                 <template slot="items" slot-scope="props">
                     <tr>
-                        <td class="text-xs-center">{{ props.item.profile.first_name + ' ' + props.item.profile.last_name
-                            }}
-                        </td>
-                        <td class="text-xs-center">{{ props.item.email }}</td>
-                        <td class="text-xs-center" v-if="props.item.role_id == 3 ">Admin</td>
-                        <td class="text-xs-center" v-else-if="props.item.role_id == 2 ">Kỹ thuận viên</td>
-                        <td class="text-xs-center" v-else>Giảng Viên</td>
-                        <td class="text-xs-center">{{ props.item.profile.gender == 1 ?"male" : "female" }}</td>
+                        <td class="text-xs-center">{{ props.item.ma_mon_hoc }}</td>
+                        <td class="text-xs-center">{{ props.item.name }}</td>
                         <td class="text-xs-center">
                             <v-btn icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
@@ -111,7 +105,7 @@
 
 <script>
     export default {
-        name: "ListUser",
+        name: "list",
         data: () => ({
             pagination: {
                 sortBy: 'name',
@@ -120,29 +114,35 @@
             selected: [],
             search: "",
             headers: [
-                {text: 'name', align: 'left', value: 'profile.first_name'},
-                {text: 'email', value: 'email', align: 'left',},
-                {text: 'chức vụ', align: 'left',},
-                {text: 'gender', value: 'gender', align: 'left',},
+                {text: 'Mã Môn Học', align: 'ma_mon_hoc', value: 'profile.first_name'},
+                {text: 'Tên Môn Học', value: 'name', align: 'left',},
                 {text: 'action', value: '', align: 'left',},
             ],
-            user: [],
-	        dialog: false,
+            monHoc: [],
+            dialog: false,
             success: '',
             info: '',
             valueItem: '',
             positionItem: '',
             dialogDelete: false,
-            //url:'http://localhost:8000',
-            url: "https://luanvantn.dev.digiprojects.top",
+            url:'http://localhost:8000',
+            //url: "https://luanvantn.dev.digiprojects.top",
         }),
         created: function () {
             var _this = this;
             _this.isLoading = true;
-            let uri = _this.url + '/api/user';
-            Axios.get(uri).then((response) => {
+            let author = localStorage.getItem('author');
+            let Auth = JSON.parse(author);
+            _this.id = Auth['id'];
+            _this.token = Auth['token'];
+            let uri = _this.url + '/api/mon-hoc';
+            Axios.get(uri , {
+                headers: {
+                    Authorization: 'Bearer' + ' ' + this.token
+                }
+            }).then((response) => {
                 _this.isLoading = false;
-                this.user = response.data.data;
+                this.monHoc = response.data.data;
             }).catch(error => {
                 if (!error.response) {
                     // network error
@@ -162,11 +162,6 @@
                     _this.valueItem = item;
                     _this.positionItem = index;
                 },
-                toggleAll() {
-                    if (this.selected.length) this.selected = []
-                    else this.selected = this.user.slice()
-                }
-                ,
                 changeSort(column) {
                     if (this.pagination.sortBy === column) {
                         this.pagination.descending = !this.pagination.descending
@@ -178,11 +173,11 @@
                 xoaData() {
                     let _this = this;
                     _this.dialog = false;
-                    Axios.delete(_this.url + '/api/user/' + _this.valueItem).then(response => {
+                    Axios.delete(_this.url + '/api/mon-hoc/' + _this.valueItem,{headers:{Authorization: 'Bearer' + ' ' + _this.token}}).then(response => {
                         if (response.status == 200) {
                             _this.success = ' xóa thành công'
                             _this.dialogDelete = false
-                            _this.user.splice(_this.positionItem, 1)
+                            _this.monHoc.splice(_this.positionItem, 1)
                             setTimeout(() => {
                                 _this.success = ''
                             },3000)
@@ -195,11 +190,11 @@
                         }, 3000);
                     })
                 },
-	            notification(){
-		            _this.dialog = true;
-	            },
+                notification(){
+                    _this.dialog = true;
+                },
                 editItem(id) {
-                    this.$router.push({path: `/edit-user/${id}`});
+                    this.$router.push({path: `/edit-mon-hoc/${id}`});
                 },
             }
     }

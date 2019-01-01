@@ -297,9 +297,10 @@
             ],
             itemsAdmin: [
                 //{icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
-                //{icon: 'schedule', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
+                {icon: 'schedule', text: 'Thêm Danh Sách Lịch Dạy', path: 'importLichDay'},
                 {icon: 'event', text: 'Lịch Dạy', path: 'MuonPhongKtv'},
-                {icon: 'accessibility', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
+                {icon: 'accessibility', text: 'Danh Sách User', path: 'ListUser'},
+                {icon: 'list', text: 'Danh Sách môn học', path: 'ListMonHoc'},
                 {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
                 {icon: 'computer', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
                 {icon: 'room', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},

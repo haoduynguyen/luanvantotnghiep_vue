@@ -52,7 +52,7 @@ router.beforeEach(async (to, from, next) => {
 });
 window.fbAsyncInit = function() {
     FB.init({
-        appId      : '217826945802069',
+        appId      : '348232345938588',
         xfbml      : true,
         version    : 'v3.2'
     });
