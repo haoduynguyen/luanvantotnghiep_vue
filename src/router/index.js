@@ -25,6 +25,9 @@ import App from '@/App'
 import auth from '@/middleware/auth'
 import ListMuonPhong from '@/components/MuonPhong/listMuonPhong'
 import ListDangKyNghi from '@/components/DangKyNghi/listDangKyNghi'
+import ListMonHoc from '@/components/MonHoc/list'
+import AddMonHoc from '@/components/MonHoc/add'
+import EditMonHoc from '@/components/MonHoc/edit'
 
 Vue.use(Router)
 
@@ -139,14 +142,30 @@ export default new Router({
                         middleware: auth,
                     },
                 },
-                // {
-                //     path: '/dk-muon-phong',
-                //     name: 'MuonPhong',
-                //     component: MuonPhong,
-                //     meta: {
-                //         middleware: auth,
-                //     },
-                // },
+                {
+                    path: '/ds-mon-hoc',
+                    name: 'ListMonHoc',
+                    component: ListMonHoc,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/add-mon-hoc',
+                    name: 'AddMonHoc',
+                    component: AddMonHoc,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/edit-mon-hoc/:id',
+                    name: 'EditMonHoc',
+                    component: EditMonHoc,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
                 {
                     path: '/lich-day',
                     name: 'TestMuonPhong',
