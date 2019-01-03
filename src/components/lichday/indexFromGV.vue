@@ -81,7 +81,7 @@
                                     <div></div>
                                 </div>
                                 <div v-else class="lichtruc-detail"
-                                     v-on:click="viewDetail(ca.id,checkLichTruc(ca.id, thu.id),key)">
+                                     v-on:click="viewDetail(ca.id,thu.id,checkLichTruc(ca.id, thu.id),key)">
                                     {{ checkLichTruc(ca.id, thu.id).user.profile.first_name+ ' ' + checkLichTruc(ca.id,
                                     thu.id).user.profile.last_name }}
                                     <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
@@ -152,12 +152,22 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-btn type="submit"
-                               v-if="detailContent.dang_ky_nghi  == null && detailContent.nhom_lop || (detailContent.dang_ky_nghi  != null && detailContent.dang_ky_nghi.tuan_id != selectTuan) "
+                               v-if="(detailContent.dang_ky_nghi  == null &&
+                               detailContent.nhom_lop || (detailContent.dang_ky_nghi  != null &&
+                               detailContent.dang_ky_nghi.tuan_id != selectTuan)) &&
+                                (detailContent.bao_cao_phong_may  == null
+                                || (detailContent.bao_cao_phong_may  != null &&
+                               detailContent.bao_cao_phong_may.tuan_id != selectTuan))"
                                v-on:click="dangKyNghi()">Đăng Ký Nghỉ
                         </v-btn>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" @click="submitMotaLoi()"
-                               v-if="detailContent.dang_ky_nghi  == null && detailContent.nhom_lop || (detailContent.dang_ky_nghi  != null && detailContent.dang_ky_nghi.tuan_id != selectTuan) || detailContent.ngay_muon != null">
+                               v-if="(detailContent.dang_ky_nghi  == null &&
+                               detailContent.nhom_lop || (detailContent.dang_ky_nghi  != null &&
+                               detailContent.dang_ky_nghi.tuan_id != selectTuan))&& (detailContent.bao_cao_phong_may  == null
+                                || (detailContent.bao_cao_phong_may  != null &&
+                               detailContent.bao_cao_phong_may.tuan_id != selectTuan)) ||
+                               detailContent.ngay_muon != null">
                             Báo cáo phòng máy
                         </v-btn>
                     </v-card-actions>
@@ -191,8 +201,8 @@
             selectTuan: 0,
             notification: '',
             statusNghi: 0,
-            url: 'https://luanvantn.dev.digiprojects.top',
-            //url: 'http://localhost:8000',
+            //url: 'https://luanvantn.dev.digiprojects.top',
+            url: 'http://localhost:8000',
             dialog: false,
             detailContent: "",
             id: 0,
@@ -398,11 +408,12 @@
                     _this.info = ""
                 });
             },
-            viewDetail(ca_id, itemLichDay) {
+            viewDetail(ca_id, thu_id, itemLichDay) {
                 var _this = this;
                 _this.dialog = true;
                 _this.selectedNghi = itemLichDay.id
                 _this.dataLich.ca_id = ca_id;
+                _this.dataLich.thu_id = thu_id;
                 _this.dataLich.mon_hoc_id = itemLichDay.mon_hoc_id
                 _this.detailContent = itemLichDay;// ham nay ko chay thi pai
                 var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == itemLichDay.thu_id)
@@ -419,7 +430,11 @@
                         if (dem == 1) {
                             result = item;
                             //_this.dataDangKyNghi.lich_day_id = item.id;
+
+                            //console.log(item);
+
                             console.log(item);
+
                             if (item.dang_ky_nghi != null) {
                                 status = item.dang_ky_nghi.tuan_id
                             }
@@ -441,6 +456,8 @@
                         status: _this.ex7,
                         ngay_thong_bao: _this.dataLich.ngay,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
+                        lich_day_id: _this.selectedNghi,
+                        thu_id: _this.dataLich.thu_id,
                     }
                 console.log(data);
                 Axios.post(uri, data, {
@@ -455,9 +472,13 @@
                         setTimeout(() => {
                             _this.success = '';
                         }, 3000);
-                    }
+                            var indexLichday = _this.dataLich.lichDay.findIndex(itemLichday => itemLichday.id == response.data.data.lich_day_id)
+                            _this.dataLich.lichDay[indexLichday].bao_cao_phong_may = {tuan_id: _this.selectTuan}
+                            console.log('aaa',_this.dataLich.lichDay[indexLichday].bao_cao_phong_may);
+                        }
+
                 }).catch(function (error) {
-                    _this.error = error.response.data.message;
+                    //_this.error = error.response.data.message;
                     _this.info = ""
                 });
             },

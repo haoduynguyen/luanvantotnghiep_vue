@@ -84,8 +84,8 @@
             },
             ex7: '',
             token: '',
-            url: 'https://luanvantn.dev.digiprojects.top',
-            //url: 'http://localhost:8000'
+            //url: 'https://luanvantn.dev.digiprojects.top',
+            url: 'http://localhost:8000'
         }),
         //viet cac ham xu ly
         methods: {

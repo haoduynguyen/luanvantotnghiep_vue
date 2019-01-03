@@ -128,8 +128,8 @@
 
             ],
             dangKyNghi: [],
-            //url:'http://localhost:8000',
-            url: "https://luanvantn.dev.digiprojects.top",
+            url:'http://localhost:8000',
+            //url: "https://luanvantn.dev.digiprojects.top",
             token:'',
             success:'',
             info:'',
