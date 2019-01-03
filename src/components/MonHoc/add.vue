@@ -13,9 +13,9 @@
                         required
                 ></v-text-field>
                 <v-card-actions>
-                    <v-btn v-bind:to="{name: 'ListMonHoc'}">Back</v-btn>
+                    <v-btn v-bind:to="{name: 'ListMonHoc'}">Trở về</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Save</v-btn>
+                    <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Lưu</v-btn>
                 </v-card-actions>
             </v-form>
         </v-app>

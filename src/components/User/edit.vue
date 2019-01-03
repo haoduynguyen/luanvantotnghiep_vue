@@ -40,14 +40,31 @@
                         label="Phone"
                         required
                 ></v-text-field>
+                <v-select
+                        v-if="giangVien.role_id == 3"
+                        :items="roleList"
+                        label="Chức vụ"
+                        item-text="name"
+                        item-value="id"
+                        v-model="giangVien.role_id"
+                ></v-select>
+                <v-select
+                        v-else
+                        readonly
+                        :items="roleList"
+                        label="Chức vụ"
+                        item-text="name"
+                        item-value="id"
+                        v-model="giangVien.role_id"
+                ></v-select>
                 <v-switch
                         :label="`Gender: ${switch1.toString() == 'true' ? 'male' : 'female'}`"
                         v-model="switch1"
                 ></v-switch>
                 <v-card-actions>
-                    <v-btn v-bind:to="{name: 'ListUser'}">Back</v-btn>
+                    <v-btn v-bind:to="{name: 'ListUser'}">Trở về</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Save</v-btn>
+                    <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Lưu</v-btn>
                 </v-card-actions>
             </v-form>
         </v-app>
@@ -60,23 +77,20 @@
         data: () => ({
             valid: false,
             giangVien: {
-                email: '',
-                password:'',
-                profile: {
-                    first_name: '',
-                    last_name: '',
-                    phone: '',
-                    gender: '',
-                },
+                profile:{
+                    first_name:'',
+                    last_name:'',
+                }
             },
             first_name: '',
             last_name: '',
             email: '',
             phone: '',
-            gender:0,
+            gender: 0,
             url: 'https://luanvantn.dev.digiprojects.top',
             switch1: true,
             roleList: [],
+            roleSelected: 0,
             nameRules: [
                 v => !!v || 'Name is required',
                 v => v.length <= 10 || 'Name must be less than 10 characters'
@@ -85,8 +99,8 @@
                 v => !!v || 'E-mail is required',
                 v => /.+@.+/.test(v) || 'E-mail must be valid'
             ],
-            success:'',
-            info:'',
+            success: '',
+            info: '',
         }),
         methods: {
             editGiangVien: function () {
@@ -99,12 +113,12 @@
                     gender: _this.giangVien.profile.gender,
                 }
                 Axios.put(_this.url + '/api/user/' + _this.giangVien.id, giangVienItem).then((response) => {
-                    if (response.status  == 200) {
+                    if (response.status == 200) {
                         _this.success = 'Sửa thành công';
                         setTimeout(() => {
                             _this.success = '';
                             window.location.reload()
-                            _this.$router.push({name: 'MuonPhongKtv'})
+                            _this.$router.push({name: 'ListUser'})
                         }, 2000);
                     }
                 }).catch(function (error) {
@@ -116,13 +130,18 @@
             }
         },
         created: function () {
-            let urlCurrent = window.location.href;
-            let giangvien_id = urlCurrent.slice(urlCurrent.lastIndexOf('edit-user/') + 10, urlCurrent.length);
-            let uri = this.url + '/api/user/' + giangvien_id + '/edit';
+            var _this = this;
+            //let urlCurrent = window.location.href;
+            //let giangvien_id = urlCurrent.slice(urlCurrent.lastIndexOf('edit-user/') + 10, urlCurrent.length);
+            let uri = this.url + '/api/user/' + this.$route.params.id + '/edit';
             Axios.get(uri).then((response) => {
-                this.giangVien = response.data.data;
-                this.giangVien.profile.gender = this.switch1 ? 1 : null
+                _this.giangVien = response.data.data;
+                console.log(_this.giangVien.role_id);
+                _this.giangVien.profile.gender = this.switch1 ? 1 : null
             });
+            Axios.get(_this.url + '/api/role').then((response) => {
+                _this.roleList = response.data.data;
+            })
         }
 
     }

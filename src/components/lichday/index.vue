@@ -64,16 +64,16 @@
                     <div v-for="( thu, key ) in dataLich.thuList" :key="key" style="width: 14.28%;">
                         <div v-for="( ca, key ) in dataLich.caList" :key="key" class="lichtruc-content-block">
                             <div style="border: 1px solid white; height: 150px; background-color: #eeeeee">
-                                <div v-if="checkLichTruc(ca.id,thu.id)=='' || ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
-                                        thu.id).dang_ky_nghi.tuan_id == selectTuan)"
+                                <div v-if="checkLichTruc(ca.id,thu.id)=='' || ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null &&
+                                checkLichTruc(ca.id,thu.id).dang_ky_nghi.tuan_id == selectTuan)"
                                      class="lichtruc-detail">
                                 </div>
                                 <div v-else class="lichtruc-detail"
                                      v-on:click="viewDetail(checkLichTruc(ca.id, thu.id))">
                                     {{ checkLichTruc(ca.id, thu.id).user.profile.first_name+ ' ' + checkLichTruc(ca.id,
                                     thu.id).user.profile.last_name }}
-                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
-                                        thu.id).dang_ky_nghi.tuan_id == selectTuan) ? 'hôm nay nghỉ' : '' }}
+                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null &&
+                                        checkLichTruc(ca.id, thu.id).dang_ky_nghi.tuan_id == selectTuan) ? 'hôm nay nghỉ' : '' }}
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
+                        <v-btn color="blue darken-1" flat @click.native="dialog = false">Đóng</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -191,6 +191,7 @@
                 var month = (new Date().getMonth() + 1);
                 var date = new Date().getDate() ;
                 var date = date.toString().length < 2 ? "0" + date : date;
+                var month = month.toString().length < 2 ? "0" + month : month;
                 var currentDate = year + '-' + month + '-' + date
                 for (var tuan of _this.dataLich.tuanList) {
                     var ngaybatdau = tuan.ngay_bat_dau;
@@ -227,6 +228,8 @@
                     var year = new Date().getFullYear();
                     var month = (new Date().getMonth() + 1);
                     var date = new Date().getDate();
+                    var date = date.toString().length < 2 ? "0" + date : date;
+                    var month = month.toString().length < 2 ? "0" + month : month;
                     var currentDate = year + '-' + month + '-' + date
                     if (ngaybatdau <= currentDate && currentDate <= ngayketthuc) {
                         _this.dataLich.selectedHocKy = hk.id;

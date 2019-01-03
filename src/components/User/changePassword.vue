@@ -21,9 +21,9 @@
                         required
                 ></v-text-field>
                 <v-card-actions>
-                    <v-btn v-bind:to="{name: 'LichDay'}">Back</v-btn>
+                    <v-btn v-bind:to="{name: 'LichDay'}">Trở về</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Save</v-btn>
+                    <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Lưu</v-btn>
                 </v-card-actions>
             </v-form>
         </v-app>

@@ -161,6 +161,7 @@
                     _this.dialogDelete = true;
                     _this.valueItem = item;
                     _this.positionItem = index;
+                    console.log(_this.positionItem);
                 },
                 toggleAll() {
                     if (this.selected.length) this.selected = []
@@ -182,6 +183,7 @@
                         if (response.status == 200) {
                             _this.success = ' xóa thành công'
                             _this.dialogDelete = false
+                            console.log(_this.positionItem);
                             _this.user.splice(_this.positionItem, 1)
                             setTimeout(() => {
                                 _this.success = ''

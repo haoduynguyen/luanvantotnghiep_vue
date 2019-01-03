@@ -41,7 +41,6 @@
 
             </div>
             <v-card-actions>
-                <v-btn v-bind:to="{name: 'importLichDay'}">Import</v-btn>
                 <v-spacer></v-spacer>
                 <label>
                     <input type="text" name="color1" style="background-color: #8090a7; width: 20px" disabled> Đã có
@@ -367,6 +366,7 @@
                 var month = (new Date().getMonth() + 1);
                 var date = new Date().getDate();
                 var date = date.toString().length < 2 ? "0" + date : date;
+                var month = month.toString().length < 2 ? "0" + month : month;
                 var currentDate = year + '-' + month + '-' + date
                 var nextIndex = 0;
                 for (var index in _this.dataLich.tuanList) {
@@ -411,6 +411,8 @@
                     var year = new Date().getFullYear();
                     var month = (new Date().getMonth() + 1);
                     var date = new Date().getDate();
+                    var date = date.toString().length < 2 ? "0" + date : date;
+                    var month = month.toString().length < 2 ? "0" + month : month;
                     var currentDate = year + '-' + month + '-' + date
                     if (ngaybatdau <= currentDate && currentDate <= ngayketthuc) {
                         _this.dataLich.selectedHocKy = hk.id;

@@ -22,7 +22,7 @@
                                 <v-text-field :disabled="loadingSendMail != '' ? true : false" prepend-icon="lock" label="Email" v-model="sendMail.email"></v-text-field>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn :disabled="loadingSendMail != '' ? true : false" type="submit" class="btn btn-xs btn-primary" color="success">Submit</v-btn>
+                                    <v-btn :disabled="loadingSendMail != '' ? true : false" type="submit" class="btn btn-xs btn-primary" color="success">Gửi</v-btn>
                                 </v-card-actions>
                             </v-form>
                             <v-progress-circular

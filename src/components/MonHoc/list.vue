@@ -142,7 +142,7 @@
                 }
             }).then((response) => {
                 _this.isLoading = false;
-                this.monHoc = response.data.data;
+                _this.monHoc = response.data.data;
             }).catch(error => {
                 if (!error.response) {
                     // network error
@@ -161,6 +161,7 @@
                     _this.dialogDelete = true;
                     _this.valueItem = item;
                     _this.positionItem = index;
+                    console.log(_this.positionItem);
                 },
                 changeSort(column) {
                     if (this.pagination.sortBy === column) {
@@ -175,9 +176,10 @@
                     _this.dialog = false;
                     Axios.delete(_this.url + '/api/mon-hoc/' + _this.valueItem,{headers:{Authorization: 'Bearer' + ' ' + _this.token}}).then(response => {
                         if (response.status == 200) {
-                            _this.success = ' xóa thành công'
-                            _this.dialogDelete = false
-                            _this.monHoc.splice(_this.positionItem, 1)
+                            _this.success = ' xóa thành công';
+                            _this.dialogDelete = false;
+                            var index =  _this.monHoc.findIndex(monhoc => monhoc.id == _this.valueItem);
+                            _this.monHoc.splice(index, 1);
                             setTimeout(() => {
                                 _this.success = ''
                             },3000)

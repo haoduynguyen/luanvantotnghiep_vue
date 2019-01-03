@@ -19,12 +19,12 @@
                 <v-flex xs12 sm8 md4>
                     <v-card class="elevation-12">
                         <v-toolbar dark color="primary">
-                            <v-toolbar-title>Login</v-toolbar-title>
+                            <v-toolbar-title>Đăng Nhập</v-toolbar-title>
                             <v-spacer></v-spacer>
                         </v-toolbar>
                         <v-card-text>
                             <v-form v-model="drawer" v-on:submit.prevent="loginUser" method="POST">
-                                <v-text-field prepend-icon="person" name="login" label="Login" v-model="Login.email"
+                                <v-text-field prepend-icon="person" name="login" label="Email" v-model="Login.email"
                                               type="text"></v-text-field>
                                 <v-text-field prepend-icon="lock" name="password" label="Password"
                                               v-model="Login.password" id="password" type="password"></v-text-field>
@@ -35,7 +35,7 @@
                                     </v-btn>
 
                                     <v-spacer></v-spacer>
-                                    <v-btn type="submit" class=" btn btn-xs btn-primary" color="success">Login</v-btn>
+                                    <v-btn type="submit" class=" btn btn-xs btn-primary" color="success">Đăng Nhập</v-btn>
                                 </v-card-actions>
                                 <v-card-actions>
                                     <fb-signin-button
@@ -47,7 +47,7 @@
                                         Sign in with Facebook
                                     </fb-signin-button>
                                     <v-spacer></v-spacer>
-                                    <a v-bind:href="urlSendMail +'/send-email' "> Forgot Password??? </a>
+                                    <a v-bind:href="urlSendMail +'/send-email' "> Quên mật khẩu??? </a>
                                 </v-card-actions>
                             </v-form>
                         </v-card-text>
