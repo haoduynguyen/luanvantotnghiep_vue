@@ -28,6 +28,11 @@ import ListDangKyNghi from '@/components/DangKyNghi/listDangKyNghi'
 import ListMonHoc from '@/components/MonHoc/list'
 import AddMonHoc from '@/components/MonHoc/add'
 import EditMonHoc from '@/components/MonHoc/edit'
+import ListPhongMay from '@/components/PhongMay/listPM'
+import UpdateDanhSach from '@/components/PhongMay/updateDS'
+import ListHocKy from '@/components/HocKy/listHocKy'
+import UpdateHocKy from '@/components/HocKy/updateHocKy'
+import AddHocKy from '@/components/HocKy/addHocKy'
 
 Vue.use(Router)
 
@@ -239,6 +244,51 @@ export default new Router({
                     props: true,
                     name: 'ListDangKyNghi',
                     component: ListDangKyNghi,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/list-PM',
+                    props: true,
+                    name: 'ListPhongMay',
+                    component: ListPhongMay,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/update-ds/:id',
+                    //props: true,
+                    name: 'UpdateDanhSach',
+                    component: UpdateDanhSach,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/list-hk/',
+                    //props: true,
+                    name: 'ListHocKy',
+                    component: ListHocKy,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/update-hoc-ky/:id',
+                    //props: true,
+                    name: 'UpDateHocKy',
+                    component: UpdateHocKy,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/add-hoc-ky/:id',
+                    //props: true,
+                    name: 'AddHocKy',
+                    component: AddHocKy,
                     meta: {
                         middleware: auth,
                     },
