@@ -27,11 +27,11 @@
                         label="Số Lượng Máy"
                         required
                 ></v-text-field>
-                <v-text-field
+                <v-textarea
                         v-model="data.mo_ta"
                         label="Mô Tả"
                         required
-                ></v-text-field>
+                ></v-textarea>
                 <v-card-actions>
                     <v-btn v-bind:to="{name: 'ListPM'}">Quay Lại</v-btn>
                     <v-spacer></v-spacer>
@@ -52,8 +52,8 @@
                 mo_ta: '',
                 so_may: '',
             },
-            //url: 'https://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            url: 'https://luanvantn.dev.digiprojects.top',
+            //url: 'http://localhost:8000',
             success:'',
             info:'',
         }),

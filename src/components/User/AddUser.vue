@@ -40,6 +40,7 @@
                         label="Chức vụ"
                         item-text="name"
                         item-value="id"
+                        v-model="dataUser.role_id"
                 ></v-select>
                 <v-card-actions>
                     <v-btn v-bind:to="{name: 'ListUser'}">Trở về</v-btn>
@@ -64,7 +65,7 @@
                 password_confirmation: '',
                 phone: '123456789',
                 gender: '',
-                role_id: '1',
+                role_id: '',
             },
             //url: 'https://luanvantn.dev.digiprojects.top',
             url: 'http://localhost:8000',
@@ -87,6 +88,7 @@
                     _this.dataUser.gender = _this.switch1 ? 1 : 0
                     let uri = _this.url + '/api/user';
                     console.log(_this.switch1);
+                    console.log(_this.dataUser);
                     console.log(_this.dataUser);
                     Axios.post(uri, _this.dataUser).then((response) => {
                         alert('Add User Success!');

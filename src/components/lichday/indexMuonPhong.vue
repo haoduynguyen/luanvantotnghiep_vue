@@ -471,6 +471,7 @@
                 var _this = this;
                 var dem = 0;
                 var resultMonHoc = '';
+
                 for (var item of _this.dangKyMuonPhong) {
                     if (item.ca_id == ca_id && item.thu_id == thu_id) {
                         resultMonHoc = item;

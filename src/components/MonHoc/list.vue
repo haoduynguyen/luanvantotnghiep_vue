@@ -129,8 +129,8 @@
             valueItem: '',
             positionItem: '',
             dialogDelete: false,
-            url:'http://localhost:8000',
-            //url: "https://luanvantn.dev.digiprojects.top",
+            //url:'http://localhost:8000',
+            url: "https://luanvantn.dev.digiprojects.top",
         }),
         created: function () {
             var _this = this;
