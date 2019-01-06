@@ -33,7 +33,7 @@ import UpdateDanhSach from '@/components/PhongMay/updateDS'
 import ListHocKy from '@/components/HocKy/listHocKy'
 import UpdateHocKy from '@/components/HocKy/updateHocKy'
 import AddHocKy from '@/components/HocKy/addHocKy'
-
+import permission from '@/components/Auth/permission'
 Vue.use(Router)
 
 export default new Router({
@@ -86,15 +86,6 @@ export default new Router({
             ]
         },
         {
-            path: '/fake-fb', component: Layout, name: 'Layout', children: [
-                {
-                    path: '/fake-fb',
-                    name: 'Fakefb',
-                    component: Fakefb
-                },
-            ]
-        },
-        {
             path: '/', component: App, name: 'App', meta: {
                 middleware: auth,
             }, children: [
@@ -106,6 +97,9 @@ export default new Router({
                     meta: {
                         middleware: auth,
                     },
+                    menu:'1',
+                    text:'Danh Sách User',
+                    icon:'user'
                 },
                 {
                     path: '/add-user',
@@ -146,6 +140,9 @@ export default new Router({
                     meta: {
                         middleware: auth,
                     },
+                    menu:'1',
+                    text:'Lịch Dạy Giảng Viên',
+                    icon:'schedule',
                 },
                 {
                     path: '/ds-mon-hoc',
@@ -154,6 +151,9 @@ export default new Router({
                     meta: {
                         middleware: auth,
                     },
+                    menu:'1',
+                    text:'Danh Sách Môn Học',
+                    icon:'list',
                 },
                 {
                     path: '/add-mon-hoc',
@@ -186,6 +186,9 @@ export default new Router({
                     meta: {
                         middleware: auth,
                     },
+                    menu:'1',
+                    text:'lịch dạy',
+                    icon:'event'
                 },
                 {
                     path: '/list-mo-ta-gv',
@@ -194,6 +197,9 @@ export default new Router({
                     meta: {
                         middleware: auth,
                     },
+                    menu:'1',
+                    text:'Danh Sách Mô Tả PM',
+                    icon:'computer',
                 },
                 {
                     path: '/list-mo-ta',
@@ -202,6 +208,9 @@ export default new Router({
                     meta: {
                         middleware: auth,
                     },
+                    menu:'1',
+                    text:'Danh Sách Mô Tả PM',
+                    icon:'computer'
                 },
                 {
                     path: '/add-lichday',
@@ -238,6 +247,9 @@ export default new Router({
                     meta: {
                         middleware: auth,
                     },
+                    menu:'1',
+                    text:'Danh Sách Mượn phòng',
+                    icon:'list'
                 },
                 {
                     path: '/list-dang-ky-nghi',
@@ -256,6 +268,9 @@ export default new Router({
                     meta: {
                         middleware: auth,
                     },
+                    menu:'1',
+                    text:'Danh Sách Phòng Máy',
+                    icon:'computer'
                 },
                 {
                     path: '/update-ds/:id',
@@ -274,6 +289,9 @@ export default new Router({
                     meta: {
                         middleware: auth,
                     },
+                    menu:'1',
+                    text:'Danh Sách Học Kỳ',
+                    icon:'list'
                 },
                 {
                     path: '/update-hoc-ky/:id',
@@ -292,6 +310,18 @@ export default new Router({
                     meta: {
                         middleware: auth,
                     },
+                },
+                {
+                    path: '/permission',
+                    //props: true,
+                    name: 'permission',
+                    component: permission,
+                    meta: {
+                        middleware: auth,
+                    },
+                    menu:'1',
+                    text:'Danh Sách Quyền',
+                    icon:'schedule'
                 },
             ]
         },

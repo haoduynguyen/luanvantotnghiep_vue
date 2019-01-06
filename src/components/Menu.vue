@@ -196,7 +196,7 @@
 
             <v-spacer></v-spacer>
             <label>
-                {{name}}
+                {{role}}{{name}}
             </label>
 
             <!--<v-btn icon>-->
@@ -254,8 +254,10 @@
             img: image,
             id: 0,
             name: '',
-            url: "https://luanvantn.dev.digiprojects.top",
-            //url: 'http://localhost:8000',
+            role:'',
+            //url: "https://luanvantn.dev.digiprojects.top",
+            url: 'http://localhost:8000',
+            permission:[],
             items: [
                 {
                     title: 'Change Password', path: '/change-password/', test: () => {
@@ -302,8 +304,8 @@
                 {icon: 'accessibility', text: 'Danh Sách User', path: 'ListUser'},
                 {icon: 'list', text: 'Danh Sách Học Kỳ', path: 'ListHocKy'},
                 {icon: 'list', text: 'Danh Sách Môn Học', path: 'ListMonHoc'},
-                {icon: 'list', text: 'Danh Sách Phòng Máy', path: 'ListPhongMay'},
-                {icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
+                {icon: 'computer', text: 'Danh Sách Phòng Máy', path: 'ListPhongMay'},
+                //{icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
                 {icon: 'computer', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
                 {icon: 'room', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
                 {icon: 'work_off', text: 'Danh Sách Đăng Ký Nghỉ', path: 'ListDangKyNghi'},
@@ -324,8 +326,20 @@
                 _this.isLoading = false;
                 var user = response.data.data;
                 _this.name = user.profile.first_name + ' ' + user.profile.last_name
+                if(user.role_id == 3){
+                    _this.role = 'Admin: '
+                } else if(user.role_id == 2){
+                    _this.role = 'KTV: '
+                } else {
+                    _this.role = 'GV: '
+                }
                 _this.id = user.id
                 _this.role_id = user.role_id
+                if(user.role != null){
+                    let menu = JSON.parse(user.role.permission);
+                    _this.permission = user.role.permission;
+                    console.log(menu);
+                }
             });
         },
         methods: {

@@ -136,7 +136,6 @@
             let uri = this.url + '/api/user/' + this.$route.params.id + '/edit';
             Axios.get(uri).then((response) => {
                 _this.giangVien = response.data.data;
-                console.log(_this.giangVien.role_id);
                 _this.giangVien.profile.gender = this.switch1 ? 1 : null
             });
             Axios.get(_this.url + '/api/role').then((response) => {

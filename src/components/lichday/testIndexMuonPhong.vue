@@ -177,7 +177,9 @@
                             </tr>
                             <tr>
                                 <td><strong>Môn học: </strong></td>
-                                <td>{{ (detailDaMuonPhong.ghi_chu != null) ? detailDaMuonPhong.ghi_chu : detailDaMuonPhong.mon_hoc.name }}</td>
+                                <td>{{ (detailDaMuonPhong.ghi_chu != null) ? detailDaMuonPhong.ghi_chu :
+                                    detailDaMuonPhong.mon_hoc.name }}
+                                </td>
                             </tr>
                             <tr v-if=" detailDaMuonPhong.nhom_lop">
                                 <td><strong>Lớp: </strong></td>
@@ -247,13 +249,16 @@
                             </tr>
                             <tr>
                                 <td><strong>Môn học: </strong></td>
-                                <td>{{(dangKyMuonPhong.ghi_chu != null) ? dangKyMuonPhong.ghi_chu : dangKyMuonPhong.mon_hoc.name }}</td>
+                                <td>{{(dangKyMuonPhong.ghi_chu != null) ? dangKyMuonPhong.ghi_chu :
+                                    dangKyMuonPhong.mon_hoc.name }}
+                                </td>
                             </tr>
                         </table>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn
-                                type="submit" v-on:click="submitMuonPhong()">Đăng Ký Mượn Phòng
+                                type="submit" v-if="dataLich.chosingHk != ''" v-on:click="submitMuonPhong()">Đăng Ký
+                            Mượn Phòng
                         </v-btn>
                         <v-spacer></v-spacer>
                         <!--<v-btn color="blue darken-1" flat @click.native="dialogdkMuonPhong = false">Close</v-btn>-->
@@ -280,6 +285,7 @@
                 curentTuan: [],
                 selectedTuan: 0,
                 selectedHocKy: 0,
+                chosingHk: "",
                 selectedPhongMay: 0,
                 selectedMonHoc: 0,
                 statusCode: 0,
@@ -296,7 +302,7 @@
             url: 'http://localhost:8000',
             dialog: false,
             dialogdkMuonPhong: false,
-            dialogDaMuonPhong:false,
+            dialogDaMuonPhong: false,
             hueky: false,
             detailContent: "",
             detailContentMota: "",
@@ -305,8 +311,8 @@
             detailDaMuonPhong: "",
             token: "",
             showGhichu: false,
-            success:'',
-            info:'',
+            success: '',
+            info: '',
         }),
         created: function () {
             var _this = this;
@@ -349,7 +355,7 @@
             }).then((response) => {
                 _this.isLoading = false;
                 this.dataLich.monList = response.data.data;
-                this.dataLich.monList.push({ name: 'Môn khác'})
+                this.dataLich.monList.push({name: 'Môn khác'})
             }).catch(error => {
                 if (!error.response) {
                     this.errorStatus = 'Error: Network Error';
@@ -415,7 +421,7 @@
                     var month = month.toString().length < 2 ? "0" + month : month;
                     var currentDate = year + '-' + month + '-' + date
                     if (ngaybatdau <= currentDate && currentDate <= ngayketthuc) {
-                        _this.dataLich.selectedHocKy = hk.id;
+                        _this.dataLich.selectedHocKy = hk;
                         break
                     }
                 }
@@ -491,6 +497,20 @@
                 _this.dataLich.ca_id = ca_id;
                 _this.dataLich.thu_id = thu_id;
                 _this.dataLich.phong_id = phong_id.id;
+                var hk = typeof _this.dataLich.selectedHocKy == "object" ? _this.dataLich.selectedHocKy : _this.dataLich.selectedHocKy
+                var year = new Date().getFullYear();
+                var month = (new Date().getMonth() + 1);
+                var date = new Date().getDate();
+                var date = date.toString().length < 2 ? "0" + date : date;
+                var month = month.toString().length < 2 ? "0" + month : month;
+                var currentDate = year + '-' + month + '-' + date
+                console.log(currentDate);
+                console.log(hk.ngaybatdau);
+                _this.dataLich.chosingHk = "";
+                if (hk.ngaybatdau <= currentDate && currentDate < hk.ngayketthuc) {
+                    _this.dataLich.chosingHk = 'true';
+                }
+                console.log(_this.dataLich.chosingHk);
                 var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == thu_id)
                 _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
                 if ((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200)) {
@@ -527,7 +547,7 @@
                         thu_id: _this.dataLich.thu_id,
                         ngay_muon: _this.dataLich.ngay,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
-                        ghi_chu:_this.dataLich.ghichu
+                        ghi_chu: _this.dataLich.ghichu
                     }
                 Axios.post(uri, data, {
                     headers: {
