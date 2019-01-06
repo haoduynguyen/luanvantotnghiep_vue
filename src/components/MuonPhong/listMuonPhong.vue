@@ -198,7 +198,7 @@
                         if (response.status == 200) {
                             _this.muonPhong.splice(_this.positionItem, 1)
                             _this.dialogDelete = false;
-                            _this.success = 'xóa thành công';
+                            _this.success = 'Xóa Đăng Ký Thành Công';
                             setTimeout(() => {
                                 _this.success = '';
                             }, 2000);

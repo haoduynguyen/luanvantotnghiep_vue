@@ -66,7 +66,8 @@
                 gender: '',
                 role_id: '1',
             },
-            url: 'https://luanvantn.dev.digiprojects.top',
+            //url: 'https://luanvantn.dev.digiprojects.top',
+            url: 'http://localhost:8000',
             switch1: true,
             roleList: [],
             nameRules: [

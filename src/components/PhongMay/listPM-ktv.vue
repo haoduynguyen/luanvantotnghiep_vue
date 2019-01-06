@@ -3,7 +3,7 @@
         <v-card-actions>
             <!--<v-btn v-bind:to="{name: 'Home'}">Back</v-btn>-->
             <v-spacer></v-spacer>
-            <v-btn v-bind:to="{name: 'AddDanhSachPM'}" color="success">Thêm</v-btn>
+
         </v-card-actions>
         <v-card>
             <v-card-title>
@@ -49,9 +49,6 @@
                             <v-btn icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
                             </v-btn>
-                            <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id , props.index)">
-                                <v-icon color="pink">delete</v-icon>
-                            </v-btn>
                         </td>
                     </tr>
                 </template>
@@ -71,43 +68,13 @@
         >
             <label>{{info}}</label>
         </v-alert>
-        <v-layout row justify-center>
-            <v-dialog
-                    v-model="dialogDelete"
-                    max-width="290"
-            >
-                <v-card>
-                    <v-card-title class="headline">Bạn có chắc chắn muốn xóa không ?</v-card-title>
 
-                    <v-card-text>
-                    </v-card-text>
-
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                                color="green darken-1"
-                                flat="flat"
-                                @click="dialogDelete = false"
-                        >
-                            Không
-                        </v-btn>
-                        <v-btn
-                                color="green darken-1"
-                                flat="flat"
-                                @click="xoaData"
-                        >
-                            Đồng ý
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-        </v-layout>
     </div>
 </template>
 
 <script>
     export default {
-        name: "listPM",
+        name: "listPM-ktv",
         data: () => ({
             pagination: {
                 sortBy: 'name',
@@ -172,36 +139,36 @@
                     _this.dialog = true;
                 },
                 editItem(id) {
-                    this.$router.push({path: `/update-ds/${id}`});
+                    this.$router.push({path: `/update-ds-ktv/${id}`});
                 },
-                xacnhanxoa(item, index) {
-                    var _this = this;
-                    _this.dialogDelete = true;
-                    _this.valueItem = item;
-                    _this.positionItem = index;
-                    console.log(_this.positionItem);
-                },
-                xoaData() {
-                    let _this = this;
-                    _this.dialog = false;
-                    Axios.delete(_this.url + '/api/phong-may/' + _this.valueItem, {headers: {Authorization: 'Bearer' + ' ' + _this.token}}).then(response => {
-                        if (response.status == 200) {
-                            _this.success = ' Xóa Phòng Máy Thành Công';
-                            _this.dialogDelete = false;
-                            var index = _this.phongMay.findIndex(phongmay => phongmay.id == _this.valueItem);
-                            _this.phongMay.splice(index, 1);
-                            setTimeout(() => {
-                                _this.success = ''
-                            }, 3000)
-                        }
-                    }).catch(function (error) {
-                        _this.info = error.response.data.message;
-                        _this.dialogDelete = false;
-                        setTimeout(() => {
-                            _this.info = '';
-                        }, 3000);
-                    })
-                },
+                // xacnhanxoa(item, index) {
+                //     var _this = this;
+                //     _this.dialogDelete = true;
+                //     _this.valueItem = item;
+                //     _this.positionItem = index;
+                //     console.log(_this.positionItem);
+                // },
+                // xoaData() {
+                //     let _this = this;
+                //     _this.dialog = false;
+                //     Axios.delete(_this.url + '/api/phong-may/' + _this.valueItem, {headers: {Authorization: 'Bearer' + ' ' + _this.token}}).then(response => {
+                //         if (response.status == 200) {
+                //             _this.success = ' Xóa Phòng Máy Thành Công';
+                //             _this.dialogDelete = false;
+                //             var index = _this.phongMay.findIndex(phongmay => phongmay.id == _this.valueItem);
+                //             _this.phongMay.splice(index, 1);
+                //             setTimeout(() => {
+                //                 _this.success = ''
+                //             }, 3000)
+                //         }
+                //     }).catch(function (error) {
+                //         _this.info = error.response.data.message;
+                //         _this.dialogDelete = false;
+                //         setTimeout(() => {
+                //             _this.info = '';
+                //         }, 3000);
+                //     })
+                // },
             }
     }
 </script>

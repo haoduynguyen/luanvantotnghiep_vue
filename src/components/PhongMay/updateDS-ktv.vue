@@ -15,31 +15,32 @@
             <label>{{info}}</label>
         </v-alert>
         <v-app id="inspire">
-            <v-form v-model="valid" v-on:submit.prevent="updateHK" method="put">
+            <v-form v-model="valid" v-on:submit.prevent="updateMay" method="put">
                 <v-text-field
                         v-model="data.name"
-                        label="Tên Học Kỳ"
+                        label="Tên Phòng Máy"
+                        disabled
                         required
                 ></v-text-field>
                 <v-text-field
-                        v-model="data.nam_hoc"
-                        label="Năm Học"
+                        v-model="data.so_may"
+                        label="Số Lượng Máy"
                         required
                 ></v-text-field>
                 <v-text-field
-                        v-model="data.ngay_bat_dau"
-                        label="Ngày bắt đầu"
+                        v-model="data.mo_ta"
+                        label="Mô Tả"
                         required
                 ></v-text-field>
-                <v-text-field
-                        v-model="data.ngay_ket_thuc"
-                        label="Ngày kết thúc"
+                <v-textarea
+                        v-model="data.ghi_chu"
+                        label="Ghi Chú"
                         required
-                ></v-text-field>
+                ></v-textarea>
                 <v-card-actions>
-                    <v-btn v-bind:to="{name: 'ListHocKy'}">Quay Lại</v-btn>
+                    <v-btn v-bind:to="{name: 'ListPM'}">Quay Lại</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Thêm</v-btn>
+                    <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Lưu</v-btn>
                 </v-card-actions>
             </v-form>
         </v-app>
@@ -48,33 +49,32 @@
 
 <script>
     export default {
-        name: "updateHocKy",
+        name: "updateDS-ktv",
         data: () => ({
             valid: false,
             data: {
                 name: '',
-                nam_hoc: '',
-                ngay_bat_dau:'',
-                ngay_ket_thuc:'',
+                mo_ta: '',
+                so_may: '',
+                ghi_chu:'',
             },
             //url: 'https://luanvantn.dev.digiprojects.top',
             url: 'http://localhost:8000',
-            success: '',
-            info: '',
+            success:'',
+            info:'',
         }),
         methods: {
-            updateHK: function () {
+            updateMay: function () {
                 var _this = this;
-                Axios.put(_this.url + '/api/hoc-ky/' + _this.data.id, _this.data, {
-                    headers: {
+
+                Axios.put(_this.url + '/api/phong-may/' + _this.data.id, _this.data,{ headers: {
                         Authorization: 'Bearer' + ' ' + this.token
-                    }
-                }).then((response) => {
-                    if (response.status == 200) {
-                        _this.success = 'Cập Nhật Học Kỳ Thành Công';
+                    }}).then((response) => {
+                    if (response.status  == 200) {
+                        _this.success = 'Cập Nhật Thành Công';
                         setTimeout(() => {
                             _this.success = '';
-                            _this.$router.push({name: 'ListHocKy'})
+                            _this.$router.push({name: 'ListPhongMay'})
                         }, 2000);
                     }
                 }).catch(function (error) {
@@ -93,14 +93,13 @@
             _this.id = Auth['id'];
             _this.token = Auth['token'];
             let urlCurrent = window.location.href;
-            let hocky_id = urlCurrent.slice(urlCurrent.lastIndexOf('update-hoc-ky/') + 14, urlCurrent.length);
-            let uri = _this.url + '/api/hoc-ky/' + hocky_id + '/edit';
-            console.log('aaa', uri);
-            Axios.get(uri, {
-                headers: {
+            let phongmay_id = urlCurrent.slice(urlCurrent.lastIndexOf('update-ds-ktv/') + 14, urlCurrent.length);
+
+            let uri = _this.url + '/api/phong-may/' + phongmay_id + '/edit';
+            console.log('aaa',uri);
+            Axios.get(uri,{ headers: {
                     Authorization: 'Bearer' + ' ' + this.token
-                }
-            }).then((response) => {
+                }}).then((response) => {
                 _this.data = response.data.data;
                 console.log(_this.data);
                 // this.giangVien.profile.gender = this.switch1 ? 1 : null

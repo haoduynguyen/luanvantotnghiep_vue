@@ -43,6 +43,8 @@
                     <tr>
                         <td class="text-xs-center">{{ props.item.ma_mon_hoc }}</td>
                         <td class="text-xs-center">{{ props.item.name }}</td>
+                        <td class="text-xs-center">{{ props.item.ngay_bat_dau }}</td>
+                        <td class="text-xs-center">{{ props.item.ngay_ket_thuc }}</td>
                         <td class="text-xs-center">
                             <v-btn icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
@@ -114,8 +116,10 @@
             selected: [],
             search: "",
             headers: [
-                {text: 'Mã Môn Học', align: 'ma_mon_hoc', value: 'profile.first_name'},
+                {text: 'Mã Môn Học', align: 'left', value: 'profile.first_name'},
                 {text: 'Tên Môn Học', value: 'name', align: 'left',},
+                {text: 'Ngày Bắt Đầu', value: 'ngay_bat_dau', align: 'left',},
+                {text: 'Ngày Kết Thúc', value: 'ngay_ket_thuc', align: 'left',},
                 {text: 'action', value: '', align: 'left',},
             ],
             monHoc: [],
@@ -176,7 +180,7 @@
                     _this.dialog = false;
                     Axios.delete(_this.url + '/api/mon-hoc/' + _this.valueItem,{headers:{Authorization: 'Bearer' + ' ' + _this.token}}).then(response => {
                         if (response.status == 200) {
-                            _this.success = ' xóa thành công';
+                            _this.success = ' Xóa Môn Học Thành Công';
                             _this.dialogDelete = false;
                             var index =  _this.monHoc.findIndex(monhoc => monhoc.id == _this.valueItem);
                             _this.monHoc.splice(index, 1);

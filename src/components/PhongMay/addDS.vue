@@ -1,19 +1,26 @@
 <template>
     <div id="app">
         <v-app id="inspire">
-            <v-form v-model="valid" v-on:submit.prevent="addMonHoc" method="POST">
-                <v-text-field
-                        v-model="data.ma_mon_hoc"
-                        label="Mã môn học"
-                        required
-                ></v-text-field>
+            <v-form v-model="valid" v-on:submit.prevent="savePhongMay" method="POST">
                 <v-text-field
                         v-model="data.name"
-                        label="Tên môn học"
+                        label="Tên Phòng Máy"
                         required
                 ></v-text-field>
+                <v-text-field
+                        v-model="data.so_may"
+                        label="Số Máy"
+                        required
+                ></v-text-field>
+                <v-textarea
+                        v-model="data.mo_ta"
+                        label="Mô Tả"
+
+                        required
+                ></v-textarea>
+
                 <v-card-actions>
-                    <v-btn v-bind:to="{name: 'ListMonHoc'}">Quay Lại</v-btn>
+                    <v-btn v-bind:to="{name: 'ListPhongMay'}">Quay Lại</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Lưu</v-btn>
                 </v-card-actions>
@@ -38,12 +45,14 @@
 
 <script>
     export default {
-        name: "add",
+        name: "addDS",
         data: () => ({
             valid: false,
             data: {
-                ma_mon_hoc: '',
                 name: '',
+                so_may:'',
+                mo_ta:'',
+
             },
             success:'',
             info:'',
@@ -62,17 +71,17 @@
         }),
         methods:
             {
-                addMonHoc() {
+                savePhongMay() {
                     var _this = this;
                     _this.isLoading = true;
-                    let uri = _this.url + '/api/mon-hoc';
+                    let uri = _this.url + '/api/phong-may';
                     console.log(_this.data);
                     Axios.post(uri, _this.data,{headers:{Authorization: 'Bearer' + ' ' + _this.token}}).then((response) => {
-                        if(response.status == 201){
-                            _this.success = 'Tạo Môn Học Thành Công';
+                        if(response.status == 200){
+                            _this.success = 'Thêm Phòng Máy Thành Công';
                             setTimeout(() => {
                                 _this.success = '';
-                                _this.$router.push({name:'ListMonHoc'});
+                                _this.$router.push({name:'ListPhongMay'});
                             }, 3000)
                         }
                     }).catch(e =>{
