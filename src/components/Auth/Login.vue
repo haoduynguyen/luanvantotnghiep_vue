@@ -72,8 +72,8 @@
                 scope: 'email',
                 return_scopes: true
             },
-            url: "https://luanvantn.dev.digiprojects.top",
-           // url: 'http://localhost:8000',
+            //url: "https://luanvantn.dev.digiprojects.top",
+            url: 'http://localhost:8000',
             urlSendMail: "http://lvtn.cf",
             success: '',
             info: '',
@@ -94,7 +94,6 @@
                     let uri = _this.url + '/api/login';
                     Axios.post(uri, _this.Login).then((response) => {
                         if (response.status == 200) {
-                            console.time("Time this");
                             localStorage.setItem('author', JSON.stringify(response.data.data))
                             _this.success = 'Đăng nhập thành công'
                             if (response.data.data.role_id == 1) {
@@ -102,7 +101,6 @@
                                     _this.success = '';
                                     _this.$router.push({name: 'LichDayGV'})
                                 }, 300);
-                                console.timeEnd("Time this");
                             } else {
                                 setTimeout(() => {
                                     _this.success = '';
@@ -111,11 +109,9 @@
                             }
                         }
                     }).catch(error => {
-                        console.clear();
                         if (!error.response) {
                             // network error
                             this.errorStatus = 'Error: Network Error'
-                            console.log(error.response.data.message)
                         } else {
                             _this.info = error.response.data.message;
                             setTimeout(() => {
