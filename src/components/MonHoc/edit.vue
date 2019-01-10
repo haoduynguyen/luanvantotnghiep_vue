@@ -26,6 +26,18 @@
                         label="Tên môn học"
                         required
                 ></v-text-field>
+                <v-text-field
+                        v-model="data.ngay_bat_dau"
+                        label="Ngày bắt đầu"
+                        type = 'date'
+                        required
+                ></v-text-field>
+                <v-text-field
+                        v-model="data.ngay_ket_thuc"
+                        label="Ngày kết thúc"
+                        type = 'date'
+                        required
+                ></v-text-field>
                 <v-card-actions>
                     <v-btn v-bind:to="{name: 'ListMonHoc'}">Trở về</v-btn>
                     <v-spacer></v-spacer>
@@ -57,7 +69,7 @@
                         Authorization: 'Bearer' + ' ' + this.token
                     }}).then((response) => {
                     if (response.status  == 200) {
-                        _this.success = 'Sửa thành công';
+                        _this.success = 'Cập Nhật Môn Học Thành Công';
                         setTimeout(() => {
                             _this.success = '';
                             _this.$router.push({name: 'ListMonHoc'})

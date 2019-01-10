@@ -1,4 +1,3 @@
-
 <template>
     <div>
         <v-card>
@@ -54,12 +53,18 @@
                             ></v-checkbox>
                         </td>
                         <td class="text-xs-center">{{ props.item.phong_may.name}}</td>
-                        <td class="text-xs-center">{{ props.item.giang_vien.profile.first_name + ' ' + props.item.giang_vien.profile.last_name
+                        <td class="text-xs-center">{{ props.item.giang_vien.profile.first_name + ' ' +
+                            props.item.giang_vien.profile.last_name
                             }}
                         </td>
                         <td class="text-xs-center">{{ props.item.mota_gv != null ? props.item.mota_gv : "" }}</td>
-                        <td class="text-xs-center">{{ props.item.ky_thuat_vien != null ? props.item.ky_thuat_vien.profile.first_name + ' ' + props.item.ky_thuat_vien.profile.last_name : "" }}</td>
-                        <td class="text-xs-center">{{ props.item.mota_ktv != null ? props.item.mota_ktv : "" }}</td>
+                        <td class="text-xs-center">{{ props.item.ky_thuat_vien != null ?
+                            props.item.ky_thuat_vien.profile.first_name + ' ' +
+                            props.item.ky_thuat_vien.profile.last_name : "" }}
+                        </td>
+                        <td class="text-xs-center" v-if="props.item.status == 1">Chưa Sửa</td>
+                        <td class="text-xs-center" v-if="props.item.status == 2">Đang Sửa</td>
+                        <td class="text-xs-center" v-if="props.item.status == 3">Bình Thường</td>
                         <td class="text-xs-center">
                             <v-btn icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
@@ -130,21 +135,15 @@
             search: "",
             headers: [
                 {text: 'Phòng Máy', value: 'phong_may.name', align: 'left',},
-                {
-                    text: 'Tên Giảng Viên',
-                    align: 'left',
-                    value: 'giang_vien.profile.first_name'
-                },
+                {text: 'Tên Giảng Viên', align: 'left', value: 'giang_vien.profile.first_name'},
                 {text: 'Mô Tả Giảng Viên', value: '', align: 'left',},
                 {text: 'Tên Kỹ Thuật Viên', value: 'ky_thuat_vien.profile.first_name', align: 'left',},
-                {text: 'Mô Tả Kỹ Thuật Viên', value: 'mota_ktv', align: 'left',},
-
-
+                {text: 'Mô Tả Kỹ Thuật Viên', value: 'status', align: 'left',},
                 {text: 'Chức Năng', value: '', align: 'left',},
             ],
             listMota: [],
             //url: 'https://luanvantn.dev.digiprojects.top',
-            url:'http://localhost:8000',
+            url: 'http://localhost:8000',
             success: '',
             info: '',
             valueItem: '',
@@ -227,12 +226,12 @@
                             _this.listMota.splice(_this.positionItem, 1)
                             setTimeout(() => {
                                 _this.success = ''
-                            },3000)
+                            }, 3000)
                         }
                     }).catch(function (error) {
                         _this.info = error.response.data.message;
                         _this.dialogDelete = false;
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             _this.info = '';
                         }, 2000);
                     })

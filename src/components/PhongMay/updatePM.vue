@@ -3,7 +3,7 @@
         <v-app id="inspire">
             <v-card flat tile>
                 <v-toolbar color="cyan" dark>
-                    <v-toolbar-title>EDIT Giảng Viên </v-toolbar-title>
+                    <v-toolbar-title>Cập Nhật Tình Trạng Máy </v-toolbar-title>
                 </v-toolbar>
             </v-card>
             <v-form v-on:submit.prevent="update" method="post" class="custom-style">
@@ -27,7 +27,7 @@
                 <!--:label="`Gender: ${switch1.toString() == 'true' ? 'male' : 'female'}`"-->
                 <!--&gt;</v-switch>-->
                 <v-card-actions>
-                    <v-btn v-bind:to="{name: 'ListMayLoi'}"><v-icon dark left>arrow_back</v-icon>Trở về</v-btn>
+                    <v-btn v-bind:to="{name: 'ListMayLoi'}"><v-icon dark left>arrow_back</v-icon>Quay Lại</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Lưu</v-btn>
                 </v-card-actions>
@@ -72,7 +72,7 @@
                     //this.showData = response.data.data;
                     if(response.status == 200)
                     {
-                      alert("Update Success");
+                      alert("Cập Nhật Mô Tả Thành Công");
                       _this.$router.push({name: 'ListMoTaGV'})
                     }
                     //console.log(response);

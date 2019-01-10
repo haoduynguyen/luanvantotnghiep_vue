@@ -77,7 +77,7 @@
                     max-width="290"
             >
                 <v-card>
-                    <v-card-title class="headline">Bạn có chắc chắn muốn xóa không ?</v-card-title>
+                    <v-card-title class="headline">Bạn có chắc chắn muốn xóa không?</v-card-title>
 
                     <v-card-text>
                     </v-card-text>
@@ -184,7 +184,7 @@
                 _this.dialog = false;
                 Axios.delete(_this.url + '/api/hoc-ky/' + _this.valueItem,{headers:{Authorization: 'Bearer' + ' ' + _this.token}}).then(response => {
                     if (response.status == 200) {
-                        _this.success = ' xóa thành công'
+                        _this.success = ' Xóa Học Kỳ Thành Công'
                         _this.dialogDelete = false
                         _this.hocKy.splice(_this.positionItem, 1)
                         setTimeout(() => {

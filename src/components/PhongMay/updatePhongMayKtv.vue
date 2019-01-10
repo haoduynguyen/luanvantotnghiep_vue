@@ -4,7 +4,7 @@
             <span>Giảng Viên: {{showData.giang_vien.profile.first_name + ' ' + showData.giang_vien.profile.last_name}}</span>
             <v-card flat tile>
                 <v-toolbar color="cyan" dark>
-                    <v-toolbar-title>Edit Kỹ Thuật Viên</v-toolbar-title>
+                    <v-toolbar-title>Cập Nhật Tình Trạng Máy</v-toolbar-title>
                 </v-toolbar>
             </v-card>
             <v-form v-on:submit.prevent="update" method="post" class="custom-style">
@@ -23,12 +23,12 @@
                         v-model="showData.mota_gv"
                         disabled
                 ></v-textarea>
-                <v-textarea
-                        name="input-7-1"
-                        label="Mô Tả Kỹ Thuật Viên"
-                        hint="Hint text"
-                        v-model="showData.mota_ktv"
-                ></v-textarea>
+                <!--<v-textarea-->
+                        <!--name="input-7-1"-->
+                        <!--label="Mô Tả Kỹ Thuật Viên"-->
+                        <!--hint="Hint text"-->
+                        <!--v-model="showData.mota_ktv"-->
+                <!--&gt;</v-textarea>-->
 
                         <v-radio-group v-model="ex7" row>
                             <v-radio
@@ -52,7 +52,7 @@
                 <!--:label="`Gender: ${switch1.toString() == 'true' ? 'male' : 'female'}`"-->
                 <!--&gt;</v-switch>-->
                 <v-card-actions>
-                    <v-btn v-bind:to="{name: 'ListMayLoi'}">Trở về</v-btn>
+                    <v-btn v-bind:to="{name: 'ListMayLoi'}">Quay Lại</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Lưu</v-btn>
                 </v-card-actions>
@@ -93,7 +93,7 @@
                 var _this = this;
                 let uri = _this.url + '/api/update-mo-ta/';
                 var gvItem = {
-                    mota_ktv: _this.showData.mota_ktv,
+                    //mota_ktv: _this.showData.mota_ktv,
                     status : _this.ex7
                 }
                 Axios.put(uri + this.id, gvItem, {
@@ -104,7 +104,7 @@
                     _this.isLoading = false;
                     _this.showData = response.data.data;
                     if (response.status == 200) {
-                        alert("cập nhật tình hình thành công");
+                        alert("Cập nhật Mô Tả Thành Công");
                         _this.$router.push({name: 'ListMayLoi'})
                     }
                 })

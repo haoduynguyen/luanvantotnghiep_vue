@@ -37,9 +37,9 @@
                         required
                 ></v-text-field>
                 <v-card-actions>
-                    <v-btn v-bind:to="{name: 'ListHocKy'}">Back</v-btn>
+                    <v-btn v-bind:to="{name: 'ListHocKy'}">Quay Lại</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Save</v-btn>
+                    <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Thêm</v-btn>
                 </v-card-actions>
             </v-form>
         </v-app>
@@ -71,7 +71,7 @@
                     }
                 }).then((response) => {
                     if (response.status == 200) {
-                        _this.success = 'Sửa thành công';
+                        _this.success = 'Cập Nhật Học Kỳ Thành Công';
                         setTimeout(() => {
                             _this.success = '';
                             _this.$router.push({name: 'ListHocKy'})

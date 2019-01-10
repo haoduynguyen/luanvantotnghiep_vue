@@ -27,9 +27,14 @@
                         label="Số Lượng Máy"
                         required
                 ></v-text-field>
-                <v-textarea
+                <v-text-field
                         v-model="data.mo_ta"
                         label="Mô Tả"
+                        required
+                ></v-text-field>
+                <v-textarea
+                        v-model="data.ghi_chu"
+                        label="Ghi Chú"
                         required
                 ></v-textarea>
                 <v-card-actions>
@@ -44,16 +49,17 @@
 
 <script>
     export default {
-        name: "updateDS",
+        name: "updateDS-ktv",
         data: () => ({
             valid: false,
             data: {
                 name: '',
                 mo_ta: '',
                 so_may: '',
+                ghi_chu:'',
             },
-            url: 'https://luanvantn.dev.digiprojects.top',
-            //url: 'http://localhost:8000',
+            //url: 'https://luanvantn.dev.digiprojects.top',
+            url: 'http://localhost:8000',
             success:'',
             info:'',
         }),
@@ -65,7 +71,7 @@
                         Authorization: 'Bearer' + ' ' + this.token
                     }}).then((response) => {
                     if (response.status  == 200) {
-                        _this.success = 'Sửa thành công';
+                        _this.success = 'Cập Nhật Thành Công';
                         setTimeout(() => {
                             _this.success = '';
                             _this.$router.push({name: 'ListPhongMay'})
@@ -87,7 +93,7 @@
             _this.id = Auth['id'];
             _this.token = Auth['token'];
             let urlCurrent = window.location.href;
-            let phongmay_id = urlCurrent.slice(urlCurrent.lastIndexOf('update-ds/') + 10, urlCurrent.length);
+            let phongmay_id = urlCurrent.slice(urlCurrent.lastIndexOf('update-ds-ktv/') + 14, urlCurrent.length);
 
             let uri = _this.url + '/api/phong-may/' + phongmay_id + '/edit';
             console.log('aaa',uri);

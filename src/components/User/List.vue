@@ -46,7 +46,7 @@
                         </td>
                         <td class="text-xs-center">{{ props.item.email }}</td>
                         <td class="text-xs-center" v-if="props.item.role_id == 3 ">Admin</td>
-                        <td class="text-xs-center" v-else-if="props.item.role_id == 2 ">Kỹ thuận viên</td>
+                        <td class="text-xs-center" v-else-if="props.item.role_id == 2 ">Kỹ Thuật Viên</td>
                         <td class="text-xs-center" v-else>Giảng Viên</td>
                         <td class="text-xs-center">{{ props.item.profile.gender == 1 ?"male" : "female" }}</td>
                         <td class="text-xs-center">
@@ -120,11 +120,11 @@
             selected: [],
             search: "",
             headers: [
-                {text: 'name', align: 'left', value: 'profile.first_name'},
-                {text: 'email', value: 'email', align: 'left',},
-                {text: 'chức vụ', align: 'left',},
-                {text: 'gender', value: 'gender', align: 'left',},
-                {text: 'action', value: '', align: 'left',},
+                {text: 'Họ Tên', align: 'left', value: 'profile.first_name'},
+                {text: 'Email', value: 'email', align: 'left',},
+                {text: 'Chức Vụ', align: 'left',},
+                {text: 'Giới Tính', value: 'gender', align: 'left',},
+                {text: 'Action', value: '', align: 'left',},
             ],
             user: [],
 	        dialog: false,
@@ -133,8 +133,8 @@
             valueItem: '',
             positionItem: '',
             dialogDelete: false,
-            //url:'http://localhost:8000',
-            url: "https://luanvantn.dev.digiprojects.top",
+            url:'http://localhost:8000',
+            //url: "https://luanvantn.dev.digiprojects.top",
         }),
         created: function () {
             var _this = this;

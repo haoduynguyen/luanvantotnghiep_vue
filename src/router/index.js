@@ -29,11 +29,15 @@ import ListMonHoc from '@/components/MonHoc/list'
 import AddMonHoc from '@/components/MonHoc/add'
 import EditMonHoc from '@/components/MonHoc/edit'
 import ListPhongMay from '@/components/PhongMay/listPM'
-import UpdateDanhSach from '@/components/PhongMay/updateDS'
+import ListPhongMayKTV from '@/components/PhongMay/listPM-ktv'
+import UpdateDanhSachPM from '@/components/PhongMay/updateDS'
+import UpdateDanhSachPMKTV from '@/components/PhongMay/updateDS-ktv'
 import ListHocKy from '@/components/HocKy/listHocKy'
 import UpdateHocKy from '@/components/HocKy/updateHocKy'
 import AddHocKy from '@/components/HocKy/addHocKy'
+import AddDanhSachPM from '@/components/PhongMay/addDS'
 import permission from '@/components/Auth/permission'
+
 Vue.use(Router)
 
 export default new Router({
@@ -273,10 +277,28 @@ export default new Router({
                     icon:'computer'
                 },
                 {
+                    path: '/list-PM-ktv',
+                    props: true,
+                    name: 'ListPhongMayKTV',
+                    component: ListPhongMayKTV,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
                     path: '/update-ds/:id',
                     //props: true,
-                    name: 'UpdateDanhSach',
-                    component: UpdateDanhSach,
+                    name: 'UpdateDanhSachPM',
+                    component: UpdateDanhSachPM,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/update-ds-ktv/:id',
+                    //props: true,
+                    name: 'UpdateDanhSachPMKTV',
+                    component: UpdateDanhSachPMKTV,
                     meta: {
                         middleware: auth,
                     },
@@ -307,6 +329,15 @@ export default new Router({
                     //props: true,
                     name: 'AddHocKy',
                     component: AddHocKy,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/add-phong-may/',
+                    //props: true,
+                    name: 'AddDanhSachPM',
+                    component: AddDanhSachPM,
                     meta: {
                         middleware: auth,
                     },

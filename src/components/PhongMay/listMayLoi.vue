@@ -85,14 +85,14 @@
                             props.item.ky_thuat_vien.profile.first_name + ' ' +
                             props.item.ky_thuat_vien.profile.last_name : "" }}
                         </td>
-                        <td class="text-xs-center">{{ props.item.mota_ktv != null ? props.item.mota_ktv : "" }}</td>
+                        <td class="text-xs-center" v-if="props.item.status == 1">Chưa Sửa</td>
+                        <td class="text-xs-center" v-if="props.item.status == 2">Đang Sửa</td>
+                        <td class="text-xs-center" v-if="props.item.status == 3">Bình Thường</td>
                         <td class="text-xs-center">{{ props.item.ngay_tao != null ? props.item.ngay_tao : "" }}</td>
                         <td class="text-xs-center">{{ (props.item.status == 3 && props.item.ngay_sua != null) ?
                             props.item.ngay_sua : "-" }}
                         </td>
-                        <td class="text-xs-center" v-if="props.item.status == 1">Chưa Sửa</td>
-                        <td class="text-xs-center" v-if="props.item.status == 2">Đang Sửa</td>
-                        <td class="text-xs-center" v-if="props.item.status == 3">Bình Thường</td>
+
                         <td class="text-xs-center">
                             <v-btn v-if="user_role != 3" icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
@@ -170,10 +170,9 @@
                 },
                 {text: 'Mô Tả Giảng Viên', value: '', align: 'left',},
                 {text: 'Tên Kỹ Thuật Viên', value: '', align: 'left',},
-                {text: 'Mô Tả Kỹ Thuật Viên', value: 'giang_vien.profile.first_name', align: 'left',},
+                {text: 'Mô Tả Kỹ Thuật Viên', value: '', align: 'left',},
                 {text: 'Ngày Tạo', value: '', align: 'left',},
                 {text: 'Ngày Sửa', value: '', align: 'left',},
-                {text: 'Trạng Thái', value: '', align: 'left',},
                 {text: 'Chức Năng', value: '', align: 'left',},
             ],
             listMota: [],
@@ -358,7 +357,7 @@
                             _this.listMota.splice(_this.positionItem, 1)
                             setTimeout(() => {
                                 _this.success = ''
-                            },3000)
+                            }, 3000)
                         } else {
                             alert('abc')
                         }
