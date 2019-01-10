@@ -50,7 +50,7 @@
                         <td class="text-xs-center" v-else>Giảng Viên</td>
                         <td class="text-xs-center">{{ props.item.profile.gender == 1 ?"male" : "female" }}</td>
                         <td class="text-xs-center">
-                            <v-btn icon class="mx-0" @click="editItem(props.item.id)">
+                            <v-btn icon class="mx-0" @click="editItem(props.item.id)" v-if="1==1" disabled>
                                 <v-icon color="teal">edit</v-icon>
                             </v-btn>
                             <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id , props.index)">
