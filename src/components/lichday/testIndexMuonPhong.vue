@@ -512,6 +512,7 @@
                 }
                 console.log(_this.dataLich.chosingHk);
                 var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == thu_id)
+                _this.dataLich['ngay'] = [];
                 _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
                 if ((_this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.selectedTuan && _this.dataLich.statusCode == 200)) {
                     _this.dialogdkMuonPhong = true;

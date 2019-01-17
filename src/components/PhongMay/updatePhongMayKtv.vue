@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <v-app id="inspire">
-            <span>Giảng Viên: {{showData.giang_vien.profile.first_name + ' ' + showData.giang_vien.profile.last_name}}</span>
+            <!--<span>Giảng Viên: {{showData.giang_vien.profile.first_name + ' ' + showData.giang_vien.profile.last_name}}</span>-->
             <v-card flat tile>
                 <v-toolbar color="cyan" dark>
                     <v-toolbar-title>Cập Nhật Tình Trạng Máy</v-toolbar-title>
@@ -18,17 +18,19 @@
 
                 <v-textarea
                         name="input-7-1"
+                        label="Giảng Viên"
+                        hint="Hint text"
+                        v-model="showData.giang_vien.profile.first_name + ' ' + showData.giang_vien.profile.last_name"
+                        disabled
+                ></v-textarea>
+
+                <v-textarea
+                        name="input-7-1"
                         label="Mô Tả Giảng Viên"
                         hint="Hint text"
                         v-model="showData.mota_gv"
                         disabled
                 ></v-textarea>
-                <!--<v-textarea-->
-                        <!--name="input-7-1"-->
-                        <!--label="Mô Tả Kỹ Thuật Viên"-->
-                        <!--hint="Hint text"-->
-                        <!--v-model="showData.mota_ktv"-->
-                <!--&gt;</v-textarea>-->
 
                         <v-radio-group v-model="ex7" row>
                             <v-radio
@@ -47,6 +49,12 @@
                                     value="3"
                             ></v-radio>
                         </v-radio-group>
+                <v-textarea
+                        name="input-7-1"
+                        label="Mô Tả Kỹ Thuật Viên"
+                        hint="Hint text"
+                        v-model="showData.mota_ktv"
+                ></v-textarea>
 
                 <!--<v-switch-->
                 <!--:label="`Gender: ${switch1.toString() == 'true' ? 'male' : 'female'}`"-->
@@ -93,7 +101,7 @@
                 var _this = this;
                 let uri = _this.url + '/api/update-mo-ta/';
                 var gvItem = {
-                    //mota_ktv: _this.showData.mota_ktv,
+                    mota_ktv: _this.showData.mota_ktv,
                     status : _this.ex7
                 }
                 Axios.put(uri + this.id, gvItem, {

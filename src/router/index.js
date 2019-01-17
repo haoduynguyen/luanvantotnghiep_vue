@@ -29,8 +29,11 @@ import AddMonHoc from '@/components/MonHoc/add'
 import EditMonHoc from '@/components/MonHoc/edit'
 import ListPhongMay from '@/components/PhongMay/listPM'
 import ListPhongMayKTV from '@/components/PhongMay/listPM-ktv'
+import ListCa from '@/components/Ca/listCa'
+import UpdateCa from '@/components/Ca/updateCa'
 import UpdateDanhSachPM from '@/components/PhongMay/updateDS'
 import UpdateDanhSachPMKTV from '@/components/PhongMay/updateDS-ktv'
+
 import ListHocKy from '@/components/HocKy/listHocKy'
 import UpdateHocKy from '@/components/HocKy/updateHocKy'
 import AddHocKy from '@/components/HocKy/addHocKy'
@@ -352,6 +355,22 @@ export default new Router({
                     menu:'1',
                     text:'Danh Sách Quyền',
                     icon:'schedule'
+                },
+                {
+                    path: '/list-ca',
+                    name: 'ListCa',
+                    component: ListCa,
+                    meta: {
+                        middleware: auth,
+                    },
+                },
+                {
+                    path: '/update-ca/:id',
+                    name: 'UpdateCa',
+                    component: UpdateCa,
+                    meta: {
+                        middleware: auth,
+                    },
                 },
             ]
         },

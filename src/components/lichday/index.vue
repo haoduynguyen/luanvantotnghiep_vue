@@ -63,7 +63,7 @@
                 <div class="lichtruc-content">
                     <div v-for="( thu, key ) in dataLich.thuList" :key="key" style="width: 14.28%;">
                         <div v-for="( ca, key ) in dataLich.caList" :key="key" class="lichtruc-content-block">
-                            <div style="border: 1px solid white; height: 150px; background-color: #eeeeee">
+                            <div style="border: 1px solid white; height: 150px; background-color: #3e4760">
                                 <div v-if="checkLichTruc(ca.id,thu.id)=='' || ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null &&
                                 checkLichTruc(ca.id,thu.id).dang_ky_nghi.tuan_id == selectTuan)"
                                      class="lichtruc-detail">

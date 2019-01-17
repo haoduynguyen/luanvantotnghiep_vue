@@ -30,9 +30,9 @@
                 <v-btn v-bind:to="{name: 'importLichDay'}">Import</v-btn>
                 <v-spacer></v-spacer>
                 <label>
-                    <input type="text" name="color1" style="background-color: #8090a7; width: 20px" disabled> Đã có
+                    <input type="text" name="color1" style="background-color: 	#b26b66; width: 20px" disabled> Đã có
                     giảng viên dạy <br>
-                    <input type="text" name="color1" style="background-color: gold; width: 20px" disabled> Chưa có
+                    <input type="text" name="color1" style="background-color: 	#5b7bb4; width: 20px" disabled> Chưa có
                     Lịch Dạy
                     <input type="text" name="color1" style="background-color: red; width: 20px; margin-left: 13px"
                            disabled> Đang mượn phòng
@@ -62,11 +62,11 @@
                 </div>
                 <div class="lichtruc-content">
                     <div v-for="( thu, key ) in dataLich.thuList" :key="key"
-                         style="width: 14.28%; background-color: #bd7474">
+                         style="width: 14.28%; background-color: #4267b2">
                         <div v-for="( ca, key ) in dataLich.caList" :key="key" class="lichtruc-content-block">
                             <div v-for="(phongMay,key) in dataLich.phongMayList" :key="key"
                                  class="phongmay-content-block">
-                                <div style="border: 1px solid white; height: 50px; background-color: gold">
+                                <div style="border: 1px solid white; height: 50px; background-color: #5b7bb4">
                                     <div v-if="checkLichMuonPhong(ca.id,thu.id,phongMay.id)"
                                          class="lichtruc-detail"
                                          v-on:click="viewDaMuonPhong(ca.id, thu.id,phongMay,checkLichMuonPhong(ca.id,thu.id,phongMay.id))"
@@ -80,7 +80,7 @@
                                     </div>
                                     <div v-else class="lichtruc-detail"
                                          v-on:click="viewDetail(checkLichTruc(ca.id, thu.id,phongMay.id))">
-                                        <div style="background-color: #8090a7;" class="lichtruc-detail">
+                                        <div style="background-color:	#b26b66;" class="lichtruc-detail">
                                             {{checkLichTruc(ca.id,thu.id,phongMay.id).phong_may.name}}
                                         </div>
                                         <div></div>

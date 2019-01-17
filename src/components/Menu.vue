@@ -183,7 +183,7 @@
             </v-list>
         </v-navigation-drawer>
         <v-toolbar
-                color="pink darken-3"
+                color="#2a4456"
                 dark
                 app
                 :clipped-left="$vuetify.breakpoint.mdAndUp"
@@ -278,6 +278,7 @@
             ],
             itemsGV: [
                 {icon: 'event', text: 'Lịch Dạy Chi Tiết', path: 'LichDayGV'},
+                {icon: 'accessibility', text: 'Danh Sách User', path: 'ListUser'},
                 {icon: 'class', text: 'Đăng Ký Mượn Phòng', path: 'TestMuonPhong'},
                 {icon: 'computer', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
                 {icon: 'room', text: 'Danh Sách Mượn Phòng', path: 'ListMuonPhong'},
@@ -295,7 +296,7 @@
                 // },
                 //{icon: 'event', text: 'Lịch Dạy', path: 'LichDay'},
                 {icon: 'class', text: 'Lịch Dạy', path: 'MuonPhongKtv'},
-                {icon: 'accessibility', text: 'Danh Sách Giảng Viên', path: 'ListUser'},
+                {icon: 'accessibility', text: 'Danh Sách User', path: 'ListUser'},
                 {icon: 'computer', text: 'Danh Sách Máy Lỗi', path: 'ListMayLoi'},
                 {icon: 'list', text: 'Danh Sách Phòng Máy', path: 'ListPhongMayKTV'},
 
@@ -308,6 +309,7 @@
                 {icon: 'event', text: 'Lịch Dạy', path: 'MuonPhongKtv'},
                 {icon: 'accessibility', text: 'Danh Sách User', path: 'ListUser'},
                 {icon: 'list', text: 'Danh Sách Học Kỳ', path: 'ListHocKy'},
+                {icon: 'list', text: 'Danh Sách Ca', path: 'ListCa'},
                 {icon: 'list', text: 'Danh Sách Môn Học', path: 'ListMonHoc'},
                 {icon: 'computer', text: 'Danh Sách Phòng Máy', path: 'ListPhongMay'},
                 //{icon: 'list', text: 'Danh Sách Mô Tả PM', path: 'ListMoTaGV'},
@@ -334,9 +336,9 @@
                 if(user.role_id == 3){
                     _this.role = 'Admin: '
                 } else if(user.role_id == 2){
-                    _this.role = 'KTV: '
+                    _this.role = 'Kỹ Thuật Viên: '
                 } else {
-                    _this.role = 'GV: '
+                    _this.role = 'Giảng Viên: '
                 }
                 _this.id = user.id
                 _this.role_id = user.role_id
