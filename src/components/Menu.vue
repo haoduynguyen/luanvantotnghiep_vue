@@ -343,7 +343,6 @@
                 if(user.role != null){
                     let menu = JSON.parse(user.role.permission);
                     _this.permission = user.role.permission;
-                    console.log(menu);
                 }
             });
         },
