@@ -31,7 +31,7 @@
                         v-model="showData.mota_gv"
                         disabled
                 ></v-textarea>
-
+                <p style="text-align: left">Tình trạng:</p>
                         <v-radio-group v-model="ex7" row>
                             <v-radio
                                     label="Chưa Sửa"
@@ -51,7 +51,7 @@
                         </v-radio-group>
                 <v-textarea
                         name="input-7-1"
-                        label="Mô Tả Kỹ Thuật Viên"
+                        label="Ghi Chú"
                         hint="Hint text"
                         v-model="showData.mota_ktv"
                 ></v-textarea>
