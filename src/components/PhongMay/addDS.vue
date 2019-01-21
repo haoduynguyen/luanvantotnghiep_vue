@@ -44,6 +44,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "addDS",
         data: () => ({
@@ -57,7 +58,7 @@
             success:'',
             info:'',
             //url: 'https://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             switch1: true,
             roleList: [],
             nameRules: [
@@ -74,7 +75,7 @@
                 savePhongMay() {
                     var _this = this;
                     _this.isLoading = true;
-                    let uri = _this.url + '/api/phong-may';
+                    let uri = url.url + '/api/phong-may';
                     console.log(_this.data);
                     Axios.post(uri, _this.data,{headers:{Authorization: 'Bearer' + ' ' + _this.token}}).then((response) => {
                         if(response.status == 200){

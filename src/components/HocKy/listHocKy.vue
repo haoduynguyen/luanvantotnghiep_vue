@@ -106,6 +106,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "listHocKy",
         data: () => ({
@@ -122,7 +123,7 @@
             ],
             selected: [],
             search: '',
-            hocKy: '',
+            hocKy: [],
             dialog: false,
             success: '',
             info: '',
@@ -130,7 +131,7 @@
             positionItem: '',
             dialogDelete: false,
             //url: 'http://localhost:8000',
-            url: 'https://luanvantn.dev.digiprojects.top',
+            //url: 'https://luanvantn.dev.digiprojects.top',
         }),
         created: function () {
             var _this = this;
@@ -139,7 +140,7 @@
             let Auth = JSON.parse(author);
             _this.id = Auth['id'];
             _this.token = Auth['token'];
-            let uri = _this.url + '/api/hoc-ky';
+            let uri = url.url + '/api/hoc-ky';
             Axios.get(uri, {
                 headers: {
                     Authorization: 'Bearer' + '' + this.token
@@ -182,7 +183,7 @@
             xoaData() {
                 let _this = this;
                 _this.dialog = false;
-                Axios.delete(_this.url + '/api/hoc-ky/' + _this.valueItem,{headers:{Authorization: 'Bearer' + ' ' + _this.token}}).then(response => {
+                Axios.delete(url.url + '/api/hoc-ky/' + _this.valueItem,{headers:{Authorization: 'Bearer' + ' ' + _this.token}}).then(response => {
                     if (response.status == 200) {
                         _this.success = ' Xóa Học Kỳ Thành Công'
                         _this.dialogDelete = false

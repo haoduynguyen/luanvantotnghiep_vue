@@ -88,7 +88,7 @@
             phone: '',
             gender: 0,
             //url: 'https://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             switch1: true,
             roleList: [],
             roleSelected: 0,
@@ -113,7 +113,7 @@
                     phone: _this.giangVien.profile.phone,
                     gender: _this.giangVien.profile.gender,
                 }
-                Axios.put(_this.url + '/api/user/' + _this.giangVien.id, giangVienItem).then((response) => {
+                Axios.put(url.url + '/api/user/' + _this.giangVien.id, giangVienItem).then((response) => {
                     if (response.status == 200) {
                         _this.success = 'Sửa thành công';
                         setTimeout(() => {
@@ -134,12 +134,12 @@
             var _this = this;
             //let urlCurrent = window.location.href;
             //let giangvien_id = urlCurrent.slice(urlCurrent.lastIndexOf('edit-user/') + 10, urlCurrent.length);
-            let uri = this.url + '/api/user/' + this.$route.params.id + '/edit';
+            let uri = url.url + '/api/user/' + this.$route.params.id + '/edit';
             Axios.get(uri).then((response) => {
                 _this.giangVien = response.data.data;
                 _this.giangVien.profile.gender = this.switch1 ? 1 : null
             });
-            Axios.get(_this.url + '/api/role').then((response) => {
+            Axios.get(url.url + '/api/role').then((response) => {
                 _this.roleList = response.data.data;
             })
         }

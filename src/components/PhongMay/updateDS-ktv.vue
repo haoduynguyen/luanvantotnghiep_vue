@@ -48,6 +48,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "updateDS-ktv",
         data: () => ({
@@ -59,7 +60,7 @@
                 ghi_chu:'',
             },
             //url: 'https://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             success:'',
             info:'',
         }),
@@ -67,7 +68,7 @@
             updateMay: function () {
                 var _this = this;
 
-                Axios.put(_this.url + '/api/phong-may/' + _this.data.id, _this.data,{ headers: {
+                Axios.put(url.url + '/api/phong-may/' + _this.data.id, _this.data,{ headers: {
                         Authorization: 'Bearer' + ' ' + this.token
                     }}).then((response) => {
                     if (response.status  == 200) {
@@ -95,7 +96,7 @@
             let urlCurrent = window.location.href;
             let phongmay_id = urlCurrent.slice(urlCurrent.lastIndexOf('update-ds-ktv/') + 14, urlCurrent.length);
 
-            let uri = _this.url + '/api/phong-may/' + phongmay_id + '/edit';
+            let uri = url.url + '/api/phong-may/' + phongmay_id + '/edit';
             console.log('aaa',uri);
             Axios.get(uri,{ headers: {
                     Authorization: 'Bearer' + ' ' + this.token

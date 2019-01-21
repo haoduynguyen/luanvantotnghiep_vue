@@ -270,6 +270,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "testIndexMuonPhong",
         data: () => ({
@@ -299,7 +300,7 @@
             mota_pm: '',
             selectTuan: 0,
             //url: 'https://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             dialog: false,
             dialogdkMuonPhong: false,
             dialogDaMuonPhong: false,
@@ -322,7 +323,7 @@
             _this.id = Auth['id'];
             _this.token = Auth['token'];
             // get danh sách ca
-            let uriCa = _this.url + '/api/ca';
+            let uriCa = url.url + '/api/ca';
             Axios.get(uriCa).then((response) => {
                 _this.isLoading = false;
                 this.dataLich.caList = response.data.data;
@@ -335,7 +336,7 @@
                 }
             });
             //get danh sach thú
-            let uriLich = _this.url + '/api/thu';
+            let uriLich = url.url + '/api/thu';
             Axios.get(uriLich).then((response) => {
                 _this.isLoading = false;
                 this.dataLich.thuList = response.data.data;
@@ -347,7 +348,7 @@
                 }
             });
             //get danh sách môn học
-            let uriMonHoc = _this.url + '/api/mon-hoc';
+            let uriMonHoc = url.url + '/api/mon-hoc';
             Axios.get(uriMonHoc, {
                 headers: {
                     Authorization: 'Bearer' + ' ' + _this.token
@@ -364,7 +365,7 @@
                 }
             });
             // get danh sách tuần
-            let uriTuan = _this.url + '/api/tuan';
+            let uriTuan = url.url + '/api/tuan';
             Axios.get(uriTuan).then((response) => {
                 _this.isLoading = false;
                 this.dataLich.tuanList = response.data.data;
@@ -399,7 +400,7 @@
                 }
             });
             // get danh sach hk
-            let urihocKy = _this.url + '/api/hoc-ky';
+            let urihocKy = url.url + '/api/hoc-ky';
             Axios.get(urihocKy).then((response) => {
                 _this.isLoading = false;
                 for (var hocky of response.data.data) {
@@ -433,7 +434,7 @@
                 }
             });
             //get danh sach phong may
-            let uriPhongMay = _this.url + '/api/phong-may';
+            let uriPhongMay = url.url + '/api/phong-may';
             Axios.get(uriPhongMay).then((response) => {
                 _this.isLoading = false;
                 this.dataLich.phongMayList = response.data.data;
@@ -470,7 +471,7 @@
                 var ngayHienTai = _this.dataLich.tuanList.findIndex(itemTuan => itemTuan.id == data.tuan_id)
                 _this.dataLich.thuNgayList = []
                 _this.getDateOfWeek(_this.dataLich.tuanList[ngayHienTai]);
-                Axios.get(_this.url + '/api/get-lich?' + 'hk_id=' + data.hk_id + '&tuan_id=' + data.tuan_id
+                Axios.get(url.url + '/api/get-lich?' + 'hk_id=' + data.hk_id + '&tuan_id=' + data.tuan_id
                 ).then((response) => {
                     _this.dataLich.lichDay = response.data.data
                     _this.dataLich.statusCode = response.status;
@@ -478,7 +479,7 @@
                     _this.error = error.response.data.message
                     _this.info = ""
                 });
-                Axios.get(_this.url + '/api/dk-muon-phong?' + 'hk_id=' + data.hk_id + '&tuan_id=' + data.tuan_id, {
+                Axios.get(url.url + '/api/dk-muon-phong?' + 'hk_id=' + data.hk_id + '&tuan_id=' + data.tuan_id, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + _this.token
                     }
@@ -538,7 +539,7 @@
             submitMuonPhong() {
                 console.time("Time this 1");
                 var _this = this
-                var uri = _this.url + '/api/dk-muon-phong'
+                var uri = url.url + '/api/dk-muon-phong'
                 var data =
                     {
                         mon_hoc_id: _this.dataLich.selectedMonHoc.id,

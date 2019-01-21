@@ -49,6 +49,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "addHocKy",
         data: () => ({
@@ -61,8 +62,8 @@
             },
             success:'',
             info:'',
-            url: 'https://luanvantn.dev.digiprojects.top',
-            //url: 'http://localhost:8000',
+            //url: 'https://luanvantn.dev.digiprojects.top',
+           // url: 'http://localhost:8000',
             switch1: true,
             roleList: [],
             nameRules: [
@@ -79,7 +80,7 @@
                 saveHocKy() {
                     var _this = this;
                     _this.isLoading = true;
-                    let uri = _this.url + '/api/hoc-ky';
+                    let uri = url.url + '/api/hoc-ky';
                     console.log(_this.data);
                     Axios.post(uri, _this.data,{headers:{Authorization: 'Bearer' + ' ' + _this.token}}).then((response) => {
                         if(response.status == 200){

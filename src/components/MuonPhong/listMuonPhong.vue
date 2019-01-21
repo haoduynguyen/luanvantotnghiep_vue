@@ -109,6 +109,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "listMuonPhong",
         data: () => ({
@@ -130,7 +131,7 @@
             ],
             muonPhong: [],
             //url: 'https://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             token: '',
             valueItem: '',
             positionItem: '',
@@ -145,7 +146,7 @@
             var token = Auth['token']
             _this.token = token;
             _this.isLoading = true;
-            let uri = _this.url + '/api/get-ds-muon-phong';
+            let uri = url.url + '/api/get-ds-muon-phong';
             Axios.get(uri, {
                 headers: {
                     Authorization: 'Bearer' + ' ' + token
@@ -190,7 +191,7 @@
                 xoaData() {
                     let _this = this;
                     console.log(_this.valueItem);
-                    Axios.put(_this.url + '/api/update-status-mp/' + _this.valueItem, {
+                    Axios.put(url.url + '/api/update-status-mp/' + _this.valueItem, {
                         headers: {
                             Authorization: 'Bearer' + ' ' + _this.token
                         }

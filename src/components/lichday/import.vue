@@ -68,10 +68,12 @@
 
 <script>
     import image from "../../assets/logo.png";
+    import url from '../../middleware/domain';
     export default {
         data: function () {
             return {
-                urlCurrent: "https://luanvantn.dev.digiprojects.top",
+                //urlCurrent: "https://luanvantn.dev.digiprojects.top",
+                //urlCurrent: "http://locaohost:8000",
                 fetchError: '',
                 downTime: 0,
                 valid: false,
@@ -125,7 +127,7 @@
                     _this.info = "File excel đang được import. Xin vui lòng chờ trong giây lát";
                 }
 
-                Axios.post(_this.urlCurrent + '/api/import-excel', formData).then((response) => {
+                Axios.post(url.url + '/api/import-excel', formData).then((response) => {
                     console.log(response.data);
                     if(response.data.warn) {
                         _this.info = "";
@@ -152,7 +154,7 @@
         },
         created: function() {
             var _this = this;
-            Axios.get(_this.urlCurrent+'/api/hoc-ky').then((response) => {
+            Axios.get(url.url+'/api/hoc-ky').then((response) => {
                 // _this.hockyList = response.data;
 
                 for(var hocky of response.data.data) {

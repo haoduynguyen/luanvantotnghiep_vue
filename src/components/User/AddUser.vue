@@ -53,6 +53,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "AddUser",
         data: () => ({
@@ -68,7 +69,7 @@
                 role_id: '',
             },
             //url: 'https://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             switch1: true,
             roleList: [],
             nameRules: [
@@ -86,18 +87,14 @@
                     var _this = this;
                     _this.isLoading = true;
                     _this.dataUser.gender = _this.switch1 ? 1 : 0
-                    let uri = _this.url + '/api/user';
-                    console.log(_this.switch1);
-                    console.log(_this.dataUser);
-                    console.log(_this.dataUser);
+                    let uri = url.url + '/api/user';
                     Axios.post(uri, _this.dataUser).then((response) => {
                         alert('Add User Success!');
                     });
                 },
                 getRole() {
                     var _this = this;
-                    let uri = _this.url + '/api/role';
-                    console.log(_this.url);
+                    let uri = url.url + '/api/role';
                     Axios.get(uri).then((response) => {
                         _this.roleList = response.data.data;
                         console.log('Role');

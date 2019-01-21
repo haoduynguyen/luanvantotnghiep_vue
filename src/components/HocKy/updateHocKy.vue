@@ -47,6 +47,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "updateHocKy",
         data: () => ({
@@ -57,7 +58,7 @@
                 ngay_bat_dau:'',
                 ngay_ket_thuc:'',
             },
-            url: 'https://luanvantn.dev.digiprojects.top',
+            //url: 'https://luanvantn.dev.digiprojects.top',
             //url: 'http://localhost:8000',
             success: '',
             info: '',
@@ -65,7 +66,7 @@
         methods: {
             updateHK: function () {
                 var _this = this;
-                Axios.put(_this.url + '/api/hoc-ky/' + _this.data.id, _this.data, {
+                Axios.put(url.url + '/api/hoc-ky/' + _this.data.id, _this.data, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + this.token
                     }
@@ -94,7 +95,7 @@
             _this.token = Auth['token'];
             let urlCurrent = window.location.href;
             let hocky_id = urlCurrent.slice(urlCurrent.lastIndexOf('update-hoc-ky/') + 14, urlCurrent.length);
-            let uri = _this.url + '/api/hoc-ky/' + hocky_id + '/edit';
+            let uri = url.url + '/api/hoc-ky/' + hocky_id + '/edit';
             console.log('aaa', uri);
             Axios.get(uri, {
                 headers: {

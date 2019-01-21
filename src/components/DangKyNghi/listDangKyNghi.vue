@@ -107,6 +107,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "DangKyNghi",
         data: () => ({
@@ -128,7 +129,7 @@
 
             ],
             dangKyNghi: [],
-            url:'http://localhost:8000',
+            //url:'http://localhost:8000',
             //url: "https://luanvantn.dev.digiprojects.top",
             token:'',
             success:'',
@@ -144,7 +145,7 @@
             var token = Auth['token']
             _this.token = token;
             _this.isLoading = true;
-            let uri = _this.url + '/api/get-dk-nghi';
+            let uri = url.url + '/api/get-dk-nghi';
             Axios.get(uri,{
                 headers: {
                     Authorization: 'Bearer' + ' ' + token
@@ -186,7 +187,7 @@
                 xoaData() {
                     let _this = this;
                     console.log(_this.valueItem);
-                    Axios.delete(_this.url + '/api/dang-ky-nghi/' + _this.valueItem, {
+                    Axios.delete(url.url + '/api/dang-ky-nghi/' + _this.valueItem, {
                         headers: {
                             Authorization: 'Bearer' + ' ' + _this.token
                         }

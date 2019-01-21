@@ -11,9 +11,9 @@
                         <v-card-text>
                             <v-form v-model="drawer" v-on:submit.prevent="forgotPassword" method="POST">
                                 <v-text-field prepend-icon="person" name="login" label="Password" v-model="Login.password"
-                                              id="password" type="password"></v-text-field>
+                                               type="password"></v-text-field>
                                 <v-text-field prepend-icon="lock" name="password" label="Password confirmation"
-                                              v-model="Login.password_confirmation" id="password" type="password"></v-text-field>
+                                              v-model="Login.password_confirmation" type="password"></v-text-field>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Submit</v-btn>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "forgotPassword",
         data: () => ({
@@ -38,14 +39,14 @@
                 password: '',
                 password_confirmation: '',
             },
-            url: "https://luanvantn.dev.digiprojects.top",
+            //url: "https://luanvantn.dev.digiprojects.top",
         }),
         methods:
             {
                 forgotPassword() {
                     var _this = this
                     _this.isLoading = true
-                    let uri = _this.url + '/api/password/reset'
+                    let uri = url.url + '/api/password/reset'
                     let str = window.location.href
                     let cutStrToken = str.slice(str.lastIndexOf('forgot-password/') + 16, str.lastIndexOf('?'))
                     let cutStrEmail = str.slice(str.lastIndexOf('?email=') + 7)

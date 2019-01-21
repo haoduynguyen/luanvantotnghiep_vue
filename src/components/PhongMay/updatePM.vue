@@ -37,6 +37,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "updatePM",
         props: {
@@ -51,7 +52,7 @@
                 mota_gv:'',
             },
             token:'',
-            url: 'https://luanvantn.dev.digiprojects.top',
+            //url: 'https://luanvantn.dev.digiprojects.top',
             //url: 'http://localhost:8000',
         }),
         //viet cac ham xu ly
@@ -59,7 +60,7 @@
             update: function () {
                 var _this = this;
 
-                let uri = _this.url + '/api/update-mo-ta/';
+                let uri = url.url + '/api/update-mo-ta/';
                 var gvItem = {
                     mota_gv: _this.showData.mota_gv,
                 }
@@ -88,7 +89,7 @@
             console.log('TOKEN',_this.token);
 
             _this.isLoading = true;
-            let uri = _this.url + '/api/show-mo-ta-id/';
+            let uri = url.url + '/api/show-mo-ta-id/';
             Axios.get(uri + this.id).then((response) => {
 
                 _this.isLoading = false;

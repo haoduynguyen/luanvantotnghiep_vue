@@ -42,6 +42,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "sendEmail",
         data: () => ({
@@ -49,7 +50,7 @@
             sendMail: {
                 email: '',
             },
-            url: "https://luanvantn.dev.digiprojects.top",
+            //url: "https://luanvantn.dev.digiprojects.top",
             //url: "http://localhost:8000",
             loadingSendMail: '',
             info: '',
@@ -59,7 +60,7 @@
                  sendmail() {
                     var _this = this
                     _this.isLoading = true
-                    let uri = _this.url + '/api/password/email';
+                    let uri = url.url + '/api/password/email';
                     _this.loadingSendMail = 'đang send mail';
                     var data = {
                         email: _this.sendMail.email,

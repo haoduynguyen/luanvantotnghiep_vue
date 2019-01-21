@@ -119,6 +119,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "ListUser",
         data: () => ({
@@ -152,7 +153,7 @@
             positionItem: '',
             dialogDelete: false,
             //url:'http://localhost:8000',
-            url: "https://luanvantn.dev.digiprojects.top",
+            //url: "https://luanvantn.dev.digiprojects.top",
         }),
         created: function () {
             var _this = this;
@@ -163,7 +164,7 @@
             _this.token = Auth['token'];
             _this.auth = Auth.role_id;
             console.log(Auth);
-            let uri = _this.url + '/api/user';
+            let uri = url.url + '/api/user';
             Axios.get(uri, {
                 headers: {
                     Authorization: 'Bearer' + ' ' + this.token
@@ -207,7 +208,7 @@
                 xoaData() {
                     let _this = this;
                     _this.dialog = false;
-                    Axios.delete(_this.url + '/api/user/' + _this.valueItem).then(response => {
+                    Axios.delete(url.url + '/api/user/' + _this.valueItem).then(response => {
                         if (response.status == 200) {
                             _this.success = ' Xóa thành công'
                             _this.dialogDelete = false

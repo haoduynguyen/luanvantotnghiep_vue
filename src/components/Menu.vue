@@ -245,7 +245,7 @@
 
 <script>
     import image from "../assets/logo.png";
-
+    import url from '../middleware/domain';
     export default {
         name: "Menu",
         data: () => ({
@@ -254,14 +254,10 @@
             img: image,
             id: 0,
             name: '',
-
             //url: "https://luanvantn.dev.digiprojects.top",
-            url: 'http://localhost:8000',
-
+            //url: 'http://localhost:8000',
             role:'',
-
             permission:[],
-
             items: [
                 {
                     title: 'Change Password', path: '/change-password/', test: () => {
@@ -324,7 +320,7 @@
             let author = localStorage.getItem('author');
             let Auth = JSON.parse(author);
             var token = Auth['token'];
-            var uri = _this.url + '/api/get-user'
+            var uri = url.url + '/api/get-user'
             Axios.get(uri, {
                 headers: {
                     Authorization: 'Bearer' + ' ' + token

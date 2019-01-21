@@ -126,6 +126,7 @@
     </div>
 </template>
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "listMayLoiGv",
         data: () => ({
@@ -145,7 +146,7 @@
             ],
             listMota: [],
             //url: 'https://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             success: '',
             info: '',
             valueItem: '',
@@ -158,7 +159,7 @@
             this.token = auth['token']
             var _this = this;
             _this.isLoading = true;
-            let uri = _this.url + '/api/list-mo-ta';
+            let uri = url.url + '/api/list-mo-ta';
             Axios.get(uri, {
                 headers: {
                     Authorization: 'Bearer' + ' ' + this.token
@@ -221,7 +222,7 @@
 
                 xoaData() {
                     let _this = this;
-                    Axios.delete(_this.url + '/api/delete-may-loi/' + _this.valueItem).then(response => {
+                    Axios.delete(url.url + '/api/delete-may-loi/' + _this.valueItem).then(response => {
                         if (response.status == 200) {
                             _this.success = ' Xóa Mô Tả Thành Công'
                             _this.dialogDelete = false

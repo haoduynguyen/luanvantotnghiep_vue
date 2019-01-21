@@ -106,6 +106,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "listPM",
         data: () => ({
@@ -130,7 +131,7 @@
             positionItem: '',
             dialogDelete: false,
 
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             //url: "https://luanvantn.dev.digiprojects.top",
 
 
@@ -142,7 +143,7 @@
             let Auth = JSON.parse(author);
             _this.id = Auth['id'];
             _this.token = Auth['token'];
-            let uri = _this.url + '/api/phong-may';
+            let uri = url.url + '/api/phong-may';
             Axios.get(uri, {
                 headers: {
                     Authorization: 'Bearer' + ' ' + this.token
@@ -187,7 +188,7 @@
                 xoaData() {
                     let _this = this;
                     _this.dialog = false;
-                    Axios.delete(_this.url + '/api/phong-may/' + _this.valueItem, {headers: {Authorization: 'Bearer' + ' ' + _this.token}}).then(response => {
+                    Axios.delete(url.url + '/api/phong-may/' + _this.valueItem, {headers: {Authorization: 'Bearer' + ' ' + _this.token}}).then(response => {
                         if (response.status == 200) {
                             _this.success = ' Xóa Phòng Máy Thành Công';
                             _this.dialogDelete = false;

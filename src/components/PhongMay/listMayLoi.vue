@@ -154,6 +154,7 @@
     </div>
 </template>
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "listMayLoi",
         data: () => ({
@@ -179,7 +180,7 @@
             ],
             listMota: [],
             //url: 'https://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             urlExport: '',
             listPhongMay: [],
             selectedPhongMay: 0,
@@ -202,7 +203,7 @@
             _this.token = auth['token'];
             _this.user_role = auth['role_id'];
             _this.isLoading = true;
-            let uri = _this.url + '/api/list-mo-ta';
+            let uri = url.url + '/api/list-mo-ta';
             Axios.get(uri, {
                 headers: {
                     Authorization: 'Bearer' + ' ' + _this.token
@@ -218,7 +219,7 @@
                     this.errorStatus = error.response.data.message;
                 }
             });
-            let uriPhongMay = _this.url + '/api/phong-may';
+            let uriPhongMay = url.url + '/api/phong-may';
             Axios.get(uriPhongMay).then((response) => {
                 _this.isLoading = false;
                 _this.listPhongMay = response.data.data;
@@ -232,7 +233,7 @@
                 }
             });
             // get danh sách tuần
-            let uriTuan = _this.url + '/api/tuan';
+            let uriTuan = url.url + '/api/tuan';
             Axios.get(uriTuan).then((response) => {
                 _this.isLoading = false;
                 for (let item of response.data.data) {
@@ -272,7 +273,7 @@
                         _this.check_box_da_sua = 0;
                     }
                     try {
-                        var response = await Axios.get(_this.url + '/api/list-mo-ta?check_box_dang_sua='
+                        var response = await Axios.get(url.url + '/api/list-mo-ta?check_box_dang_sua='
                             + _this.check_box_chua_sua + '&check_box_chua_sua=' +
                             _this.check_box_dang_sua + '&check_box_da_sua=' + _this.check_box_da_sua, {
                             headers: {
@@ -339,20 +340,20 @@
                             // check_box_da_sua: _this.check_box_da_sua,
                             tuan_id: typeof _this.selectedTuan.id === 'undefined' ? 0 : _this.selectedTuan.id,
                         };
-                    var exportData = await Axios.get(_this.url + '/api/export-danh-sach-loi?phong_may_id=' + data.phong_may_id + '&tuan_id=' + data.tuan_id,
+                    var exportData = await Axios.get(url.url + '/api/export-danh-sach-loi?phong_may_id=' + data.phong_may_id + '&tuan_id=' + data.tuan_id,
                         {
                             headers: {
                                 Authorization: 'Bearer' + ' ' + _this.token
                             }
                         });
                     if (exportData.status == 200) {
-                        _this.urlExport = _this.url + exportData.data;
+                        _this.urlExport = url.url + exportData.data;
                         window.location.href = _this.urlExport;
                     }
                 },
                 xoaData() {
                     let _this = this;
-                    Axios.delete(_this.url + '/api/delete-may-loi/' + _this.valueItem).then(response => {
+                    Axios.delete(url.url + '/api/delete-may-loi/' + _this.valueItem).then(response => {
                         if (response.status == 200) {
                             _this.success = ' xóa thanh công'
                             _this.dialogDelete = false

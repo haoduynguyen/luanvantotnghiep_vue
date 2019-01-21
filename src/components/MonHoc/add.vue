@@ -37,6 +37,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "add",
         data: () => ({
@@ -47,7 +48,7 @@
             },
             success:'',
             info:'',
-            url: 'https://luanvantn.dev.digiprojects.top',
+            //url: 'https://luanvantn.dev.digiprojects.top',
             //url: 'http://localhost:8000',
             switch1: true,
             roleList: [],
@@ -65,7 +66,7 @@
                 addMonHoc() {
                     var _this = this;
                     _this.isLoading = true;
-                    let uri = _this.url + '/api/mon-hoc';
+                    let uri = url.url + '/api/mon-hoc';
                     console.log(_this.data);
                     Axios.post(uri, _this.data,{headers:{Authorization: 'Bearer' + ' ' + _this.token}}).then((response) => {
                         if(response.status == 201){

@@ -31,6 +31,8 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
+
     export default {
         name: "changePassword",
 
@@ -42,7 +44,7 @@
                 passwordConfirmation: ''
             },
             //url: 'https://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             id: 0,
         }),
         methods: {
@@ -53,8 +55,7 @@
                     new_password: _this.dataUser.newPassword,
                     new_password_confirmation: _this.dataUser.passwordConfirmation
                 }
-                Axios.put(_this.url + '/api/change-password/' + _this.id, data).then((response) => {
-                    console.log(response);
+                Axios.put(url.url + '/api/change-password/' + _this.id, data).then((response) => {
                     if (response.status == 200) {
                         alert('update success')
                         localStorage.clear();

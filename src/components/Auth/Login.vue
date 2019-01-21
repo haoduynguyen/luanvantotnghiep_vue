@@ -60,6 +60,7 @@
 
 <script>
     import image from "../../assets/google.png";
+    import url from '../../middleware/domain';
     export default {
         name: "Login",
         data: () => ({
@@ -73,7 +74,7 @@
                 return_scopes: true
             },
             //url: "https://luanvantn.dev.digiprojects.top",
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             urlSendMail: "http://lvtn.cf",
             success: '',
             info: '',
@@ -91,7 +92,7 @@
                 loginUser() {
                     var _this = this
                     _this.isLoading = true;
-                    let uri = _this.url + '/api/login';
+                    let uri = url.url + '/api/login';
                     Axios.post(uri, _this.Login).then((response) => {
                         if (response.status == 200) {
                             localStorage.setItem('author', JSON.stringify(response.data.data))
@@ -132,7 +133,7 @@
                         access_token: googleUser.Zi.access_token
                     };
                     try {
-                        var response = await Axios.post(_this.url + '/api/google', data)
+                        var response = await Axios.post(url.url + '/api/google', data)
                         if (response.status == 200) {
                             localStorage.setItem('author', JSON.stringify(response.data.data))
                             _this.success = 'Đăng nhập thành công'
@@ -234,7 +235,7 @@
                             var data ={
                                 access_token: response.authResponse.accessToken
                             }
-                             Axios.post(_this.url + '/api/facebook', data).then((res) => {
+                             Axios.post(url.url + '/api/facebook', data).then((res) => {
                                 localStorage.setItem('author', JSON.stringify(res.data.data))
                                 _this.success = 'Đăng nhập thành công',
                                     setTimeout(() => {

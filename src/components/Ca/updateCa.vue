@@ -17,7 +17,7 @@
         <v-app id="inspire">
             <v-form v-model="valid" v-on:submit.prevent="updateCa" method="put">
                 <v-text-field
-                        v-model="data.name"
+                        v-model="data.tenPhong"
                         label="Ca"
                         disabled
                         required
@@ -28,27 +28,31 @@
                         disabled
                         required
                 ></v-text-field>
-                <v-time-picker
-                        v-model="data.gio_bat_dau"
-                        label="Giờ Bắt Đầu"
-                        required
-                ></v-time-picker>
-                <v-time-picker
-                        v-model="data.gio_ket_thuc"
-                        label="Giờ Kết Thúc"
-                        required
-                ></v-time-picker>
+                <!--<v-time-picker-->
+                        <!--v-model="data.gio_bat_dau"-->
+                        <!--label="Giờ Bắt Đầu"-->
+                        <!--required-->
+                <!--&gt;</v-time-picker>-->
+                <!--<v-time-picker-->
+                        <!--v-model="data.gio_ket_thuc"-->
+                        <!--label="Giờ Kết Thúc"-->
+                        <!--required-->
+                <!--&gt;</v-time-picker>-->
+                <input v-model="data.gio_bat_dau"  type="time"  value="13:30">
+                <input v-model="data.gio_ket_thuc" type="time" value="01:30">
                 <v-card-actions>
                     <v-btn v-bind:to="{name: 'ListCa'}">Quay Lại</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn type="submit" class="btn btn-xs btn-primary" color="success">Lưu</v-btn>
                 </v-card-actions>
+
             </v-form>
         </v-app>
     </div>
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "updateCa",
         data: () => ({
@@ -60,17 +64,19 @@
                 gio_ket_thuc: '',
             },
             //url: 'https://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
-            success:'',
-            info:'',
+            //url: 'http://localhost:8000',
+            success: '',
+            info: '',
         }),
         methods: {
             updateCa: function () {
                 var _this = this;
-                Axios.put(_this.url + '/api/ca/' + _this.data.id, _this.data,{ headers: {
+                Axios.put(url.url + '/api/ca/' + _this.data.id, _this.data, {
+                    headers: {
                         Authorization: 'Bearer' + ' ' + this.token
-                    }}).then((response) => {
-                    if (response.status  == 200) {
+                    }
+                }).then((response) => {
+                    if (response.status == 200) {
                         _this.success = 'Sửa thành công';
                         setTimeout(() => {
                             _this.success = '';
@@ -83,7 +89,7 @@
                         _this.info = '';
                     }, 2000);
                 });
-            }
+             }
         },
         created: function () {
             var _this = this;
@@ -95,11 +101,12 @@
             let urlCurrent = window.location.href;
             let ca_id = urlCurrent.slice(urlCurrent.lastIndexOf('update-ca/') + 10, urlCurrent.length);
 
-            let uri = _this.url + '/api/ca/' + ca_id + '/edit';
-            console.log('aaa',uri);
-            Axios.get(uri,{ headers: {
+            let uri = url.url + '/api/ca/' + ca_id + '/edit';
+            Axios.get(uri, {
+                headers: {
                     Authorization: 'Bearer' + ' ' + this.token
-                }}).then((response) => {
+                }
+            }).then((response) => {
                 _this.data = response.data.data;
                 console.log(_this.data);
                 // this.giangVien.profile.gender = this.switch1 ? 1 : null

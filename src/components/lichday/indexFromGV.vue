@@ -178,6 +178,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "indexFromGV",
         data: () => ({
@@ -202,7 +203,7 @@
             notification: '',
             statusNghi: 0,
             //url: 'https://luanvantn.dev.digiprojects.top',
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             dialog: false,
             detailContent: "",
             id: 0,
@@ -217,7 +218,7 @@
             var _this = this;
             _this.isLoading = true;
             // get danh sách ca
-            let uriCa = _this.url + '/api/ca';
+            let uriCa = url.url + '/api/ca';
             Axios.get(uriCa).then((response) => {
                 _this.isLoading = false;
                 this.dataLich.caList = response.data.data;
@@ -230,7 +231,7 @@
                 }
             });
             //get danh sach thú
-            let uriLich = _this.url + '/api/thu';
+            let uriLich = url.url + '/api/thu';
             Axios.get(uriLich).then((response) => {
                 _this.isLoading = false;
                 this.dataLich.thuList = response.data.data;
@@ -243,7 +244,7 @@
                 }
             });
             // get danh sách tuần
-            let uriTuan = _this.url + '/api/tuan';
+            let uriTuan = url.url + '/api/tuan';
             Axios.get(uriTuan).then((response) => {
                 _this.isLoading = false;
                 this.dataLich.tuanList = response.data.data;
@@ -270,7 +271,7 @@
                 }
             });
             // get danh sach hk
-            let urihocKy = _this.url + '/api/hoc-ky';
+            let urihocKy = url.url + '/api/hoc-ky';
             Axios.get(urihocKy).then((response) => {
                 _this.isLoading = false;
                 for (var hocky of response.data.data) {
@@ -304,7 +305,7 @@
                 }
             });
             //get danh sach phong may
-            let uriPhongMay = _this.url + '/api/phong-may';
+            let uriPhongMay = url.url + '/api/phong-may';
             Axios.get(uriPhongMay).then((response) => {
                 _this.isLoading = false;
                 _this.dataLich.phongMayList = response.data.data;
@@ -328,11 +329,12 @@
                         hk_id: typeof _this.dataLich.selectedHocKy == "object" ? _this.dataLich.selectedHocKy.id : _this.dataLich.selectedHocKy,
                         phong_may_id: _this.dataLich.selectedPhongMay,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
+
                     }
                 var ngayHienTai = _this.dataLich.tuanList.findIndex(itemTuan => itemTuan.id == data.tuan_id)
                 _this.dataLich.thuNgayList = []
                 _this.getDateOfWeek(_this.dataLich.tuanList[ngayHienTai]);
-                Axios.get(_this.url + '/api/get-lich-gv?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
+                Axios.get(url.url + '/api/get-lich-gv?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
                     , {
                         headers: {
                             Authorization: 'Bearer' + ' ' + this.token
@@ -345,7 +347,7 @@
                     _this.info = e.response.data.message
 
                 });
-                Axios.get(_this.url + '/api/get-dk-muon-phong-gv?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
+                Axios.get(url.url + '/api/get-dk-muon-phong-gv?' + 'hk_id=' + data.hk_id + '&phong_may_id=' + data.phong_may_id.id + '&tuan_id=' + data.tuan_id
                     , {
                         headers: {
                             Authorization: 'Bearer' + ' ' + this.token
@@ -368,12 +370,14 @@
             },
             dangKyNghi() {
                 var _this = this;
-                var uri = _this.url + '/api/dang-ky-nghi'
+                var uri = url.url + '/api/dang-ky-nghi'
+                var timeDKN = new Date().getHours() + ":" + new Date().getMinutes();
                 var data =
                     {
                         lich_day_id: _this.selectedNghi,  //_this.dataDangKyNghi.lich_day_id,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
                         ngay_nghi: _this.dataLich.ngay,
+                        timeDKN: timeDKN,
                     }
                 Axios.post(uri, data, {
                     headers: {
@@ -401,11 +405,13 @@
                         // console.log(response);
                     }
                 }).catch(function (error) {
+                    console.log('aaa');
                     _this.info = error.response.data.message
+                    console.log(_this.info);
                     setTimeout(() => {
                         _this.info = '';
                     }, 3000);
-                    _this.info = ""
+                    _this.dialog = false
                 });
             },
             viewDetail(ca_id, thu_id, itemLichDay) {
@@ -433,8 +439,6 @@
 
                             //console.log(item);
 
-                            console.log(item);
-
                             if (item.dang_ky_nghi != null) {
                                 status = item.dang_ky_nghi.tuan_id
                             }
@@ -446,7 +450,7 @@
             },
             submitMotaLoi() {
                 var _this = this;
-                var uri = _this.url + '/api/add-mo-ta'
+                var uri = url.url + '/api/add-mo-ta'
                 var data =
                     {
                         mota_gv: _this.moTaGv,
@@ -459,7 +463,6 @@
                         lich_day_id: _this.selectedNghi,
                         thu_id: _this.dataLich.thu_id,
                     }
-                console.log(data);
                 Axios.post(uri, data, {
                     headers: {
                         Authorization: 'Bearer' + ' ' + this.token
@@ -474,7 +477,7 @@
                         }, 3000);
                             var indexLichday = _this.dataLich.lichDay.findIndex(itemLichday => itemLichday.id == response.data.data.lich_day_id)
                             _this.dataLich.lichDay[indexLichday].bao_cao_phong_may = {tuan_id: _this.selectTuan}
-                            console.log('aaa',_this.dataLich.lichDay[indexLichday].bao_cao_phong_may);
+
                         }
 
                 }).catch(function (error) {

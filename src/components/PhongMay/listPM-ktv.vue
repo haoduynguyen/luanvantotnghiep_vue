@@ -73,6 +73,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "listPM-ktv",
         data: () => ({
@@ -96,7 +97,7 @@
             valueItem: '',
             positionItem: '',
             dialogDelete: false,
-            url: 'http://localhost:8000',
+            //url: 'http://localhost:8000',
             //url: "https://luanvantn.dev.digiprojects.top",
         }),
         created: function () {
@@ -106,7 +107,7 @@
             let Auth = JSON.parse(author);
             _this.id = Auth['id'];
             _this.token = Auth['token'];
-            let uri = _this.url + '/api/phong-may';
+            let uri = url.url + '/api/phong-may';
             Axios.get(uri, {
                 headers: {
                     Authorization: 'Bearer' + ' ' + this.token

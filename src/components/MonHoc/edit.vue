@@ -49,6 +49,7 @@
 </template>
 
 <script>
+    import url from '../../middleware/domain';
     export default {
         name: "edit",
         data: () => ({
@@ -57,7 +58,7 @@
                 ma_mon_hoc: '',
                 name: '',
             },
-            url: 'https://luanvantn.dev.digiprojects.top',
+            //url: 'https://luanvantn.dev.digiprojects.top',
             //url: 'http://localhost:8000',
             success:'',
             info:'',
@@ -65,7 +66,7 @@
         methods: {
             editMonHoc: function () {
                 var _this = this;
-                Axios.put(_this.url + '/api/mon-hoc/' + _this.data.id, _this.data,{ headers: {
+                Axios.put(url.url + '/api/mon-hoc/' + _this.data.id, _this.data,{ headers: {
                         Authorization: 'Bearer' + ' ' + this.token
                     }}).then((response) => {
                     if (response.status  == 200) {
@@ -92,7 +93,7 @@
             _this.token = Auth['token'];
             let urlCurrent = window.location.href;
             let monhoc_id = urlCurrent.slice(urlCurrent.lastIndexOf('edit-mon-hoc/') + 13, urlCurrent.length);
-            let uri = _this.url + '/api/mon-hoc/' + monhoc_id + '/edit';
+            let uri = url.url + '/api/mon-hoc/' + monhoc_id + '/edit';
             console.log('aaa',uri);
             Axios.get(uri,{ headers: {
                     Authorization: 'Bearer' + ' ' + this.token
