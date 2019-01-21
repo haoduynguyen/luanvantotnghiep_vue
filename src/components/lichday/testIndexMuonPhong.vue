@@ -271,6 +271,7 @@
 
 <script>
     import url from '../../middleware/domain';
+
     export default {
         name: "testIndexMuonPhong",
         data: () => ({
@@ -401,6 +402,7 @@
             });
             // get danh sach hk
             let urihocKy = url.url + '/api/hoc-ky';
+
             Axios.get(urihocKy).then((response) => {
                 _this.isLoading = false;
                 for (var hocky of response.data.data) {
@@ -505,13 +507,10 @@
                 var date = date.toString().length < 2 ? "0" + date : date;
                 var month = month.toString().length < 2 ? "0" + month : month;
                 var currentDate = year + '-' + month + '-' + date
-                console.log(currentDate);
-                console.log(hk.ngaybatdau);
                 _this.dataLich.chosingHk = "";
                 if (hk.ngaybatdau <= currentDate && currentDate < hk.ngayketthuc) {
                     _this.dataLich.chosingHk = 'true';
                 }
-                console.log(_this.dataLich.chosingHk);
                 var ngayHienTai = _this.dataLich.thuNgayList.findIndex(itemNgay => itemNgay.id == thu_id)
                 _this.dataLich['ngay'] = [];
                 _this.dataLich['ngay'] = _this.dataLich.thuNgayList[ngayHienTai].ngay
@@ -524,7 +523,6 @@
                 }
             },
             viewDaMuonPhong(ca_id, thu_id, phong_id, itemDetail) {
-                console.log(itemDetail);
                 var _this = this;
                 _this.dataLich.ca_id = ca_id;
                 _this.dataLich.thu_id = thu_id;
@@ -537,7 +535,6 @@
                 }
             },
             submitMuonPhong() {
-                console.time("Time this 1");
                 var _this = this
                 var uri = url.url + '/api/dk-muon-phong'
                 var data =
@@ -549,7 +546,9 @@
                         thu_id: _this.dataLich.thu_id,
                         ngay_muon: _this.dataLich.ngay,
                         tuan_id: typeof _this.dataLich.selectedTuan == "object" ? _this.dataLich.selectedTuan.id : _this.dataLich.selectedTuan,
-                        ghi_chu: _this.dataLich.ghichu
+                        ghi_chu: _this.dataLich.ghichu,
+                        currentMinutes: new Date().getMinutes().toString().length == "2" ? new Date().getMinutes() : "0" + new Date().getMinutes(),
+                        timeDKN: new Date().getHours() + ":" + new Date().getMinutes(),
                     }
                 Axios.post(uri, data, {
                     headers: {
@@ -564,11 +563,9 @@
                     }, 2000);
                     let resultData = response.data.data
                     _this.dataLich.lichMuon.push(resultData)
-                    console.timeEnd("Time this 1");
                 }).catch(function (error) {
                     _this.dialogdkMuonPhong = false
                     _this.info = error.response.data.message
-                    console.log(_this.info);
                     setTimeout(() => {
                         _this.info = '';
                     }, 2000);
@@ -635,7 +632,6 @@
                 }
             },
             onChangeMonhoc(monhoc) {
-                console.log(monhoc)
                 this.showGhichu = false
                 if (monhoc.name == 'Môn khác')
                     this.showGhichu = true

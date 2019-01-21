@@ -76,16 +76,13 @@
                                 _this.$router.push({name:'ListMonHoc'});
                             }, 3000)
                         }
-                    }).catch(e =>{
-                        if (!e.response) {
-                            // network error
-                            this.e = 'Error: Network Error';
-                        } else {
-                            _this.info = error.response.data.message;
-                            setTimeout(() => {
-                                _this.info = '';
-                            }, 3000);
-                        }
+                    }).catch(error =>{
+                        _this.info = error.response.data.message
+                        console.log(_this.info);
+                        setTimeout(() => {
+                            _this.info = '';
+                        }, 3000);
+                        _this.dialog = false
                     });
                 },
             },

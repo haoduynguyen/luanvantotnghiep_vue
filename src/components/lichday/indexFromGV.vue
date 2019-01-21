@@ -84,7 +84,8 @@
                                      v-on:click="viewDetail(ca.id,thu.id,checkLichTruc(ca.id, thu.id),key)">
                                     {{ checkLichTruc(ca.id, thu.id).user.profile.first_name+ ' ' + checkLichTruc(ca.id,
                                     thu.id).user.profile.last_name }}
-                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null &&  checkLichTruc(ca.id, thu.id).dang_ky_nghi.status != 0 && checkLichTruc(ca.id,
+                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
+                                        thu.id).dang_ky_nghi.status != 0 && checkLichTruc(ca.id,
                                         thu.id).dang_ky_nghi.tuan_id == selectTuan) ? 'hôm nay nghỉ' : '' }}
                                     </div>
                                 </div>
@@ -164,9 +165,8 @@
                         <v-btn color="blue darken-1" @click="submitMotaLoi()"
                                v-if="(detailContent.dang_ky_nghi  == null &&
                                detailContent.nhom_lop || (detailContent.dang_ky_nghi  != null &&
-                               detailContent.dang_ky_nghi.tuan_id != selectTuan))&& (detailContent.bao_cao_phong_may  == null
-                                || (detailContent.bao_cao_phong_may  != null &&
-                                (detailContent.dang_ky_nghi.tuan_id != selectTuan || detailContent.dang_ky_nghi.status == 0 ))) ||
+                               (detailContent.dang_ky_nghi.tuan_id != selectTuan || detailContent.dang_ky_nghi.status == 0 )))&& (detailContent.bao_cao_phong_may  == null
+                                || (detailContent.bao_cao_phong_may  != null && detailContent.bao_cao_phong_may.tuan_id != selectTuan)) ||
                                detailContent.ngay_muon != null">
                             Báo cáo phòng máy
                         </v-btn>
@@ -179,6 +179,7 @@
 
 <script>
     import url from '../../middleware/domain';
+
     export default {
         name: "indexFromGV",
         data: () => ({
@@ -254,6 +255,7 @@
                 var date = date.toString().length < 2 ? "0" + date : date;
                 var month = month.toString().length < 2 ? "0" + month : month;
                 var currentDate = year + '-' + month + '-' + date
+
                 for (var tuan of _this.dataLich.tuanList) {
                     var ngaybatdau = tuan.ngay_bat_dau;
                     var ngayketthuc = tuan.ngay_ket_thuc;
@@ -474,10 +476,10 @@
                         setTimeout(() => {
                             _this.success = '';
                         }, 3000);
-                            var indexLichday = _this.dataLich.lichDay.findIndex(itemLichday => itemLichday.id == response.data.data.lich_day_id)
-                            _this.dataLich.lichDay[indexLichday].bao_cao_phong_may = {tuan_id: _this.selectTuan}
+                        var indexLichday = _this.dataLich.lichDay.findIndex(itemLichday => itemLichday.id == response.data.data.lich_day_id)
+                        _this.dataLich.lichDay[indexLichday].bao_cao_phong_may = {tuan_id: _this.selectTuan}
 
-                        }
+                    }
 
                 }).catch(function (error) {
                     //_this.error = error.response.data.message;

@@ -191,7 +191,10 @@
                 xoaData() {
                     let _this = this;
                     console.log(_this.valueItem);
-                    Axios.put(url.url + '/api/update-status-mp/' + _this.valueItem, {
+                    var data = {
+                        timeDKN : new Date().getHours() + ":" + new Date().getMinutes(),
+                    }
+                    Axios.put(url.url + '/api/update-status-mp/' + _this.valueItem, data, {
                         headers: {
                             Authorization: 'Bearer' + ' ' + _this.token
                         }

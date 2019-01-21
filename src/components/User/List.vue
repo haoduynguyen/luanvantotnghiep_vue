@@ -18,7 +18,7 @@
             </v-card-title>
             <v-data-table
                     v-model="selected"
-                    :headers="headers"
+                    :headers="auth == 3 ? headers : headers1"
                     :items="user"
                     :pagination.sync="pagination"
                     select-all
@@ -51,15 +51,14 @@
                         <td class="text-xs-center" v-else>Giảng Viên</td>
                         <td class="text-xs-center">{{ props.item.profile.gender == 1 ?"male" : "female" }}</td>
                         <td class="text-xs-center">{{ props.item.profile.phone}}</td>
-                        <td class="text-xs-center">
+                        <td class="text-xs-center" v-if="auth == 3">
 
                             <!--<v-btn v-if="auth != 3" disabled icon class="mx-0" @click="editItem(props.item.id)">-->
                                 <!--<v-icon color="teal">edit</v-icon>-->
                             <!--</v-btn>-->
                             <!--<v-btn v-else icon class="mx-0" @click="editItem(props.item.id)">-->
 
-                            <v-btn icon class="mx-0" @click="editItem(props.item.id)" v-if="1==1" disabled>
-
+                            <v-btn icon class="mx-0" @click="editItem(props.item.id)">
                                 <v-icon color="teal">edit</v-icon>
                             </v-btn>
                             <v-btn icon class="mx-0" @click="xacnhanxoa(props.item.id , props.index)">

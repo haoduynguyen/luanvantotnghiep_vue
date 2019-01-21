@@ -327,7 +327,7 @@ export default new Router({
                     },
                 },
                 {
-                    path: '/add-hoc-ky/:id',
+                    path: '/add-hoc-ky',
                     //props: true,
                     name: 'AddHocKy',
                     component: AddHocKy,

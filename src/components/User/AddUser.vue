@@ -49,6 +49,20 @@
                 </v-card-actions>
             </v-form>
         </v-app>
+        <v-alert v-if="success != ''"
+                 v-model="success"
+                 type="success"
+                 class="alert-effect"
+        >
+            <label>{{success}}</label>
+        </v-alert>
+        <v-alert v-if="info != ''"
+                 v-model="info"
+                 type="error"
+                 class="alert-effect"
+        >
+            <label>{{info}}</label>
+        </v-alert>
     </div>
 </template>
 
@@ -68,6 +82,8 @@
                 gender: '',
                 role_id: '',
             },
+            success: '',
+            info: '',
             //url: 'https://luanvantn.dev.digiprojects.top',
             //url: 'http://localhost:8000',
             switch1: true,
@@ -89,7 +105,19 @@
                     _this.dataUser.gender = _this.switch1 ? 1 : 0
                     let uri = url.url + '/api/user';
                     Axios.post(uri, _this.dataUser).then((response) => {
-                        alert('Add User Success!');
+                        if (response.status == 200) {
+                            _this.success = 'Thêm user thành công';
+                            setTimeout(() => {
+                                _this.success = '';
+                                _this.$router.push({name: 'ListUser'});
+                            }, 3000)
+                        }
+                    }).catch(error => {
+                        _this.info = error.response.data.message;
+                        console.log(_this.info);
+                        setTimeout(() => {
+                            _this.info = '';
+                        }, 3000);
                     });
                 },
                 getRole() {
@@ -97,7 +125,6 @@
                     let uri = url.url + '/api/role';
                     Axios.get(uri).then((response) => {
                         _this.roleList = response.data.data;
-                        console.log('Role');
                     });
                 }
             },

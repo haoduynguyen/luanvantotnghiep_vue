@@ -9,19 +9,19 @@
                 ></v-text-field>
                 <v-text-field
                         v-model="data.nam_hoc"
-                        label="Năm Học"
+                        label="Năm Học( Năm bắt đầu phải nhỏ hơn năm kết thúc 1 năm)"
                         required
                 ></v-text-field>
                 <v-text-field
                         v-model="data.ngay_bat_dau"
                         label="Ngày bắt đầu"
-                        type = 'date'
+                        type='date'
                         required
                 ></v-text-field>
                 <v-text-field
                         v-model="data.ngay_ket_thuc"
                         label="Ngày kết thúc"
-                        type = 'date'
+                        type='date'
                         required
                 ></v-text-field>
                 <v-card-actions>
@@ -50,20 +50,21 @@
 
 <script>
     import url from '../../middleware/domain';
+
     export default {
         name: "addHocKy",
         data: () => ({
             valid: false,
             data: {
                 name: '',
-                name_hoc:'',
-                ngay_bat_dau:'',
-                ngay_ket_thuc:'',
+                name_hoc: '',
+                ngay_bat_dau: '',
+                ngay_ket_thuc: '',
             },
-            success:'',
-            info:'',
+            success: '',
+            info: '',
             //url: 'https://luanvantn.dev.digiprojects.top',
-           // url: 'http://localhost:8000',
+            // url: 'http://localhost:8000',
             switch1: true,
             roleList: [],
             nameRules: [
@@ -82,24 +83,20 @@
                     _this.isLoading = true;
                     let uri = url.url + '/api/hoc-ky';
                     console.log(_this.data);
-                    Axios.post(uri, _this.data,{headers:{Authorization: 'Bearer' + ' ' + _this.token}}).then((response) => {
-                        if(response.status == 200){
+                    Axios.post(uri, _this.data, {headers: {Authorization: 'Bearer' + ' ' + _this.token}}).then((response) => {
+                        if (response.status == 200) {
                             _this.success = 'Thêm Học Kỳ Thành Công';
                             setTimeout(() => {
                                 _this.success = '';
-                                _this.$router.push({name:'ListHocKy'});
+                                _this.$router.push({name: 'ListHocKy'});
                             }, 3000)
                         }
-                    }).catch(e =>{
-                        if (!e.response) {
-                            // network error
-                            this.e = 'Error: Network Error';
-                        } else {
-                            _this.info = error.response.data.message;
-                            setTimeout(() => {
-                                _this.info = '';
-                            }, 3000);
-                        }
+                    }).catch(error => {
+                        _this.info = error.response.data.message;
+                        console.log(_this.info);
+                        setTimeout(() => {
+                            _this.info = '';
+                        }, 3000);
                     });
                 },
             },

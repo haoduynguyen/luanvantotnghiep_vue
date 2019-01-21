@@ -187,8 +187,11 @@
                 xoaData() {
                     let _this = this;
                     console.log(_this.valueItem);
-                    var timeDKN = new Date().getHours() + ":" + new Date().getMinutes();
-                    Axios.put(url.url + '/api/update-status-nghi/' + _this.valueItem, {
+                    var data = {
+                        timeDKN : new Date().getHours() + ":" + new Date().getMinutes(),
+                    }
+                    console.log(data);
+                    Axios.put(url.url + '/api/update-status-nghi/' + _this.valueItem, data , {
                         headers: {
                             Authorization: 'Bearer' + ' ' + _this.token
                         }
