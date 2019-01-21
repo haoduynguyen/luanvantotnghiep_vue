@@ -187,7 +187,8 @@
                 xoaData() {
                     let _this = this;
                     console.log(_this.valueItem);
-                    Axios.delete(url.url + '/api/dang-ky-nghi/' + _this.valueItem, {
+                    var timeDKN = new Date().getHours() + ":" + new Date().getMinutes();
+                    Axios.put(url.url + '/api/update-status-nghi/' + _this.valueItem, {
                         headers: {
                             Authorization: 'Bearer' + ' ' + _this.token
                         }

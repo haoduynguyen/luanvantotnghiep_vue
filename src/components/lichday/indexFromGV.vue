@@ -84,7 +84,7 @@
                                      v-on:click="viewDetail(ca.id,thu.id,checkLichTruc(ca.id, thu.id),key)">
                                     {{ checkLichTruc(ca.id, thu.id).user.profile.first_name+ ' ' + checkLichTruc(ca.id,
                                     thu.id).user.profile.last_name }}
-                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null && checkLichTruc(ca.id,
+                                    <div>{{ ( checkLichTruc(ca.id, thu.id).dang_ky_nghi != null &&  checkLichTruc(ca.id, thu.id).dang_ky_nghi.status != 0 && checkLichTruc(ca.id,
                                         thu.id).dang_ky_nghi.tuan_id == selectTuan) ? 'hôm nay nghỉ' : '' }}
                                     </div>
                                 </div>
@@ -154,7 +154,7 @@
                         <v-btn type="submit"
                                v-if="(detailContent.dang_ky_nghi  == null &&
                                detailContent.nhom_lop || (detailContent.dang_ky_nghi  != null &&
-                               detailContent.dang_ky_nghi.tuan_id != selectTuan )) &&
+                               (detailContent.dang_ky_nghi.tuan_id != selectTuan || detailContent.dang_ky_nghi.status == 0 ))) &&
                                 (detailContent.bao_cao_phong_may  == null
                                 || (detailContent.bao_cao_phong_may  != null &&
                                detailContent.bao_cao_phong_may.tuan_id != selectTuan))"
@@ -166,7 +166,7 @@
                                detailContent.nhom_lop || (detailContent.dang_ky_nghi  != null &&
                                detailContent.dang_ky_nghi.tuan_id != selectTuan))&& (detailContent.bao_cao_phong_may  == null
                                 || (detailContent.bao_cao_phong_may  != null &&
-                               detailContent.bao_cao_phong_may.tuan_id != selectTuan)) ||
+                                (detailContent.dang_ky_nghi.tuan_id != selectTuan || detailContent.dang_ky_nghi.status == 0 ))) ||
                                detailContent.ngay_muon != null">
                             Báo cáo phòng máy
                         </v-btn>
@@ -405,7 +405,6 @@
                         // console.log(response);
                     }
                 }).catch(function (error) {
-                    console.log('aaa');
                     _this.info = error.response.data.message
                     console.log(_this.info);
                     setTimeout(() => {
