@@ -154,7 +154,7 @@
                         <v-btn type="submit"
                                v-if="(detailContent.dang_ky_nghi  == null &&
                                detailContent.nhom_lop || (detailContent.dang_ky_nghi  != null &&
-                               detailContent.dang_ky_nghi.tuan_id != selectTuan)) &&
+                               detailContent.dang_ky_nghi.tuan_id != selectTuan )) &&
                                 (detailContent.bao_cao_phong_may  == null
                                 || (detailContent.bao_cao_phong_may  != null &&
                                detailContent.bao_cao_phong_may.tuan_id != selectTuan))"
