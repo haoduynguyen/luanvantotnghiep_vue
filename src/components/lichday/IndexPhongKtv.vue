@@ -3,7 +3,7 @@
         <v-form id="formData" v-on:submit.prevent="searchLichDay">
             <div style="display: flex; ">
                 <v-select class="test"
-                          :items="dataLich.curentTuan"
+                          :items="dataLich.tuanList"
                           v-model="dataLich.selectedTuan"
                           label="Tuần"
                           single-line
@@ -352,22 +352,15 @@
                 var date = date.toString().length < 2 ? "0" + date : date;
                 var month = month.toString().length < 2 ? "0" + month : month;
                 var currentDate = year + '-' + month + '-' + date
-                var nextIndex = 0;
-                for (var index in _this.dataLich.tuanList) {
-                    let tuan = _this.dataLich.tuanList[index]
+
+                for (var tuan of _this.dataLich.tuanList) {
                     var ngaybatdau = tuan.ngay_bat_dau;
                     var ngayketthuc = tuan.ngay_ket_thuc;
                     if (ngaybatdau <= currentDate && currentDate <= ngayketthuc) {
-                        _this.dataLich.curentTuan.push(this.dataLich.tuanList[index])
-                        _this.dataLich.selectedTuan = tuan.id
-                        nextIndex = parseInt(index) + 1
-                        //_this.getDateOfWeek(this.dataLich.tuanList[index]);
+                        _this.dataLich.selectedTuan = tuan.id;
                         break;
                     }
-
                 }
-                _this.dataLich.curentTuan.push(_this.dataLich.tuanList[nextIndex])
-
             }).catch(error => {
                 if (!error.response) {
                     // network error

@@ -20,6 +20,20 @@
                                 </v-card-actions>
                             </v-form>
                         </v-card-text>
+                        <v-alert v-if="success != ''"
+                                 v-model="success"
+                                 type="success"
+                                 class="alert-effect"
+                        >
+                            <label>{{success}}</label>
+                        </v-alert>
+                        <v-alert v-if="info != ''"
+                                 v-model="info"
+                                 type="error"
+                                 class="alert-effect"
+                        >
+                            <label>{{info}}</label>
+                        </v-alert>
                     </v-card>
                 </v-flex>
             </v-layout>
@@ -40,6 +54,8 @@
                 password_confirmation: '',
             },
             //url: "https://luanvantn.dev.digiprojects.top",
+            success:'',
+            info:'',
         }),
         methods:
             {
@@ -55,18 +71,17 @@
                     _this.Login.token = cutStrToken
                     Axios.post(uri, _this.Login).then((response) => {
                         if (response.status == 200) {
-                            alert('Đổi mật khẩu thành công')
-                            this.$router.push({name: 'Login'})
+                            _this.success = 'Đổi mật khẩu thành công'
+                            setTimeout(() => {
+                                _this.success = '';
+                                this.$router.push({name: 'Login'})
+                            }, 1000);
                         }
                     }).catch(error => {
-                        if (!error.response) {
-                            // network error
-                            this.errorStatus = 'Error: Network Error'
-                            console.log(error.response.data.message)
-                        } else {
-                            this.errorStatus = error.response.data.message
-                            alert(this.errorStatus)
-                        }
+                        _this.info = error.response.data.message;
+                        setTimeout(() => {
+                            _this.info = '';
+                        }, 2000)
                     })
 
                 },

@@ -75,7 +75,7 @@
             },
             //url: "https://luanvantn.dev.digiprojects.top",
             //url: 'http://localhost:8000',
-            urlSendMail: "http://lvtn.cf",
+            urlSendMail: "http://localhost:8080",
             success: '',
             info: '',
             image:image,
